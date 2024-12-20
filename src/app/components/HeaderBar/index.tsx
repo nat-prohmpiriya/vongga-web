@@ -3,28 +3,29 @@
 import React from 'react';
 import { IoApps } from 'react-icons/io5';
 import { IoMdSearch } from 'react-icons/io';
-import { IoSettingsOutline } from 'react-icons/io5';
+import { IoAppsOutline } from 'react-icons/io5';
 import { IoNotificationsOutline } from 'react-icons/io5';
 import { FaRegCommentDots } from 'react-icons/fa';
 import { useRouter } from 'next/navigation';
+import { BsCart3 } from "react-icons/bs";
 
 const HeaderBar = () => {
   const router = useRouter();
   const goToFeedPage = () => {
     router.push('/feed');
   };
+
   return (
-    <div className="w-full h-16 bg-white border-b flex items-center px-4">
-      <div className="flex items-center justify-between w-full">
+    <div className="w-full h-16 bg-white border-b flex items-center px-4 grid grid-cols-3">
         {/* Left section */}
-        <div className="flex items-center">
-          <button className="p-2 hover:bg-gray-100 rounded-lg" onClick={()=> goToFeedPage()}>
+        <div className="col-span-1">
+          <button className="p-2 hover:bg-gray-100 rounded-lg" onClick={() => goToFeedPage()}>
             <IoApps className="text-2xl text-blue-600" />
           </button>
         </div>
 
         {/* Center section - Search */}
-        <div className="flex-1 max-w-2xl mx-auto">
+        <div className="col-span-1">
           <div className="relative">
             <input
               type="text"
@@ -36,13 +37,17 @@ const HeaderBar = () => {
         </div>
 
         {/* Right section */}
-        <div className="flex items-center space-x-2">
+        <div className="col-span-1 flex items-center justify-end gap-5">
+          <button className="p-2 bg-gray-100 rounded-lg">
+            <IoAppsOutline className="text-xl text-gray-600" />
+          </button>
+          <button className="p-2 bg-gray-100 rounded-lg">
+            <BsCart3 className="text-xl text-gray-600" />
+          </button>
           <button className="p-2 bg-gray-100 rounded-lg">
             <FaRegCommentDots className="text-xl text-gray-600" />
           </button>
-          <button className="p-2 bg-gray-100 rounded-lg">
-            <IoSettingsOutline className="text-xl text-gray-600" />
-          </button>
+
           <button className="p-2 bg-gray-100 rounded-lg">
             <IoNotificationsOutline className="text-xl text-gray-600" />
           </button>
@@ -54,7 +59,6 @@ const HeaderBar = () => {
             />
           </button>
         </div>
-      </div>
     </div>
   );
 };

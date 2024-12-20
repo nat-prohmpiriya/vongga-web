@@ -3,16 +3,29 @@
 import React from 'react';
 import { IoHomeOutline } from 'react-icons/io5';
 import { FaRegUser } from 'react-icons/fa';
-import { IoEarthOutline } from 'react-icons/io5';
+import { IoNewspaperOutline } from 'react-icons/io5';
 import { IoCalendarOutline } from 'react-icons/io5';
-import { IoChatbubbleEllipsesOutline } from 'react-icons/io5';
-import { IoNotificationsOutline } from 'react-icons/io5';
-import { IoSettingsOutline } from 'react-icons/io5';
-import Image from 'next/image';
+import { IoStorefrontOutline } from 'react-icons/io5';
+import { GrGroup } from "react-icons/gr";
+import { PiVideoLight } from "react-icons/pi";
+import { CgGames } from "react-icons/cg";
+
+import Link from 'next/link';
 
 const LeftSideBar = () => {
+  const listMenu = [
+    { name: 'Feed', icon: <IoHomeOutline className="text-xl" />, href: '/feed' },
+    { name: 'Connections', icon: <FaRegUser className="text-xl"/>, href: '/connections' },
+    { name: 'Groups', icon: <GrGroup className="text-xl" />, href: '/groups' },
+    { name: 'Articles', icon: <IoNewspaperOutline className="text-xl" /> , href: '/articles'},
+    { name: 'Watch', icon: <PiVideoLight className="text-xl" /> , href: '/watch'},
+    { name: 'Events', icon: <IoCalendarOutline className="text-xl" />, href: '/events' },
+    { name: 'Marketplace', icon: <IoStorefrontOutline className="text-xl" /> , href: '/marketplace'},
+    { name: 'Games', icon: <CgGames className="text-xl" /> , href: '/games'},
+
+  ];
   return (
-    <div>
+    <div className='pb-6'>
       {/* Profile Section */}
       <div className="relative">
         {/* Cover Image */}
@@ -63,45 +76,21 @@ const LeftSideBar = () => {
 
       {/* Navigation Menu */}
       <nav className="mt-6 px-2">
-        <a href="/feed" className="flex items-center gap-3 p-3 bg-blue-50 text-blue-600 rounded-xl mb-1">
-          <IoHomeOutline className="text-xl" />
-          <span className="font-medium">Feed</span>
-        </a>
-        <a href="/connections" className="flex items-center gap-3 p-3 hover:bg-gray-50 rounded-xl mb-1 text-gray-700">
-          <FaRegUser className="text-xl" />
-          <span>Connections</span>
-        </a>
-        <a href="/news" className="flex items-center gap-3 p-3 hover:bg-gray-50 rounded-xl mb-1 text-gray-700">
-          <IoEarthOutline className="text-xl" />
-          <span>Latest News</span>
-        </a>
-        <a href="/events" className="flex items-center gap-3 p-3 hover:bg-gray-50 rounded-xl mb-1 text-gray-700">
-          <IoCalendarOutline className="text-xl" />
-          <span>Events</span>
-        </a>
-        <a href="/groups" className="flex items-center gap-3 p-3 hover:bg-gray-50 rounded-xl mb-1 text-gray-700">
-          <IoChatbubbleEllipsesOutline className="text-xl" />
-          <span>Groups</span>
-        </a>
-        <a href="/notifications" className="flex items-center gap-3 p-3 hover:bg-gray-50 rounded-xl mb-1 text-gray-700">
-          <IoNotificationsOutline className="text-xl" />
-          <span>Notifications</span>
-        </a>
-        <a href="/settings" className="flex items-center gap-3 p-3 hover:bg-gray-50 rounded-xl mb-1 text-gray-700">
-          <IoSettingsOutline className="text-xl" />
-          <span>Settings</span>
-        </a>
-      </nav>
-
-      {/* View Profile Button */}
-      <div className="mt-6 px-4 pb-4">
-        <a
-          href="/profile"
-          className="block w-full py-2.5 text-center text-blue-500 hover:text-blue-600 font-medium"
+        {listMenu.map((item, index) => (
+        <Link
+          key={index}
+          href={item.href}
+          className={
+            item.href === '/feed'
+              ? 'flex items-center gap-3 py-3 px-4 rounded-lg bg-blue-100 text-blue-600 '
+              : 'flex items-center gap-3 py-3 px-4 rounded-lg hover:bg-gray-100'
+          }
         >
-          View Profile
-        </a>
-      </div>
+          {item.icon}
+          <span className="font-medium">{item.name}</span>
+        </Link>
+        ))}
+      </nav>
     </div>
   );
 };
