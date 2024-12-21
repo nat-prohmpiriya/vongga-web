@@ -10,6 +10,7 @@ import VideosSection from "./components/VideosSection";
 import EventsSection from "./components/EventsSection";
 import ShopSection from "./components/ShopSection";
 import FeedSection from "./components/FeedSection";
+import ArticlesSection from "./components/ArticlesSection";
 
 
 export default function PagesPage() {
@@ -47,6 +48,7 @@ export default function PagesPage() {
                     {currentSection === 'videos' && <VideosSection />}
                     {currentSection === 'events' && <EventsSection />}
                     {currentSection === 'shop' && <ShopSection />}
+                    {currentSection === 'articles' && <ArticlesSection />}
                 </div>
             </div>
             <div className="col-span-1 bg-white rounded-xl">

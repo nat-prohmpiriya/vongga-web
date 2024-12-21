@@ -34,13 +34,14 @@ const HeroBanner2: React.FC<HeroBanner2Props> = ({
   const router = useRouter();
 
   const tabs = [
-    { name: 'Feed', href: '#', count: null, value: 'feed', isActive: true },
-    { name: 'Shop', href: '#', count: null, value: 'shop', isActive: false },
-    { name: 'About', href: '#', count: null, value: 'about', isActive: false },
-    { name: 'Connections', href: '#', count: '300', value: 'connections', isActive: false },
-    { name: 'Media', href: '#', count: null, value: 'media', isActive: false },
-    { name: 'Videos', href: '#', count: null, value: 'videos', isActive: false },
-    { name: 'Events', href: '#', count: null, value: 'events', isActive: false },
+    { name: 'Feed', href: '#', count: null, value: 'feed'},
+    { name: 'Shop', href: '#', count: null, value: 'shop' },
+    { name: 'Connections', href: '#', count: '300', value: 'connections' },
+    { name: 'Articles', href: '#', count: null, value: 'articles' },
+    { name: 'Media', href: '#', count: null, value: 'media' },
+    { name: 'Videos', href: '#', count: null, value: 'videos' },
+    { name: 'Events', href: '#', count: null, value: 'events' },
+    { name: 'About', href: '#', count: null, value: 'about' },
 ];
 
   const handleTabClick = (tab: { value: string }) => {
