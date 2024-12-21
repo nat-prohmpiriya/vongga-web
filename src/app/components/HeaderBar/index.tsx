@@ -8,7 +8,7 @@ import { IoNotificationsOutline } from 'react-icons/io5';
 import { FaRegCommentDots } from 'react-icons/fa';
 import { useRouter } from 'next/navigation';
 import { BsCart3 } from "react-icons/bs";
-import AppsBtn from "./AppsBtn";
+import AppsBtn from "./MenuBar";
 
 const HeaderBar = () => {
   const router = useRouter();
@@ -40,17 +40,17 @@ const HeaderBar = () => {
         {/* Right section */}
         <div className="col-span-1 flex items-center justify-end gap-5">
           <AppsBtn/>
-          <button className="p-2 bg-gray-100 rounded-lg">
+          <button className="p-2 bg-gray-100 rounded-lg" onClick={() => router.push('/cart')}>
             <BsCart3 className="text-xl text-gray-600" />
           </button>
-          <button className="p-2 bg-gray-100 rounded-lg">
+          <button className="p-2 bg-gray-100 rounded-lg" onClick={() => router.push('/chat')}>
             <FaRegCommentDots className="text-xl text-gray-600" />
           </button>
 
-          <button className="p-2 bg-gray-100 rounded-lg">
+          <button className="p-2 bg-gray-100 rounded-lg" onClick={() => router.push('/notifications')}>
             <IoNotificationsOutline className="text-xl text-gray-600" />
           </button>
-          <button className="w-8 h-8 rounded-full overflow-hidden">
+          <button className="w-8 h-8 rounded-full overflow-hidden" onClick={() => router.push('/profile')}>
             <img
               src="https://picsum.photos/32/32"
               alt="Profile"
