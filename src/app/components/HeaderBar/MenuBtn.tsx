@@ -20,7 +20,7 @@ import { RiGroupLine } from "react-icons/ri";
 import { FaRegCalendarAlt } from "react-icons/fa";
 import { BsShop } from "react-icons/bs";
 
-export default function MenuBar() {
+export default function MenuBtn() {
     const listBtn = [
         { name: 'Feed', description: 'Lorem ipsum dolor sit amet.', icon: <IoHomeOutline className="text-xl" />, href: '/feed' },
         { name: 'Connections', description: 'Lorem ipsum dolor sit amet.', icon: <FaRegUser className="text-xl"/>, href: '/connections' },
