@@ -1,23 +1,6 @@
+import SearchBar from "@/app/components/SearchBar";
 
 export default function ArticlesPage() {
-
-    const categories = [
-        { id: 1, name: 'Travel' },
-        { id: 2, name: 'Education' },
-        { id: 3, name: 'Music' },
-        { id: 4, name: 'Sports' },
-        { id: 5, name: 'Health' },
-        { id: 6, name: 'Art' },
-        { id: 7, name: 'Fashion' },
-        { id: 8, name: 'Food' },
-        { id: 9, name: 'Technology' },
-        { id: 10, name: 'Business' },
-        { id: 11, name: 'Politics' },
-        { id: 12, name: 'Science' },
-        { id: 13, name: 'Environment' },
-        { id: 14, name: 'Culture' },
-        { id: 15, name: 'Religion' },
-    ]
 
     const ArticlesSection = ({ title }: { title: string }) => {
         return (
@@ -68,29 +51,10 @@ export default function ArticlesPage() {
             </div>
             <div className="col-span-3 space-y-4">
                 {/* Search Bar */}
-                <div className="bg-white rounded-xl p-4 ">
-                    <div className="grid grid-cols-2">
-                        <div className="col-span-1">
-                            <input type="text" placeholder="Search..." className="w-full px-4 py-2 bg-gray-100 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" />
-                        </div>
-                        <div className="col-span-1 flex items-center justify-end">
-                            <button className="px-4 py-2 bg-blue-100 text-blue-600 rounded-lg hover:bg-blue-200 transition-colors">
-                                Create Article
-                            </button>
-                        </div>
-                    </div>
-                    {/* categories */}
-                    <div className="flex flex-wrap gap-2 mt-4">
-                        {categories.map((category) => (
-                            <button key={category.id} className="px-4 py-2 bg-gray-200 text-gray-600 rounded-lg hover:bg-gray-300 transition-colors">
-                                {category.name}
-                            </button>
-                        ))}
-                    </div>
-                </div>
+                <SearchBar title="Articles"/>
 
                 {/* Popular Articles 10*/}
-                <div className="grid grid-cols-5 gap-4">
+                <div className="grid grid-cols-5 gap-4 bg-white p-4 rounded-lg">
                     <div className="col-span-3 rounded-xl relative">
                         <img src="https://picsum.photos/1501/701" alt="Banner" className="w-full h-[550px] object-cover" />
                         <p className="text-lg font-semibold overflow-hidden text-ellipsis whitespace-nowrap absolute bottom-20 left-4 text-white">

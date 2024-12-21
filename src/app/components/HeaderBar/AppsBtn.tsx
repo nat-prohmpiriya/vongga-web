@@ -24,7 +24,7 @@ export default function AppsBtn() {
         { name: 'Premium', icon: <MdWorkspacePremium className="text-xl" /> , href: '/premium'},
     ]
     const content = (
-        <div className="grid grid-cols-3 gap-2">
+        <div className="grid grid-cols-3 gap-2 p-2">
             {listBtn.map((item, index) => (
                 <Link key={index} href={item.href} className="flex items-center gap-2 p-2 rounded-lg hover:bg-gray-100">
                     {item.icon}

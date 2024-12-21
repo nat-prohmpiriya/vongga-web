@@ -20,9 +20,9 @@ const HeaderBar = () => {
     <div className="w-full h-16 bg-white border-b flex items-center px-4 grid grid-cols-3">
         {/* Left section */}
         <div className="col-span-1">
-          <button className="p-2 hover:bg-gray-100 rounded-lg" onClick={() => goToFeedPage()}>
-            <IoApps className="text-2xl text-blue-600" />
-          </button>
+          <span className="p-2 cursor-pointer rounded-lg" onClick={() => goToFeedPage()}>
+            <span className="font-semibold text-gray-600">Vongga</span>
+          </span>
         </div>
 
         {/* Center section - Search */}

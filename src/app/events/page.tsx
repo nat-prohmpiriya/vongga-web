@@ -3,6 +3,7 @@
 import React from 'react';
 import EventCard from './components/EventCard';
 import eventsData from '@/data/events';
+import SearchBar from '../components/SearchBar';
 
 export default function EventPage() {
 
@@ -12,10 +13,8 @@ export default function EventPage() {
         <h1>Sidebar</h1>
       </div>
       <div className="col-span-3 space-y-6">
+        <SearchBar title="Events"/>
         {/* HeroBanner */}
-        <div className='bg-white rounded-xl p-4 h-24'>
-
-        </div>
         <div className="grid grid-cols-3 gap-4">
           <div className="col-span-2">
             <img 

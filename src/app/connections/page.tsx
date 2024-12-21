@@ -1,4 +1,5 @@
 
+import SearchBar from "../components/SearchBar";
 
 export default function ConnectionsPage() {
     return (
@@ -16,9 +17,7 @@ export default function ConnectionsPage() {
             </div>
             <div className="col-span-3">
                 {/* Search ar */}
-                <div className="mb-4 bg-white h-24 rounded-xl">
-
-                </div>
+                <SearchBar title="Connections"/>
                 {/* Herobanner */}
                 <div className="grid grid-cols-3 gap-2">
                     <div className="col-span-1 space-y-4">
