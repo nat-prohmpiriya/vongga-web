@@ -3,11 +3,12 @@
 import React from 'react';
 import { IoApps } from 'react-icons/io5';
 import { IoMdSearch } from 'react-icons/io';
-import { IoAppsOutline } from 'react-icons/io5';
+
 import { IoNotificationsOutline } from 'react-icons/io5';
 import { FaRegCommentDots } from 'react-icons/fa';
 import { useRouter } from 'next/navigation';
 import { BsCart3 } from "react-icons/bs";
+import AppsBtn from "./AppsBtn";
 
 const HeaderBar = () => {
   const router = useRouter();
@@ -26,21 +27,19 @@ const HeaderBar = () => {
 
         {/* Center section - Search */}
         <div className="col-span-1">
-          <div className="relative">
+          {/* <div className="relative">
             <input
               type="text"
               placeholder="Search..."
               className="w-full px-4 py-2 pl-10 bg-gray-100 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
             <IoMdSearch className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 text-xl" />
-          </div>
+          </div> */}
         </div>
 
         {/* Right section */}
         <div className="col-span-1 flex items-center justify-end gap-5">
-          <button className="p-2 bg-gray-100 rounded-lg">
-            <IoAppsOutline className="text-xl text-gray-600" />
-          </button>
+          <AppsBtn/>
           <button className="p-2 bg-gray-100 rounded-lg">
             <BsCart3 className="text-xl text-gray-600" />
           </button>

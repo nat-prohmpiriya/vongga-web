@@ -13,6 +13,9 @@ export default function EventPage() {
       </div>
       <div className="col-span-3 space-y-6">
         {/* HeroBanner */}
+        <div className='bg-white rounded-xl p-4 h-24'>
+
+        </div>
         <div className="grid grid-cols-3 gap-4">
           <div className="col-span-2">
             <img 

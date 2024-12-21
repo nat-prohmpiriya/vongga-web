@@ -9,10 +9,12 @@ import { IoStorefrontOutline } from 'react-icons/io5';
 import { GrGroup } from "react-icons/gr";
 import { PiVideoLight } from "react-icons/pi";
 import { CgGames } from "react-icons/cg";
-
+import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 
 const LeftSideBar = () => {
+  const router = useRouter();
+
   const listMenu = [
     { name: 'Feed', icon: <IoHomeOutline className="text-xl" />, href: '/feed' },
     { name: 'Connections', icon: <FaRegUser className="text-xl"/>, href: '/connections' },
@@ -24,12 +26,15 @@ const LeftSideBar = () => {
     { name: 'Games', icon: <CgGames className="text-xl" /> , href: '/games'},
 
   ];
+  const goToProfilePage = () => {
+    router.push('/pages');
+  };
   return (
     <div className='pb-6'>
       {/* Profile Section */}
-      <div className="relative">
+      <div className="relative" onClick={() => goToProfilePage()}>
         {/* Cover Image */}
-        <div className="h-28">
+        <div className="h-28" >
           <img
             src="https://picsum.photos/800/200"
             alt="Cover"
