@@ -3,8 +3,15 @@
 import Image from 'next/image';
 import { FcGoogle } from 'react-icons/fc';
 import { FaApple } from 'react-icons/fa';
+import { IoEyeOutline } from "react-icons/io5";
+import { useRouter } from 'next/navigation';
+
+import { useState } from 'react';
 
 export default function Home() {
+  const router = useRouter();
+  const [showPassword, setShowPassword] = useState(false);
+
   return (
     <main className="flex min-h-screen">
       {/* Left side - Hero Image */}
@@ -49,9 +56,52 @@ export default function Home() {
               </div>
             </div>
 
-            <button className="w-full bg-black text-white px-4 py-3 rounded-lg hover:bg-gray-800 transition-colors">
-              Sign in with phone or email
-            </button>
+            {/* Email and Password Form */}
+            <form className="space-y-4">
+              <div>
+                <label htmlFor="email" className="block text-sm font-medium text-gray-700">
+                  Email address
+                </label>
+                <input
+                  type="email"
+                  id="email"
+                  name="email"
+                  className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-1 focus:ring-black focus:border-black"
+                  required
+                />
+              </div>
+
+              <div>
+                <div className="flex justify-between items-center">
+                  <label htmlFor="password" className="block text-sm font-medium text-gray-700">
+                    Password
+                  </label>
+                  <button type="button" className="text-sm text-gray-500 hover:text-gray-700">
+                    <div className="flex items-center gap-1">
+                      <IoEyeOutline className="text-lg" />
+                      Hide
+                    </div>
+                  </button>
+                </div>
+                <input
+                  type="password"
+                  id="password"
+                  name="password"
+                  className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-1 focus:ring-black focus:border-black"
+                  required
+                />
+                <p className="mt-1 text-xs text-gray-500">
+                  Use 8 or more characters with a mix of letters, numbers & symbols
+                </p>
+              </div>
+
+              <button
+                type="submit"
+                className="w-full bg-black text-white px-4 py-3 rounded-lg hover:bg-gray-800 transition-colors"
+                >
+                Sign in with Email
+              </button>
+            </form>
           </div>
 
           {/* Terms */}
@@ -63,10 +113,9 @@ export default function Home() {
 
           {/* Login link */}
           <div className="text-center">
-            <p className="text-gray-600">Already have an account?</p>
-            <a href="/login" className="mt-2 block w-full text-center px-4 py-3 rounded-lg hover:bg-gray-50 transition-colors">
-              Log in
-            </a>
+            <button onClick={() => router.push("/auth/signup")} className="mt-2 block w-full text-center px-4 py-3 rounded-lg bg-gray-50 transition-colors">
+              Sign Up
+            </button>
           </div>
 
           {/* Footer links */}
