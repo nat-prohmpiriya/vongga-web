@@ -29,9 +29,9 @@ export default async function RootLayout({ children, }: Readonly<{ children: Rea
     <html lang="en">
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
         <div className="fixed top-0 left-0 right-0 z-50">
-          { isHiddenPage && <HeaderBar />}
+          { !isHiddenPage && <HeaderBar />}
         </div>
-        <div className="pt-16">
+        <div className={ !isHiddenPage ? 'pt-16' : ''}>
           {children}
         </div>
       </body>

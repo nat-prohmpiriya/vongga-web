@@ -32,7 +32,7 @@ const LeftSideBar = () => {
   return (
     <div className='pb-6'>
       {/* Profile Section */}
-      <div className="relative" onClick={() => goToProfilePage()}>
+      <div className="relative cursor-pointer" onClick={() => goToProfilePage()}>
         {/* Cover Image */}
         <div className="h-28" >
           <img
