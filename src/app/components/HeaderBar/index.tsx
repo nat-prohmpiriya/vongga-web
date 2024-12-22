@@ -18,7 +18,7 @@ const HeaderBar = () => {
         {/* Left section */}
         <div className="col-span-1">
           <span className="p-2 cursor-pointer rounded-lg" onClick={() => goToFeedPage()}>
-            <span className="font-semibold text-gray-600">Vongga</span>
+            <span className="font-semibold text-green-200">SABAIMAI</span>
           </span>
         </div>
 
