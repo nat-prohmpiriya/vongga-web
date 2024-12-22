@@ -3,14 +3,61 @@
 import Image from 'next/image';
 import { FcGoogle } from 'react-icons/fc';
 import { FaApple } from 'react-icons/fa';
-import { IoEyeOutline } from "react-icons/io5";
+import { IoEyeOutline, IoEyeOffOutline } from "react-icons/io5";
 import { useRouter } from 'next/navigation';
-
-import { useState } from 'react';
+import { useState, FormEvent } from 'react';
+import { auth } from '@/lib/firebase';
+import { signInWithEmailAndPassword, GoogleAuthProvider, signInWithPopup } from 'firebase/auth';
+import { toast } from 'react-hot-toast';
+import Link from 'next/link';
 
 export default function Home() {
   const router = useRouter();
   const [showPassword, setShowPassword] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [formData, setFormData] = useState({
+    email: '',
+    password: ''
+  });
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    setFormData(prev => ({
+      ...prev,
+      [name]: value
+    }));
+  };
+
+  const handleSubmit = async (e: FormEvent) => {
+    e.preventDefault();
+    setIsLoading(true);
+
+    try {
+      await signInWithEmailAndPassword(
+        auth,
+        formData.email,
+        formData.password
+      );
+
+      toast.success('Signed in successfully!');
+      router.push('/feed');
+    } catch (error: any) {
+      toast.error(error.message || 'Failed to sign in');
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleGoogleSignIn = async () => {
+    try {
+      const provider = new GoogleAuthProvider();
+      await signInWithPopup(auth, provider);
+      toast.success('Signed in with Google successfully!');
+      router.push('/feed');
+    } catch (error: any) {
+      toast.error(error.message || 'Failed to sign in with Google');
+    }
+  };
 
   return (
     <main className="flex min-h-screen">
@@ -36,7 +83,10 @@ export default function Home() {
 
           {/* Sign in buttons */}
           <div className="space-y-4">
-            <button className="w-full flex items-center justify-center gap-3 px-4 py-3 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors">
+            <button 
+              onClick={handleGoogleSignIn}
+              type="button"
+              className="w-full flex items-center justify-center gap-3 px-4 py-3 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors">
               <FcGoogle className="text-xl" />
               <span>Sign in with Google</span>
             </button>
@@ -57,7 +107,7 @@ export default function Home() {
             </div>
 
             {/* Email and Password Form */}
-            <form className="space-y-4">
+            <form onSubmit={handleSubmit} className="space-y-4">
               <div>
                 <label htmlFor="email" className="block text-sm font-medium text-gray-700">
                   Email address
@@ -66,6 +116,8 @@ export default function Home() {
                   type="email"
                   id="email"
                   name="email"
+                  value={formData.email}
+                  onChange={handleInputChange}
                   className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-1 focus:ring-black focus:border-black"
                   required
                 />
@@ -76,17 +128,23 @@ export default function Home() {
                   <label htmlFor="password" className="block text-sm font-medium text-gray-700">
                     Password
                   </label>
-                  <button type="button" className="text-sm text-gray-500 hover:text-gray-700">
+                  <button 
+                    type="button" 
+                    onClick={() => setShowPassword(!showPassword)}
+                    className="text-sm text-gray-500 hover:text-gray-700"
+                  >
                     <div className="flex items-center gap-1">
-                      <IoEyeOutline className="text-lg" />
-                      Hide
+                      {showPassword ? <IoEyeOffOutline className="text-lg" /> : <IoEyeOutline className="text-lg" />}
+                      {showPassword ? 'Hide' : 'Show'}
                     </div>
                   </button>
                 </div>
                 <input
-                  type="password"
+                  type={showPassword ? "text" : "password"}
                   id="password"
                   name="password"
+                  value={formData.password}
+                  onChange={handleInputChange}
                   className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-1 focus:ring-black focus:border-black"
                   required
                 />
@@ -97,10 +155,20 @@ export default function Home() {
 
               <button
                 type="submit"
-                className="w-full bg-black text-white px-4 py-3 rounded-lg hover:bg-gray-800 transition-colors"
-                >
-                Sign in with Email
+                disabled={isLoading}
+                className="w-full bg-black text-white px-4 py-3 rounded-lg hover:bg-gray-800 transition-colors disabled:bg-gray-400"
+              >
+                {isLoading ? 'Signing in...' : 'Sign in'}
               </button>
+
+              <div className="text-center">
+                <p className="text-sm text-gray-600">
+                  Don't have an account?{' '}
+                  <Link href="/auth/signup" className="text-black hover:underline">
+                    Sign up
+                  </Link>
+                </p>
+              </div>
             </form>
           </div>
 

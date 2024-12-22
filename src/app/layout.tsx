@@ -23,7 +23,7 @@ export const metadata: Metadata = {
 
 export default async function RootLayout({ children, }: Readonly<{ children: React.ReactNode }>) {
   const currentPath = (await headers()).get('referer') || '/'; 
-  const isHiddenPage = currentPath === '/auth' || currentPath === '/'; 
+  const isHiddenPage = currentPath.includes('/auth') || currentPath === '/';
 
   return (
     <html lang="en">
