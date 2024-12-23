@@ -32,11 +32,11 @@ const LeftSideBar = () => {
   ];
   const goToProfilePage = () => {
     const displayName = user?.displayName;
+    console.log({displayName});
     if (displayName) {
       const snakeCaseDisplayName = displayName.replace(/\s+/g, '_').toLowerCase();
-      router.push(`/profile/${snakeCaseDisplayName}`);
+      router.push(`/pages/${snakeCaseDisplayName}`);
     }
-    router.push('/pages/');
   };
   return (
     <div className='pb-6'>

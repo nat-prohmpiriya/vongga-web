@@ -1,13 +1,12 @@
 'use client';
 
 import { useRouter } from 'next/navigation';
-import Btn from '@/components/common/Btn';
 import Link from 'next/link';
 import { useState, FormEvent } from 'react';
 import { FcGoogle } from 'react-icons/fc';
 import { FaApple } from 'react-icons/fa';
 import { auth } from '@/lib/firebase';
-import { createUserWithEmailAndPassword, GoogleAuthProvider, signInWithPopup } from 'firebase/auth';
+import { createUserWithEmailAndPassword, GoogleAuthProvider, signInWithPopup,  } from 'firebase/auth';
 import { toast } from 'react-hot-toast';
 
 export default function SignUp() {
@@ -58,7 +57,7 @@ export default function SignUp() {
     const handleGoogleSignIn = async () => {
         try {
             const provider = new GoogleAuthProvider();
-            await signInWithPopup(auth, provider);
+            const resultSignUp = await signInWithPopup(auth, provider);
             toast.success('Signed in with Google successfully!');
             router.push('/feed');
         } catch (error: any) {
@@ -87,12 +86,12 @@ export default function SignUp() {
                     type="button"
                     className="w-full flex items-center justify-center gap-3 px-4 py-3 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors">
                     <FcGoogle className="text-xl" />
-                    <span>Sign in with Google</span>
+                    <span>Sing up with Google</span>
                 </button>
 
                 <button className="w-full flex items-center justify-center gap-3 px-4 py-3 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors">
                     <FaApple className="text-xl" />
-                    <span>Sign in with Apple</span>
+                    <span>Sing up with Apple</span>
                 </button>
                 <div className="relative">
                     <div className="absolute inset-0 flex items-center">

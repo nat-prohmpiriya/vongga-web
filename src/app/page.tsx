@@ -65,11 +65,11 @@ export default function Home() {
       }
       // Store user data and token in Zustand
       setUser({
-        image: resultVerify.user.photoURL,
         uid: resultVerify.user.uid,
         email: resultVerify.user.email,
         displayName: resultVerify.user.displayName,
         photoUrl: resultVerify.user.photoUrl,
+        username: resultVerify.user.username
       });
 
       toast.success('Signed in with Google successfully!');
