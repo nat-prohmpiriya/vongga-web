@@ -10,6 +10,7 @@ import { auth } from '@/lib/firebase';
 import { signInWithEmailAndPassword, GoogleAuthProvider, signInWithPopup } from 'firebase/auth';
 import { toast } from 'react-hot-toast';
 import Link from 'next/link';
+import authService from '@/services/auth.service';
 
 export default function Home() {
   const router = useRouter();
@@ -51,9 +52,14 @@ export default function Home() {
   const handleGoogleSignIn = async () => {
     try {
       const provider = new GoogleAuthProvider();
-      await signInWithPopup(auth, provider);
+      const resultSignIn = await signInWithPopup(auth, provider);
+
+      const accessToken = (await resultSignIn.user.getIdTokenResult()).token;
+      const resultVerify = await authService.verifyTokenFirebase(accessToken);
+
+      console.log({resultVerify});
       toast.success('Signed in with Google successfully!');
-      router.push('/feed');
+      // router.push('/feed');
     } catch (error: any) {
       toast.error(error.message || 'Failed to sign in with Google');
     }
