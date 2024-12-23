@@ -1,135 +1,71 @@
-import axios, { AxiosError, AxiosInstance, InternalAxiosRequestConfig } from 'axios';
+import axios from 'axios'
+import clientToken from './clientToken'
+import serverToken from './serverToken'
+import isClient from './isClient'
 
-interface RefreshTokenResponse {
-  accessToken: string;
-  refreshToken: string;
-}
+const vonggaAxios = axios.create({
+    withCredentials: true,
+    baseURL: process.env.NEXT_PUBLIC_VONGGA_API_URL,
+    headers: {
+        'Content-Type': 'application/json',
+        'Access-Control-Allow-Origin': '*',
+    },
+    timeout: 10000,
+})
 
-class VonggaAxios {
-  private static instance: VonggaAxios;
-  private axiosInstance: AxiosInstance;
-  private isRefreshing: boolean = false;
-  private refreshSubscribers: ((token: string) => void)[] = [];
+vonggaAxios.interceptors.request.use(
+    async (config) => {
+        const { headers } = config
+        if (headers.Authorization) return config
 
-  private constructor() {
-    this.axiosInstance = axios.create({
-      baseURL: process.env.NEXT_PUBLIC_VONGGA_API_URL || 'http://localhost:8080/api',
-      timeout: 10000,
-    });
-
-    this.setupInterceptors();
-  }
-
-  public static getInstance(): VonggaAxios {
-    if (!VonggaAxios.instance) {
-      VonggaAxios.instance = new VonggaAxios();
+        if (isClient()) {
+            const token = clientToken.getToken()
+            headers.Authorization = `Bearer ${token.accessToken}`
+        } else {
+            const token = await serverToken.getToken()
+            headers.Authorization = `Bearer ${token.accessToken}`
+        }
+        config.headers = headers
+        return config
+    },
+    (error) => {
+        return Promise.reject(error)
     }
-    return VonggaAxios.instance;
-  }
+)
 
-  private setupInterceptors(): void {
-    // Request interceptor
-    this.axiosInstance.interceptors.request.use(
-      (config: InternalAxiosRequestConfig) => {
-        const accessToken = localStorage.getItem('accessToken');
-        if (accessToken) {
-          config.headers.Authorization = `Bearer ${accessToken}`;
-        }
-        return config;
-      },
-      (error: AxiosError) => {
-        return Promise.reject(error);
-      }
-    );
-
-    // Response interceptor
-    this.axiosInstance.interceptors.response.use(
-      (response: any) => response,
-      async (error: AxiosError) => {
-        const originalRequest = error.config;
-        if (!originalRequest) {
-          return Promise.reject(error);
-        }
-
-        // If error is not 401 or request already retried, reject
-        if (error.response?.status !== 401 || (originalRequest as any)._retry) {
-          return Promise.reject(error);
-        }
-
-        if (!this.isRefreshing) {
-          this.isRefreshing = true;
-          try {
-            const refreshToken = localStorage.getItem('refreshToken');
-            if (!refreshToken) {
-              throw new Error('No refresh token available');
+vonggaAxios.interceptors.response.use(
+    (response) => {
+        return response
+    },
+    async (error) => {
+        console.log(error)
+        if (error?.response?.status !== 401) return Promise.reject(error)
+        try {
+            let refreshToken = ''
+            if (isClient()) {
+                refreshToken = clientToken.getToken().refreshToken
+            } else {
+                refreshToken = (await serverToken.getToken()).refreshToken
             }
-
-            const response = await axios.post<RefreshTokenResponse>(
-              `${this.axiosInstance.defaults.baseURL}/auth/refresh`,
-              { refreshToken }
-            );
-
-            const { accessToken, refreshToken: newRefreshToken } = response.data;
-            localStorage.setItem('accessToken', accessToken);
-            localStorage.setItem('refreshToken', newRefreshToken);
-
-            // Notify all subscribers about the new token
-            this.refreshSubscribers.forEach((callback) => callback(accessToken));
-            this.refreshSubscribers = [];
-
-            // Retry original request with new token
-            originalRequest.headers.Authorization = `Bearer ${accessToken}`;
-            return this.axiosInstance(originalRequest);
-          } catch (refreshError) {
-            // If refresh token is invalid, clear tokens and redirect to login
-            localStorage.removeItem('accessToken');
-            localStorage.removeItem('refreshToken');
-            window.location.href = '/login';
-            return Promise.reject(refreshError);
-          } finally {
-            this.isRefreshing = false;
-          }
+            const response = await axios.post(
+                `${process.env.NEXT_PUBLIC_VONGGA_API_URL}/auth/refresh`,
+                { refreshToken }
+            )
+            if (response?.status === 200) {
+                const token = response.data
+                if (isClient()) {
+                    clientToken.setToken(token)
+                } else {
+                    serverToken.setToken(token)
+                }
+                const retryConfig = error.config
+                retryConfig.headers.Authorization = `Bearer ${token.accessToken}`
+                return axios(retryConfig)
+            }
+        } catch (error) {
+            return Promise.reject(error)
         }
+    }
+)
 
-        // If currently refreshing, add request to queue
-        return new Promise((resolve) => {
-          this.refreshSubscribers.push((token: string) => {
-            originalRequest.headers.Authorization = `Bearer ${token}`;
-            resolve(this.axiosInstance(originalRequest));
-          });
-        });
-      }
-    );
-  }
-
-  // Public methods to access axios instance
-  public get<T>(url: string, config = {}) {
-    return this.axiosInstance.get<T>(url, config);
-  }
-
-  public post<T>(url: string, data = {}, config = {}) {
-    return this.axiosInstance.post<T>(url, data, config);
-  }
-
-  public put<T>(url: string, data = {}, config = {}) {
-    return this.axiosInstance.put<T>(url, data, config);
-  }
-
-  public delete<T>(url: string, config = {}) {
-    return this.axiosInstance.delete<T>(url, config);
-  }
-
-  public patch<T>(url: string, data = {}, config = {}) {
-    return this.axiosInstance.patch<T>(url, data, config);
-  }
-}
-
-// Export singleton instance
-export const vonggaAxios = VonggaAxios.getInstance();
-
-// Export type for responses
-export interface ApiResponse<T> {
-  data: T;
-  message?: string;
-  error?: string;
-}
+export default vonggaAxios

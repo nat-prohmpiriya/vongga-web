@@ -1,19 +1,19 @@
-'use client';
+'use client'
 
-import { useState } from 'react';
-import Image from 'next/image';
-import { FaStar } from 'react-icons/fa';
-import { BsThreeDotsVertical } from 'react-icons/bs';
+import { useState } from 'react'
+import Image from 'next/image'
+import { FaStar } from 'react-icons/fa'
+import { BsThreeDotsVertical } from 'react-icons/bs'
 
 interface Review {
-    id: string;
-    username: string;
-    rating: number;
-    date: string;
-    variant: string;
-    content: string;
-    images: string[];
-    sellerResponse?: string;
+    id: string
+    username: string
+    rating: number
+    date: string
+    variant: string
+    content: string
+    images: string[]
+    sellerResponse?: string
 }
 
 export default function ReviewSection() {
@@ -24,9 +24,18 @@ export default function ReviewSection() {
             rating: 5,
             date: '2024-09-05 14:16',
             variant: '7ชิ้น-สีชมพู',
-            content: 'ส่งไว สินค้าตรงปก สีสวย ซิปดูดีไม่ติด แต่เสียดายแบบที่ใส่แปรงแต่งหน้าหมด ทางร้านเลยตอบแทนเป็นเงินคืนให้20บาท ทางร้านให้คำแนะนำดี',
-            images: ['https://picsum.photos/800/800?random=1', 'https://picsum.photos/800/800?random=2', 'https://picsum.photos/800/800?random=3', 'https://picsum.photos/800/800?random=4', 'https://picsum.photos/800/800?random=5', 'https://picsum.photos/800/800?random=6'],
-            sellerResponse: 'ทางเราได้รับรีวิวดีๆ จากคุณแล้วค่ะ ทางเรารู้สึกเป็นเกียรติอย่างยิ่งที่ได้รับการยอมรับจากคุณค่ะ และหวังว่าจะได้ให้บริการคุณอีกครั้งนะคะ'
+            content:
+                'ส่งไว สินค้าตรงปก สีสวย ซิปดูดีไม่ติด แต่เสียดายแบบที่ใส่แปรงแต่งหน้าหมด ทางร้านเลยตอบแทนเป็นเงินคืนให้20บาท ทางร้านให้คำแนะนำดี',
+            images: [
+                'https://picsum.photos/800/800?random=1',
+                'https://picsum.photos/800/800?random=2',
+                'https://picsum.photos/800/800?random=3',
+                'https://picsum.photos/800/800?random=4',
+                'https://picsum.photos/800/800?random=5',
+                'https://picsum.photos/800/800?random=6',
+            ],
+            sellerResponse:
+                'ทางเราได้รับรีวิวดีๆ จากคุณแล้วค่ะ ทางเรารู้สึกเป็นเกียรติอย่างยิ่งที่ได้รับการยอมรับจากคุณค่ะ และหวังว่าจะได้ให้บริการคุณอีกครั้งนะคะ',
         },
         {
             id: '2',
@@ -34,10 +43,16 @@ export default function ReviewSection() {
             rating: 5,
             date: '2024-09-04 10:57',
             variant: '7ชิ้น-เทา',
-            content: 'ร้านจัดส่งไว ราคาไม่แพง กระเป๋าเป็นตัวช่วยร่วมชิ้งร้ายแห่งชาติ น้ำหนักเบามากของใต้เยอะ ทางร้านจัดส่งไวดีค่ะ',
-            images: ['https://picsum.photos/800/800?random=1', 'https://picsum.photos/800/800?random=2', 'https://picsum.photos/800/800?random=3', 'https://picsum.photos/800/800?random=4']
-        }
-    ];
+            content:
+                'ร้านจัดส่งไว ราคาไม่แพง กระเป๋าเป็นตัวช่วยร่วมชิ้งร้ายแห่งชาติ น้ำหนักเบามากของใต้เยอะ ทางร้านจัดส่งไวดีค่ะ',
+            images: [
+                'https://picsum.photos/800/800?random=1',
+                'https://picsum.photos/800/800?random=2',
+                'https://picsum.photos/800/800?random=3',
+                'https://picsum.photos/800/800?random=4',
+            ],
+        },
+    ]
 
     return (
         <div className="bg-white rounded-lg shadow">
@@ -47,12 +62,16 @@ export default function ReviewSection() {
                 {/* Rating Overview */}
                 <div className="flex gap-8 p-6 bg-gray-50 rounded-lg">
                     <div className="flex flex-col items-center justify-center">
-                        <div className="text-3xl font-bold text-red-500">4.9</div>
+                        <div className="text-3xl font-bold text-red-500">
+                            4.9
+                        </div>
                         <div className="text-sm text-gray-500">เต็ม 5</div>
                         <div className="flex text-yellow-400 mt-1">
-                            {Array(5).fill(0).map((_, i) => (
-                                <FaStar key={i} />
-                            ))}
+                            {Array(5)
+                                .fill(0)
+                                .map((_, i) => (
+                                    <FaStar key={i} />
+                                ))}
                         </div>
                     </div>
 
@@ -93,11 +112,18 @@ export default function ReviewSection() {
                                 <div className="flex items-center gap-2">
                                     <div className="w-8 h-8 bg-gray-200 rounded-full" />
                                     <div>
-                                        <div className="font-medium">{review.username}</div>
+                                        <div className="font-medium">
+                                            {review.username}
+                                        </div>
                                         <div className="flex text-yellow-400">
-                                            {Array(review.rating).fill(0).map((_, i) => (
-                                                <FaStar key={i} className="w-3 h-3" />
-                                            ))}
+                                            {Array(review.rating)
+                                                .fill(0)
+                                                .map((_, i) => (
+                                                    <FaStar
+                                                        key={i}
+                                                        className="w-3 h-3"
+                                                    />
+                                                ))}
                                         </div>
                                     </div>
                                 </div>
@@ -115,7 +141,10 @@ export default function ReviewSection() {
                             {/* Review Images */}
                             <div className="mt-4 grid grid-cols-6 gap-2">
                                 {review.images.map((image, index) => (
-                                    <div key={index} className="relative aspect-square">
+                                    <div
+                                        key={index}
+                                        className="relative aspect-square"
+                                    >
                                         <img
                                             src={image}
                                             alt={`Review image ${index + 1}`}
@@ -133,8 +162,12 @@ export default function ReviewSection() {
                             {/* Seller Response */}
                             {review.sellerResponse && (
                                 <div className="mt-4 bg-gray-50 p-4 rounded-lg">
-                                    <div className="text-sm font-medium mb-2">การตอบกลับจากผู้ขาย</div>
-                                    <div className="text-gray-600">{review.sellerResponse}</div>
+                                    <div className="text-sm font-medium mb-2">
+                                        การตอบกลับจากผู้ขาย
+                                    </div>
+                                    <div className="text-gray-600">
+                                        {review.sellerResponse}
+                                    </div>
                                 </div>
                             )}
 
@@ -149,5 +182,5 @@ export default function ReviewSection() {
                 </div>
             </div>
         </div>
-    );
+    )
 }

@@ -1,5 +1,5 @@
-import CreateContentBar from "@/app/feed/components/CreateContentBar";
-import Posts from "@/app/feed/components/Posts";
+import CreateContentBar from '@/app/feed/components/CreateContentBar'
+import Posts from '@/app/feed/components/Posts'
 
 export default function FeedSection() {
     return (
@@ -10,5 +10,5 @@ export default function FeedSection() {
             </div>
             <Posts />
         </div>
-    );
+    )
 }

@@ -1,8 +1,7 @@
+import React from 'react'
 
-export default function PageDetails () {
-    return (
-        <div>
-            <h1>Page</h1>
-        </div>
-    );
+const DetailPage = () => {
+    return <div>DetailPage</div>
 }
+
+export default DetailPage

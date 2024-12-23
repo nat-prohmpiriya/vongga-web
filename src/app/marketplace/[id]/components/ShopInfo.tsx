@@ -1,7 +1,7 @@
-'use client';
+'use client'
 
-import Image from 'next/image';
-import { FaStore } from 'react-icons/fa';
+import Image from 'next/image'
+import { FaStore } from 'react-icons/fa'
 
 export default function InfoShop() {
     return (
@@ -24,8 +24,12 @@ export default function InfoShop() {
                 {/* Shop Info */}
                 <div className="flex-1">
                     <div className="flex items-center gap-2">
-                        <h2 className="text-lg font-semibold">Indigo.Official.Shop</h2>
-                        <span className="text-gray-500 text-sm">เข้าสู่ระบบล่าสุดเมื่อ 26 นาที ที่ผ่านมา</span>
+                        <h2 className="text-lg font-semibold">
+                            Indigo.Official.Shop
+                        </h2>
+                        <span className="text-gray-500 text-sm">
+                            เข้าสู่ระบบล่าสุดเมื่อ 26 นาที ที่ผ่านมา
+                        </span>
                     </div>
                     <div className="flex gap-8 mt-2">
                         <button className="flex items-center gap-2 px-6 py-2 border border-red-500 text-red-500 rounded-lg hover:bg-red-50">
@@ -51,7 +55,9 @@ export default function InfoShop() {
                 </div>
                 <div>
                     <div className="font-semibold">ภายใน1นาที</div>
-                    <div className="text-gray-500 text-sm">เวลาในการตอบกลับ</div>
+                    <div className="text-gray-500 text-sm">
+                        เวลาในการตอบกลับ
+                    </div>
                 </div>
                 <div>
                     <div className="font-semibold">4 ปี ที่ผ่านมา</div>
@@ -71,5 +77,5 @@ export default function InfoShop() {
                 </div>
             </div>
         </div>
-    );
+    )
 }

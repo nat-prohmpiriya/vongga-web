@@ -1,24 +1,24 @@
-'use client';
+'use client'
 
-import { useRouter } from 'next/navigation';
-import Image from 'next/image';
-import { FaTruck, FaFire } from "react-icons/fa6";
+import { useRouter } from 'next/navigation'
+import Image from 'next/image'
+import { FaTruck, FaFire } from 'react-icons/fa6'
 
 interface Product {
-    id: string;
-    title: string;
-    imageUrl: string;
-    price: number;
-    originalPrice: number;
-    discount: number;
-    rating: number;
-    sales: number;
-    isFreeShipping: boolean;
-    isHot: boolean;
+    id: string
+    title: string
+    imageUrl: string
+    price: number
+    originalPrice: number
+    discount: number
+    rating: number
+    sales: number
+    isFreeShipping: boolean
+    isHot: boolean
 }
 
 export default function HeroBanner() {
-    const router = useRouter();
+    const router = useRouter()
 
     const featuredProducts: Product[] = [
         {
@@ -57,10 +57,10 @@ export default function HeroBanner() {
             isFreeShipping: false,
             isHot: true,
         },
-    ];
+    ]
 
     const ProductBanner = ({ product }: { product: Product }) => (
-        <div 
+        <div
             className="group relative cursor-pointer overflow-hidden rounded-lg"
             onClick={() => router.push(`/marketplace/${product.id}`)}
         >
@@ -72,7 +72,7 @@ export default function HeroBanner() {
                     className="object-cover transition-transform group-hover:scale-105"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
-                
+
                 {/* Badges */}
                 <div className="absolute top-4 left-4 flex flex-col gap-2">
                     {product.isFreeShipping && (
@@ -91,12 +91,20 @@ export default function HeroBanner() {
 
                 {/* Product Info */}
                 <div className="absolute bottom-0 left-0 right-0 p-4 text-white">
-                    <h3 className="text-lg font-semibold mb-2">{product.title}</h3>
+                    <h3 className="text-lg font-semibold mb-2">
+                        {product.title}
+                    </h3>
                     <div className="flex items-center gap-4">
                         <div className="flex items-baseline gap-2">
-                            <span className="text-2xl font-bold">฿{product.price}</span>
-                            <span className="text-sm line-through opacity-75">฿{product.originalPrice}</span>
-                            <span className="text-sm bg-red-600 px-2 py-1 rounded">-{product.discount}%</span>
+                            <span className="text-2xl font-bold">
+                                ฿{product.price}
+                            </span>
+                            <span className="text-sm line-through opacity-75">
+                                ฿{product.originalPrice}
+                            </span>
+                            <span className="text-sm bg-red-600 px-2 py-1 rounded">
+                                -{product.discount}%
+                            </span>
                         </div>
                         <div className="flex items-center text-sm">
                             <span className="text-yellow-400">★</span>
@@ -108,7 +116,7 @@ export default function HeroBanner() {
                 </div>
             </div>
         </div>
-    );
+    )
 
     return (
         <div className="grid grid-cols-3 gap-4">
@@ -120,5 +128,5 @@ export default function HeroBanner() {
                 <ProductBanner product={featuredProducts[2]} />
             </div>
         </div>
-    );
+    )
 }

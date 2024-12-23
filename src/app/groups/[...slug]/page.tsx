@@ -1,9 +1,5 @@
-
-
 const GroupDetailPage = () => {
-  return (
-    <div>GroupDetailPage</div>
-  )
+    return <div>GroupDetailPage</div>
 }
 
 export default GroupDetailPage

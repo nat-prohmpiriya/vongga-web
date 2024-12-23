@@ -1,5 +1,3 @@
-
-
 export default function SearchBar({ title }: { title: string }) {
     const categories = [
         { id: 1, name: 'Travel' },
@@ -36,14 +34,15 @@ export default function SearchBar({ title }: { title: string }) {
                 </div>
             </div>
             <div className="mt-4 flex flex-row flex-wrap gap-4">
-                {
-                    categories.map((group) => (
-                        <div key={group.id} className="cursor-pointer px-4 py-2 bg-gray-100 text-gray-600 rounded-lg hover:bg-gray-200 transition-colors">
-                            {group.name}
-                        </div>
-                    ))
-                }
+                {categories.map((group) => (
+                    <div
+                        key={group.id}
+                        className="cursor-pointer px-4 py-2 bg-gray-100 text-gray-600 rounded-lg hover:bg-gray-200 transition-colors"
+                    >
+                        {group.name}
+                    </div>
+                ))}
             </div>
         </div>
-    );
+    )
 }

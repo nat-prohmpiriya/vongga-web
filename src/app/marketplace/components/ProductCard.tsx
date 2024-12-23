@@ -1,11 +1,15 @@
-import { FaTruck, FaFire } from "react-icons/fa6";
-import Image from 'next/image';
-import { useRouter } from 'next/navigation';
+import { FaTruck, FaFire } from 'react-icons/fa6'
+import Image from 'next/image'
+import { useRouter } from 'next/navigation'
 
 export default function ProductCard({ product }: any) {
-    const router = useRouter();
+    const router = useRouter()
     return (
-        <div key={product.id} className="bg-white rounded-lg overflow-hidden shadow hover:shadow-md transition-shadow cursor-pointer" onClick={() => router.push(`/marketplace/${product.id}`)}>
+        <div
+            key={product.id}
+            className="bg-white rounded-lg overflow-hidden shadow hover:shadow-md transition-shadow cursor-pointer"
+            onClick={() => router.push(`/marketplace/${product.id}`)}
+        >
             {/* Product Image */}
             <div className="relative aspect-square">
                 <Image
@@ -36,8 +40,12 @@ export default function ProductCard({ product }: any) {
                 <h3 className="text-sm line-clamp-2 mb-2">{product.title}</h3>
                 <div className="flex items-baseline gap-2">
                     <span className="text-red-500">฿{product.price}</span>
-                    <span className="text-xs text-gray-400 line-through">฿{product.originalPrice}</span>
-                    <span className="text-xs text-red-500">-{product.discount}%</span>
+                    <span className="text-xs text-gray-400 line-through">
+                        ฿{product.originalPrice}
+                    </span>
+                    <span className="text-xs text-red-500">
+                        -{product.discount}%
+                    </span>
                 </div>
                 <div className="flex items-center text-xs text-gray-500 mt-2">
                     <span className="text-yellow-400">★</span>
@@ -48,5 +56,5 @@ export default function ProductCard({ product }: any) {
                 </div>
             </div>
         </div>
-    );
+    )
 }

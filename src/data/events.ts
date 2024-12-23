@@ -1,7 +1,7 @@
-import { v4 as uuidv4 } from 'uuid';
+import { v4 as uuidv4 } from 'uuid'
 
 function createEventCard() {
-    const listNumberRandom = Math.floor(Math.random() * 100) + 1; // Generate a random number between 1 and 100
+    const listNumberRandom = Math.floor(Math.random() * 100) + 1 // Generate a random number between 1 and 100
     return {
         image: `https://picsum.photos/800/600?random=${listNumberRandom}`,
         title: 'Bone thugs-n-harmony',
@@ -16,11 +16,11 @@ function createEventCard() {
         ],
         totalAttendees: 21,
         id: uuidv4(),
-    };
+    }
 }
-const listEvents = [];
+const listEvents = []
 for (let i = 0; i < 8; i++) {
-    listEvents.push(createEventCard());
+    listEvents.push(createEventCard())
 }
 
 export default {
@@ -33,5 +33,5 @@ export default {
     ],
     featuredEvents: [
         // Featured events
-    ]
+    ],
 }
