@@ -11,9 +11,11 @@ import { signInWithEmailAndPassword, GoogleAuthProvider, signInWithPopup } from 
 import { toast } from 'react-hot-toast';
 import Link from 'next/link';
 import authService from '@/services/auth.service';
+import { useAuthStore } from '@/store/auth.store';
 
 export default function Home() {
   const router = useRouter();
+  const { setUser } = useAuthStore();
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [formData, setFormData] = useState({
@@ -51,17 +53,31 @@ export default function Home() {
 
   const handleGoogleSignIn = async () => {
     try {
+      setIsLoading(true);
       const provider = new GoogleAuthProvider();
       const resultSignIn = await signInWithPopup(auth, provider);
 
       const accessToken = (await resultSignIn.user.getIdTokenResult()).token;
       const resultVerify = await authService.verifyTokenFirebase(accessToken);
+      console.log(resultVerify);
+      if (!resultVerify) {
+        throw new Error('Invalid Firebase token');
+      }
+      // Store user data and token in Zustand
+      setUser({
+        image: resultVerify.user.photoURL,
+        uid: resultVerify.user.uid,
+        email: resultVerify.user.email,
+        displayName: resultVerify.user.displayName,
+        photoUrl: resultVerify.user.photoUrl,
+      });
 
-      console.log({resultVerify});
       toast.success('Signed in with Google successfully!');
-      // router.push('/feed');
+      router.push('/feed');
     } catch (error: any) {
       toast.error(error.message || 'Failed to sign in with Google');
+    } finally {
+      setIsLoading(false);
     }
   };
 

@@ -6,12 +6,21 @@ import { useRouter } from 'next/navigation';
 import { BsCart3 } from "react-icons/bs";
 import NotiBtn from "./NotiBtn";
 import MenuBtn from "./MenuBtn";
+import { useAuthStore } from '@/store/auth.store';
+import { useState } from 'react';
 
 const HeaderBar = () => {
+  const imgUrl = "https://picsum.photos/200?random=1";
   const router = useRouter();
+  const { user} = useAuthStore();
+  const [imageSrc, setImageSrc] = useState(user?.photoUrl || imgUrl);
+
+ 
+
   const goToFeedPage = () => {
     router.push('/feed');
   };
+
 
   return (
     <div className="w-full h-16 bg-white border-b flex items-center px-4 grid grid-cols-3">
@@ -22,7 +31,7 @@ const HeaderBar = () => {
           </span>
         </div>
 
-        {/* Center section - Search */}
+        {/* Center section - Search */} 
         <div className="col-span-1">
           {/* <div className="relative">
             <input
@@ -44,13 +53,13 @@ const HeaderBar = () => {
             <FaRegCommentDots className="text-xl text-gray-600" />
           </button>
           <NotiBtn/>
-          <button className="w-8 h-8 rounded-full overflow-hidden" onClick={() => router.push('/profile')}>
-            <img
-              src="https://picsum.photos/32/32"
-              alt="Profile"
-              className="w-full h-full object-cover"
-            />
-          </button>
+          <div className="w-8 h-8 rounded-full overflow-hidden">
+            {
+              user?.photoUrl 
+                ? <img src={imageSrc} alt={user?.displayName || 'User'} className="w-full h-full object-cover" onError={() => setImageSrc(imgUrl)}/> 
+                : <div className="text-gray-400 rounded-full w-8 h-8"> { user?.displayName?.charAt(0) || 'A'}</div>
+            }
+          </div>
         </div>
     </div>
   );

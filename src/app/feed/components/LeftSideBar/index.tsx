@@ -1,6 +1,5 @@
 'use client';
 
-import React from 'react';
 import { IoHomeOutline } from 'react-icons/io5';
 import { FaRegUser } from 'react-icons/fa';
 import { IoNewspaperOutline } from 'react-icons/io5';
@@ -11,9 +10,14 @@ import { PiVideoLight } from "react-icons/pi";
 import { CgGames } from "react-icons/cg";
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
+import { useAuthStore } from '@/store/auth.store';
+import { useState } from 'react';
 
 const LeftSideBar = () => {
+  const imageUrl = 'https://picsum.photos/800/200';
   const router = useRouter();
+  const { user} = useAuthStore();
+  const [imageSrc, setImageSrc] = useState(user?.photoUrl || imageUrl);
 
   const listMenu = [
     { name: 'Feed', icon: <IoHomeOutline className="text-xl" />, href: '/feed' },
@@ -27,7 +31,12 @@ const LeftSideBar = () => {
 
   ];
   const goToProfilePage = () => {
-    router.push('/pages');
+    const displayName = user?.displayName;
+    if (displayName) {
+      const snakeCaseDisplayName = displayName.replace(/\s+/g, '_').toLowerCase();
+      router.push(`/profile/${snakeCaseDisplayName}`);
+    }
+    router.push('/pages/');
   };
   return (
     <div className='pb-6'>
@@ -45,18 +54,23 @@ const LeftSideBar = () => {
         {/* Profile Picture */}
         <div className="absolute left-1/2 -translate-x-1/2 -bottom-10">
           <div className="w-20 h-20 rounded-full overflow-hidden border-4 border-white">
-            <img
-              src="https://picsum.photos/200"
-              alt="Profile"
-              className="w-full h-full object-cover"
-            />
+            {
+              user?.photoUrl && (
+                <img
+                  src={imageSrc}
+                  alt="Profile"
+                  className="w-full h-full object-cover"
+                  onError={() => setImageSrc(imageUrl)}
+                />
+              ) 
+            }
           </div>
         </div>
       </div>
 
       {/* Profile Info */}
       <div className="mt-14 text-center px-4">
-        <h2 className="text-xl font-bold mb-1">Sam Lanson</h2>
+        <h2 className="text-xl font-bold mb-1">{user?.displayName}</h2>
         <p className="text-gray-600 text-sm mb-3">Web Developer at Stackbros</p>
         <p className="text-gray-500 text-xs mb-6">
           I'd love to change the world, but they won't give me the source code.
