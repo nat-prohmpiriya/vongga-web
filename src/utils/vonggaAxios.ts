@@ -6,15 +6,16 @@ import isClient from './isClient'
 const vonggaAxios = axios.create({
     withCredentials: true,
     baseURL: process.env.NEXT_PUBLIC_VONGGA_API_URL,
-    headers: {
-        'Content-Type': 'application/json',
-        'Access-Control-Allow-Origin': '*',
-    },
-    timeout: 10000,
+    timeout: 30000,
 })
 
 vonggaAxios.interceptors.request.use(
     async (config) => {
+        // For multipart/form-data, let the browser set the Content-Type
+        if (config.data instanceof FormData) {
+            delete config.headers['Content-Type'];
+        }
+
         const { headers } = config
         if (headers.Authorization) return config
 
