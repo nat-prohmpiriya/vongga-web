@@ -1,11 +1,27 @@
-'use client'
 
-import React from 'react'
 import EventCard from './components/EventCard'
 import eventsData from '@/data/events'
 import SearchBar from '../components/SearchBar'
+import serverToken from '@/utils/serverToken'
 
-export default function EventPage() {
+export default async function EventPage(params: { name: string }) {
+    try {
+        const name = await params.name
+
+        const accessToken = (await serverToken.getToken()).accessToken
+        const url = process.env.NEXT_PUBLIC_VONGGA_API_URL + `/users/nutprohmpiriya7808`
+        console.log(url)
+        const response = await fetch(url, {
+            headers: {
+                Authorization: `Bearer ${accessToken}`,
+            },
+        })
+        const data = await response.json()
+        console.log(data)
+        console.log(data.user)
+    } catch (error: any) {
+        console.error('Error fetching user:', error.message)
+    }
     return (
         <div className="grid grid-cols-4 gap-4 p-4 bg-gray-100">
             <div className="col-span-1 bg-white rounded-xl p-4">

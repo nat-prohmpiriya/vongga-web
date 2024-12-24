@@ -46,6 +46,10 @@ export interface User extends BaseModel {
     datingPhotos: DatingPhoto[]
     isVerified: boolean
     phoneNumber?: string
+    live?: {
+        city: string
+        country: string
+    }
 }
 
 export interface UpdateUserRequest {

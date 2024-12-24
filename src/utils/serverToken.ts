@@ -1,4 +1,4 @@
-import { cookies } from 'next/headers'
+
 
 interface ServerTokenInterface {
     accessToken: string
@@ -7,6 +7,7 @@ interface ServerTokenInterface {
 
 class ServerToken {
     async getToken(): Promise<ServerTokenInterface> {
+        const { cookies } = require('next/headers')
         const token = {
             accessToken: '',
             refreshToken: '',
@@ -19,15 +20,17 @@ class ServerToken {
         return token
     }
     async setToken(token: ServerTokenInterface) {
+        const { cookies } = require('next/headers')
         if (typeof window !== 'undefined') return
-        ;(await cookies()).set('accessToken', token.accessToken)
-        ;(await cookies()).set('refreshToken', token.refreshToken)
+            ; (await cookies()).set('accessToken', token.accessToken)
+            ; (await cookies()).set('refreshToken', token.refreshToken)
     }
 
     async clearToken() {
+        const { cookies } = require('next/headers')
         if (typeof window !== 'undefined') return
-        ;(await cookies()).delete('accessToken')
-        ;(await cookies()).delete('refreshToken')
+            ; (await cookies()).delete('accessToken')
+            ; (await cookies()).delete('refreshToken')
     }
 }
 

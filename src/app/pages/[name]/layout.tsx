@@ -1,31 +1,23 @@
-import userService from '@/services/user.service'
-import { User } from '@/types/user'
-import ConteinerPage from '@/components/common/ContainerPage'
-import HeroBanner from '@/app/pages/components/HeroBanner'
+import ContainerPage from '@/components/common/ContainerPage'
+import HeroBanner from '@/app/pages/[name]/components/HeroBanner'
+import userService from '@/services/user.service';
 
-interface LayoutProps {
-	children: React.ReactNode
-	params: {
-		name: string
-	}
-}
+export default async function Layout({ children, params }: { children: React.ReactNode; params: { name: string } }) {
 
-export default async function Layout({ children, params }: LayoutProps) {
-	const { name } = await params
-	const userInfo = await userService.getUserInfoByUsername(name)
-
-	if (!userInfo) {
+	const username = await params.name
+	const user = await userService.getUserInfoByUsername(username)
+	if (!user) {
 		return (
-			<ConteinerPage>
-				<h3>User not found</h3>
-			</ConteinerPage>
+			<div>
+				<h1>404</h1>
+			</div>
 		)
 	}
 
 	return (
-		<ConteinerPage>
-			<HeroBanner user={userInfo} />
+		<ContainerPage>
+			<HeroBanner user={user} />
 			{children}
-		</ConteinerPage>
+		</ContainerPage>
 	)
 }
