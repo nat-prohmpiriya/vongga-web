@@ -24,6 +24,7 @@ const HeroBanner = ({ user }: Props) => {
 	const [currentTab, setCurrentTab] = useState('post');
 	const updatePhotoModalRef = useRef<UpdatePhotoModalRef>(null)
 	const updateProfileModalRef = useRef<UpdateProfileModalRef>(null)
+	const [userInfo, setUserInfo] = useState<User>(user)
 
 	const tabs = [
 		{ name: 'Post', href: '#', count: null, value: 'posts' },
@@ -50,8 +51,8 @@ const HeroBanner = ({ user }: Props) => {
 			{/* Cover Image */}
 			<div className="relative h-60">
 				<img
-					src={user?.photoCover}
-					alt={user?.username}
+					src={userInfo?.photoCover}
+					alt={userInfo?.username}
 					className="w-full h-full object-cover"
 				/>
 				<VBtn
@@ -71,8 +72,8 @@ const HeroBanner = ({ user }: Props) => {
 					<div className="flex gap-4">
 						<div className="relative">
 							<img
-								src={user.photoProfile}
-								alt={user.username}
+								src={userInfo.photoProfile}
+								alt={userInfo.username}
 								className="w-40 h-40 rounded-full border-4 border-white object-cover"
 							/>
 							<div
@@ -85,25 +86,25 @@ const HeroBanner = ({ user }: Props) => {
 						<div className="mt-24">
 							<div className="flex items-center gap-2">
 								<h1 className="text-2xl font-semibold">
-									{user.username}
+									{userInfo.username}
 								</h1>
-								{user.isVerified && <MdVerified size={30} className="text-blue-500" />}
+								{userInfo.isVerified && <MdVerified size={30} className="text-blue-500" />}
 							</div>
 							<p className="text-gray-600 text-sm">
-								{user.friendsCount} friends
+								{userInfo.friendsCount} friends
 							</p>
 							<div className="flex items-center gap-6 mt-2 text-gray-600">
 								<div className="flex items-center gap-1">
 									<HiOutlineBriefcase className="text-lg" />
-									<span className='text-sm'>{user.occupation}</span>
+									<span className='text-sm'>{userInfo.occupation}</span>
 								</div>
 								<div className="flex items-center gap-1">
 									<IoLocationOutline className="text-lg" />
-									<span className='text-sm'>{user.live?.city}, {user.live?.country}</span>
+									<span className='text-sm'>{userInfo.live?.city}, {userInfo.live?.country}</span>
 								</div>
 								<div className="flex items-center gap-1">
 									<LuCalendarDays className="text-lg" />
-									<span className='text-sm'>Joined on {formatISOToDate(user.createdAt)}</span>
+									<span className='text-sm'>Joined on {formatISOToDate(userInfo.createdAt)}</span>
 								</div>
 							</div>
 						</div>
@@ -135,8 +136,8 @@ const HeroBanner = ({ user }: Props) => {
 					</span>
 				))}
 			</div>
-			<UpdatePhotoModal ref={updatePhotoModalRef} />
-			<UpdateProfileModal ref={updateProfileModalRef} />
+			<UpdatePhotoModal ref={updatePhotoModalRef} setUser={setUserInfo} />
+			<UpdateProfileModal ref={updateProfileModalRef} setUser={setUserInfo} />
 		</div >
 	)
 }

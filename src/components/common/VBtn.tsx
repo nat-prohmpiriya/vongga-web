@@ -12,11 +12,12 @@ export default function Btn({
     fullWidth = false,
     children,
     className = '',
+    loading = false,
     ...props
 }: BtnProps) {
     const baseStyles = 'px-4 py-3 rounded-lg transition-colors h-10 '
     const variantStyles = {
-        primary: `bg-black text-white hover:bg-gray-800 ${props.loading ? 'cursor-not-allowed opacity-65' : ''}`,
+        primary: `bg-black text-white hover:bg-gray-800 ${loading ? 'cursor-not-allowed opacity-65' : ''}`,
         secondary: 'bg-gray-100 text-gray-900 hover:bg-gray-200',
     }
     const widthStyles = fullWidth ? 'w-full' : ''
@@ -25,9 +26,9 @@ export default function Btn({
         <button
             className={`${baseStyles} ${variantStyles[variant]} ${widthStyles} ${className}`}
             {...props}
-            disabled={props.loading}
+            disabled={loading}
         >
-            {props.loading && (
+            {loading && (
                 <span className="mr-2">
                     <svg
                         className="animate-spin -ml-1 mr-3 h-5 w-5 text-white"

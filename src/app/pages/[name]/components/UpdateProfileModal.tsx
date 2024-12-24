@@ -8,6 +8,8 @@ import React, {
 } from 'react';
 import VTextInput from '@/components/common/VTextInput';
 import VBtn from '@/components/common/VBtn';
+import { User } from '@/types/user';
+import userService from '@/services/user.service';
 
 export interface UpdateProfileModalRef {
     open: () => void;
@@ -20,10 +22,11 @@ interface ModalProps {
     style?: CSSProperties;
     onOpen?: () => void;
     onClose?: () => void;
+    setUser?: (user: User) => void;
 }
 
 const UpdateProfileModal = forwardRef<UpdateProfileModalRef, ModalProps>(
-    ({ children, className = '', style, onOpen, onClose }, ref) => {
+    ({ children, className = '', style, onOpen, onClose, setUser }, ref) => {
         const [isOpen, setIsOpen] = useState(false);
         const [dataForm, setDataForm] = useState({
             username: '',
@@ -72,7 +75,7 @@ const UpdateProfileModal = forwardRef<UpdateProfileModalRef, ModalProps>(
                     <div className="p-4">
                         <VTextInput label="Username" value={dataForm.username} onChange={(e) => setDataForm({ ...dataForm, username: e.target.value })} className='mb-4' />
                         <VTextInput label="Email" value={dataForm.email} onChange={(e) => setDataForm({ ...dataForm, email: e.target.value })} className='mb-4' />
-                        <VBtn variant="primary" onClick={handleSubmit} className="w-40 flex items-center justify-center" loading={isLoading} >
+                        <VBtn variant="primary" onClick={handleSubmit} className="w-40 flex items-center justify-center" disabled={isLoading} loading={isLoading} >
                             Update
                         </VBtn>
                     </div>
