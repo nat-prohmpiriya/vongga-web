@@ -19,8 +19,11 @@ class AuthService {
             Cookies.set('accessToken', data.accessToken)
             Cookies.set('refreshToken', data.refreshToken)
             return data
-        } catch (error) {
-            console.error('Error verifying Firebase token:', error)
+        } catch (error: any) {
+            console.error('Error verifying Firebase token: error', {
+                message: error.response.data.message,
+                status: error.response.status
+            })
             throw error
         }
     }
@@ -36,8 +39,11 @@ class AuthService {
             Cookies.set('accessToken', data.accessToken)
             Cookies.set('refreshToken', data.refreshToken)
             return data
-        } catch (error) {
-            console.error('Error refreshing token:', error)
+        } catch (error: any) {
+            console.error('Error refreshing token: error', {
+                message: error.response.data.message,
+                status: error.response.status
+            })
             return null
         }
     }

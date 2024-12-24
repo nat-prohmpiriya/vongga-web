@@ -43,7 +43,7 @@ describe('UpdateProfileModal', () => {
   let modalRef: React.RefObject<UpdateProfileModalRef>;
 
   beforeEach(() => {
-    modalRef = React.createRef();
+    modalRef = React.createRef() as React.RefObject<UpdateProfileModalRef>;
     jest.clearAllMocks();
   });
 
@@ -149,7 +149,7 @@ describe('UpdateProfileModal', () => {
   it('handles API error gracefully', async () => {
     const errorMessage = 'Update failed';
     (userService.updateUserProfile as jest.Mock).mockRejectedValueOnce(new Error(errorMessage));
-    
+
     // Mock console.error to prevent error output in tests
     const consoleSpy = jest.spyOn(console, 'error').mockImplementation();
 
@@ -173,7 +173,7 @@ describe('UpdateProfileModal', () => {
     await act(async () => {
       const usernameInput = screen.getByTestId('username-input');
       await userEvent.type(usernameInput, 'testuser');
-      
+
       // Submit form
       fireEvent.click(screen.getByRole('button', { name: 'Update' }));
     });
@@ -185,7 +185,7 @@ describe('UpdateProfileModal', () => {
 
     // Modal should still be open
     expect(screen.getByText('Update Profile')).toBeInTheDocument();
-    
+
     consoleSpy.mockRestore();
   });
 });

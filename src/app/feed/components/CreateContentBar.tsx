@@ -6,15 +6,22 @@ import { IoVideocamOutline } from 'react-icons/io5'
 import { IoCalendarOutline } from 'react-icons/io5'
 import { IoHappyOutline } from 'react-icons/io5'
 import { IoEllipsisHorizontalOutline } from 'react-icons/io5'
+import CreatePostModal, { CreatePostModalRef } from './CreatePostModal'
+import { useAuthStore } from '@/store/auth.store'
+
 
 const CreateContentBar = () => {
+    const modalRef = React.useRef<CreatePostModalRef>(null)
+    const { user } = useAuthStore()
+
+
     return (
-        <div className="bg-white rounded-xl p-4 shadow-sm">
+        <div className="bg-white rounded-xl p-4 shadow-sm" onClick={() => modalRef.current?.open()}>
             {/* Input Area */}
             <div className="flex items-center gap-3 mb-4">
                 <div className="w-10 h-10 rounded-full overflow-hidden flex-shrink-0">
                     <img
-                        src="https://picsum.photos/100"
+                        src={user?.photoProfile}
                         alt="Profile"
                         className="w-full h-full object-cover"
                     />
@@ -50,6 +57,7 @@ const CreateContentBar = () => {
                     <IoEllipsisHorizontalOutline className="text-xl" />
                 </button>
             </div>
+            <CreatePostModal ref={modalRef} />
         </div>
     )
 }

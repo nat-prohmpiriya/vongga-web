@@ -94,6 +94,12 @@ const UpdateProfileModal = forwardRef<UpdateProfileModalRef, ModalProps>(
                         }
                         return acc;
                     }
+
+                    // Convert height to number if it's not empty
+                    if (key === 'height' && value !== '') {
+                        acc[key] = parseFloat(value as string) || 0;
+                        return acc;
+                    }
                     
                     // Skip empty strings, null, or undefined values
                     if (value === '' || value === null || value === undefined) {

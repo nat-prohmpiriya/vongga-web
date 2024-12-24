@@ -7,7 +7,10 @@ class UserService {
             const response = await vonggaAxios.get(`/users/${username}`)
             return response.data.user
         } catch (error: any) {
-            console.log('getUserInfoByUsername', error)
+            console.error('getUserInfoByUsername error', {
+                message: error.response.data.message,
+                status: error.response.status
+            })
             return null
         }
     }
@@ -17,7 +20,10 @@ class UserService {
             const response = await vonggaAxios.patch(`/users`, data)
             return response.data.user
         } catch (error: any) {
-            console.log('updateUserProfile', error)
+            console.error('updateUserProfile error', {
+                message: error.response.data.message,
+                status: error.response.status
+            })
             return null
         }
     }

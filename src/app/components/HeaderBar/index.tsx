@@ -1,6 +1,5 @@
 'use client'
 
-import React from 'react'
 import { FaRegCommentDots } from 'react-icons/fa'
 import { useRouter, usePathname } from 'next/navigation'
 import { BsCart3 } from 'react-icons/bs'
@@ -10,10 +9,8 @@ import { useAuthStore } from '@/store/auth.store'
 import { useState, useEffect } from 'react'
 
 const HeaderBar = () => {
-	const imgUrl = 'https://picsum.photos/200?random=1'
 	const router = useRouter()
 	const { user } = useAuthStore()
-	const [imageSrc, setImageSrc] = useState(imgUrl)
 	const [isHide, setIsHide] = useState(false)
 	const parthname = usePathname()
 
