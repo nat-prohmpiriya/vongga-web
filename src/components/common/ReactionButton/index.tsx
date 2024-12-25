@@ -34,7 +34,6 @@ const ReactionButton = ({ postId, commentId }: ReactionButtonProps) => {
         if (!postId && !commentId) return;
         if (postId) fetchReactionsPost();
         if (commentId) fetchReactionsComment();
-        console.log(resutl);
     }
 
     const addReactionLike = async () => {
@@ -42,16 +41,18 @@ const ReactionButton = ({ postId, commentId }: ReactionButtonProps) => {
         const reaction: ReactionType = 'like';
         const resutl = await reactionService.createReaction({ postId, commentId, type: reaction });
         setReactionId(resutl.id);
-        console.log(resutl);
+        console.log('resutl', resutl);
+        setIsClicked(true);
         if (!postId && !commentId) return;
         if (postId) fetchReactionsPost();
         if (commentId) fetchReactionsComment();
     }
 
-    const removeReactionLike = async () => {
+    const removeReaction = async () => {
         if (!postId && !commentId || !reactionId) return;
         const resutl = await reactionService.deleteReaction(reactionId);
-        console.log(resutl);
+        console.log('resutl', resutl);
+        setReactionId('');
         if (!postId && !commentId) return;
         if (postId) fetchReactionsPost();
         if (commentId) fetchReactionsComment();
@@ -62,22 +63,22 @@ const ReactionButton = ({ postId, commentId }: ReactionButtonProps) => {
         if (isClicked) {
             addReactionLike();
         } else {
-            removeReactionLike();
+            console.log('removeReactionLike');
+            removeReaction();
         }
     }, [isClicked])
 
     const fetchReactionsPost = async () => {
         if (!postId) return;
         const result = await reactionService.getReactionsPost(postId);
-        console.log('fetchReactionsPost', result);
         const reactionTotal = result ? result.length : 0;
         setTotalReaction(reactionTotal);
+        console.log('reactionTotal', reactionTotal);
     }
 
     const fetchReactionsComment = async () => {
         if (!commentId) return;
         const result = await reactionService.getReactionsComment(commentId);
-        console.log('fetchReactionsComment', result);
         const reactionTotal = result ? result.length : 0;
         setTotalReaction(reactionTotal);
     }
@@ -98,14 +99,18 @@ const ReactionButton = ({ postId, commentId }: ReactionButtonProps) => {
         { icon: <FaSurprise className={className} />, label: 'Wow' },
         { icon: <FaSadTear className={className} />, label: 'Sad' },
         { icon: <FaAngry className={className} />, label: 'Angry' },
-
     ]
+
     const content = (
         <div className="flex">
             {
                 reactions.map((reaction, index) => (
-                    <div key={index} className="flex flex-col items-center gap-2 py-2 px-4 cursor-pointer" onClick={() => handlerReactionSubmit(reaction.label)}>
-                        {reaction.icon} <span className="text-xs">{reaction.label}</span>
+                    <div
+                        key={index}
+                        className="flex flex-col items-center gap-2 py-2 px-4 cursor-pointer"
+                        onClick={() => handlerReactionSubmit(reaction.label)}
+                    >
+                        <span >{reaction.icon}</span> <span className="text-xs">{reaction.label}</span>
                     </div>
                 ))
             }
