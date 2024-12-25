@@ -20,7 +20,6 @@ export default function PostSection(props: PostSectionProps) {
         if (props.userProfileId)
             (async () => {
                 const posts = await postService.getPosts({ userId: props.userProfileId })
-                console.log({ posts })
                 setPosts(posts)
             })()
     }, [props.userProfileId])

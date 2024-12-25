@@ -27,6 +27,19 @@ class UserService {
             return null
         }
     }
+
+    async getMyProfile(): Promise<User | null> {
+        try {
+            const response = await vonggaAxios.get(`/users/me`)
+            return response.data.user
+        } catch (error: any) {
+            console.error('getMyProfile error', {
+                message: error.response.data.message,
+                status: error.response.status
+            })
+            return null
+        }
+    }
 }
 
 export default new UserService()

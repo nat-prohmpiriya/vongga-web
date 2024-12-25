@@ -23,10 +23,6 @@ const HeaderBar = () => {
 		}
 	}, [parthname])
 
-	useEffect(() => {
-		if (!user) return router.push('/')
-	}, [user])
-
 	const goToFeedPage = () => {
 		router.push('/feed')
 	}

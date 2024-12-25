@@ -12,42 +12,37 @@ import { PostVisibility } from '@/types/post'
 import { RiGitRepositoryPrivateLine } from "react-icons/ri";
 import { GiWorld } from "react-icons/gi";
 import { Popover } from 'flowbite-react'
+import { useRouter } from 'next/navigation'
 
-// const Comment: React.FC<CommentProps> = ({
-//     user,
-//     content,
-//     time,
-//     likes,
-//     replies,
-// }) => (
-//     <div className="py-3">
-//         <div className="flex gap-3">
-//             <img
-//                 src={user.image}
-//                 alt={user.name}
-//                 className="w-10 h-10 rounded-full object-cover flex-shrink-0"
-//             />
-//             <div className="flex-1">
-//                 <div className="bg-gray-100 rounded-2xl px-4 py-2.5">
-//                     <h4 className="font-semibold text-sm">{user.name}</h4>
-//                     <p className="text-sm text-gray-600">{content}</p>
-//                 </div>
-//                 <div className="flex items-center gap-4 mt-1 text-sm text-gray-500">
-//                     <button className="hover:text-gray-900">
-//                         Like {likes && `(${likes})`}
-//                     </button>
-//                     <button className="hover:text-gray-900">Reply</button>
-//                     {replies && (
-//                         <button className="hover:text-gray-900">
-//                             View {replies} replies
-//                         </button>
-//                     )}
-//                     <span>{time}</span>
-//                 </div>
-//             </div>
-//         </div>
-//     </div>
-// )
+const Comment = () => (
+    <div className="py-3">
+        <div className="flex gap-3">
+            <img
+                // src={user.image}
+                // alt={user.name}
+                className="w-10 h-10 rounded-full object-cover flex-shrink-0"
+            />
+            <div className="flex-1">
+                <div className="bg-gray-100 rounded-2xl px-4 py-2.5">
+                    {/* <h4 className="font-semibold text-sm">{user.name}</h4>
+                    <p className="text-sm text-gray-600">{content}</p> */}
+                </div>
+                <div className="flex items-center gap-4 mt-1 text-sm text-gray-500">
+                    <button className="hover:text-gray-900">
+                        {/* Like {likes && `(${likes})`} */}
+                    </button>
+                    <button className="hover:text-gray-900">Reply</button>
+                    {/* {replies && (
+                        <button className="hover:text-gray-900">
+                            View {replies} replies
+                        </button> */}
+                    {/* )} */}
+                    {/* <span>{time}</span> */}
+                </div>
+            </div>
+        </div>
+    </div>
+)
 
 interface PostProps extends BaseProp {
     post: Post
@@ -57,6 +52,7 @@ export default function PostCard(props: PostProps) {
     const { post } = props
     const { user } = useAuthStore()
     const createPostModalRef = useRef<CreatePostModalRef>(null)
+    const router = useRouter()
 
     const statusPost = (value: PostVisibility) => {
         if (value === 'public') {
@@ -79,10 +75,11 @@ export default function PostCard(props: PostProps) {
             {/* Post Header */}
             <div className="p-4 flex items-start justify-between">
                 <div className="flex gap-3">
-                    <img
-                        // src={user.image}
-                        // alt={user.name}
-                        className="w-12 h-12 rounded-full object-cover"
+                    <VAvatar
+                        imageUrl={post?.user?.photoProfile}
+                        alt={post?.user?.username || ''}
+                        name={post?.user?.username || ''}
+                        onClick={() => { router.push(`/pages/${post?.user?.username}`) }}
                     />
                     <div>
                         {/* <h3 className="font-semibold">{user.name}</h3> */}
