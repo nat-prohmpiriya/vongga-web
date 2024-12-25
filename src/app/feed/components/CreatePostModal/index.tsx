@@ -10,7 +10,9 @@ import { IoLocationSharp } from 'react-icons/io5'
 import { PiGifBold } from 'react-icons/pi'
 import { BsThreeDots } from 'react-icons/bs'
 import { useAuthStore } from '@/store/auth.store'
+import postService, { CreatePost } from '@/services/post.service'
 import VBtn from '@/components/common/VBtn'
+import { Post } from '@/types/post'
 
 export interface CreatePostModalRef {
 	open: () => void
@@ -18,14 +20,16 @@ export interface CreatePostModalRef {
 }
 
 interface ModalProps {
-
+	post?: Post
 }
 
-const CreatePostModal = forwardRef<CreatePostModalRef, ModalProps>(({ }, ref) => {
+const CreatePostModal = forwardRef<CreatePostModalRef, ModalProps>((props, ref) => {
 	const [isOpen, setIsOpen] = useState(false)
-	const [content, setContent] = useState('')
 	const { user } = useAuthStore()
 	const [isClose, setIsClose] = useState(false)
+	const [loading, setLoading] = useState(false)
+	const [error, setError] = useState('')
+	const [post, setPost] = useState<CreatePost | null>({ content: props.post?.content || '' })
 
 	useImperativeHandle(ref, () => ({
 		open: () => {
@@ -50,13 +54,27 @@ const CreatePostModal = forwardRef<CreatePostModalRef, ModalProps>(({ }, ref) =>
 		}
 	}, [isClose])
 
+	const handleSubmitPost = async () => {
+		try {
+			if (!post) return
+			setLoading(true)
+			const result = await postService.createPost(post)
+			setIsOpen(false)
+			setPost(null)
+		} catch (error: any) {
+			setError(error.message)
+		} finally {
+			setLoading(false)
+		}
+	}
+
 	if (!isOpen) return null
 
 	return (
 		<div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
 			<div className="relative bg-white rounded-lg shadow-lg w-[500px]">
 				<div className="relative border-b border-gray-200 p-4">
-					<h2 className="text-xl font-semibold text-center">Create post</h2>
+					<h2 className="text-xl font-semibold text-center">{post?.content ? 'Update post' : 'Create post'}</h2>
 					<button
 						onClick={() => setIsClose(true)}
 						className="absolute right-4 top-4 p-1 rounded-full hover:bg-gray-100"
@@ -84,8 +102,8 @@ const CreatePostModal = forwardRef<CreatePostModalRef, ModalProps>(({ }, ref) =>
 					</div>
 
 					<textarea
-						value={content}
-						onChange={(e) => setContent(e.target.value)}
+						value={post?.content}
+						onChange={(e) => setPost({ ...post, content: e.target.value })}
 						placeholder="What's on your mind?"
 						className="w-full min-h-[100px] resize-none outline-none"
 					/>
@@ -128,7 +146,12 @@ const CreatePostModal = forwardRef<CreatePostModalRef, ModalProps>(({ }, ref) =>
 						</div>
 					</div>
 
-					<VBtn variant='primary' className="w-full py-2 px-4 text-white rounded-lg flex items-center justify-center">
+					<VBtn
+						onClick={handleSubmitPost}
+						loading={loading}
+						variant='primary'
+						className="w-full py-2 px-4 text-white rounded-lg flex items-center justify-center"
+					>
 						Post
 					</VBtn>
 				</div>

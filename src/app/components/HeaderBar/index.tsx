@@ -7,6 +7,7 @@ import NotiBtn from './NotiBtn'
 import MenuBtn from './MenuBtn'
 import { useAuthStore } from '@/store/auth.store'
 import { useState, useEffect } from 'react'
+import AccountBtn from './AccountBtn'
 
 const HeaderBar = () => {
 	const router = useRouter()
@@ -23,7 +24,7 @@ const HeaderBar = () => {
 	}, [parthname])
 
 	useEffect(() => {
-		console.log(user)
+		if (!user) return router.push('/')
 	}, [user])
 
 	const goToFeedPage = () => {
@@ -37,13 +38,12 @@ const HeaderBar = () => {
 	return (
 		<div className="w-full h-16 bg-white border-b flex items-center px-4 grid grid-cols-3 fixed top-0 left-0 right-0 z-50">
 			{/* Left section */}
-			{user?.photoProfile}
 			<div className="col-span-1">
 				<span
 					className="p-2 cursor-pointer rounded-lg"
 					onClick={() => goToFeedPage()}
 				>
-					<span className="font-semibold text-green-200">
+					<span className="font-semibold text-black">
 						SABAIMAI
 					</span>
 				</span>
@@ -77,19 +77,7 @@ const HeaderBar = () => {
 					<FaRegCommentDots className="text-xl text-gray-600" />
 				</button>
 				<NotiBtn />
-				<div className="w-8 h-8 rounded-full overflow-hidden">
-					{user?.photoProfile ? (
-						<img
-							src={user?.photoProfile}
-							alt={user?.username || 'User'}
-							className="w-full h-full object-cover"
-						/>
-					) : (
-						<div className="text-gray-400 rounded-full w-8 h-8">
-							{user?.username?.charAt(0) || 'A'}
-						</div>
-					)}
-				</div>
+				<AccountBtn />
 			</div>
 		</div>
 	)

@@ -21,25 +21,29 @@ interface Props extends BaseProp {
 
 const HeroBanner = ({ user }: Props) => {
 	const router = useRouter()
-	const [currentTab, setCurrentTab] = useState('post');
+	const [currentTab, setCurrentTab] = useState('');
 	const updatePhotoModalRef = useRef<UpdatePhotoModalRef>(null)
 	const updateProfileModalRef = useRef<UpdateProfileModalRef>(null)
 	const [userInfo, setUserInfo] = useState<User>(user)
 
 	const tabs = [
-		{ name: 'Post', href: '#', count: null, value: 'posts' },
-		{ name: 'Shop', href: '#', count: null, value: 'shop' },
-		{ name: 'Friends', href: '#', count: '', value: 'friends' },
-		{ name: 'Articles', href: '#', count: null, value: 'articles' },
-		{ name: 'Media', href: '#', count: null, value: 'gallery' },
-		{ name: 'Videos', href: '#', count: null, value: 'videos' },
-		{ name: 'Events', href: '#', count: null, value: 'events' },
+		{ name: 'Post', href: '#', count: null, value: "" },
 		{ name: 'About', href: '#', count: null, value: 'about' },
+		{ name: 'Friends', href: '#', count: '', value: 'friends' },
+		{ name: 'Gallery', href: '#', count: null, value: 'gallery' },
+		{ name: 'Videos', href: '#', count: null, value: 'videos' },
+		// { name: 'Shop', href: '#', count: null, value: 'shop' },
+		// { name: 'Articles', href: '#', count: null, value: 'articles' },
+		// { name: 'Events', href: '#', count: null, value: 'events' },
 	]
 
 	const handleTabClick = (value: string) => {
 		setCurrentTab(value)
-		router.push(`/pages/${user.username}/${value}`)
+		if (value === "") {
+			router.replace(`/pages/${user.username}`)
+		} else {
+			router.replace(`/pages/${user.username}?section=${value}`)
+		}
 	}
 
 	if (!user?.username) {
@@ -77,7 +81,7 @@ const HeroBanner = ({ user }: Props) => {
 								className="w-40 h-40 rounded-full border-4 border-white object-cover"
 							/>
 							<div
-								className='absolute bottom-7 right-3 cursor-pointer bg-gray-100 w-8 h-8 rounded-full flex items-center justify-center border-2 border-black'
+								className='absolute bottom-7 right-3 cursor-pointer bg-gray-100 w-8 h-8 rounded-full flex items-center justify-center border-2 border-black shadow-lg'
 								onClick={() => updatePhotoModalRef.current?.open('photoProfile')}
 							>
 								<MdAddPhotoAlternate className=" text-2xl" />

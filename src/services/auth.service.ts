@@ -1,6 +1,7 @@
 import axios from 'axios'
 import { User } from '../types/user'
-import Cookies from 'js-cookie'
+import vonggaAxios from '@/utils/vonggaAxios'
+import clientToken from '@/utils/clientToken'
 
 interface LoginResponse {
     user: User
@@ -14,13 +15,10 @@ class AuthService {
         try {
             const url = process.env.NEXT_PUBLIC_VONGGA_API_URL + '/auth/verifyTokenFirebase'
             const { data } = await axios.post(url, { firebaseToken: accessToken })
-            localStorage.setItem('accessToken', data.accessToken)
-            localStorage.setItem('refreshToken', data.refreshToken)
-            Cookies.set('accessToken', data.accessToken)
-            Cookies.set('refreshToken', data.refreshToken)
+            clientToken.setToken(data)
             return data
         } catch (error: any) {
-            console.error('Error verifying Firebase token: error', {
+            console.error('Error verifying Firebase token: ', {
                 message: error.response.data.message,
                 status: error.response.status
             })
@@ -34,13 +32,24 @@ class AuthService {
             const { data } = await axios.post(url, {
                 refreshToken: refreshToken,
             })
-            localStorage.setItem('accessToken', data.accessToken)
-            localStorage.setItem('refreshToken', data.refreshToken)
-            Cookies.set('accessToken', data.accessToken)
-            Cookies.set('refreshToken', data.refreshToken)
+            clientToken.setToken(data)
             return data
         } catch (error: any) {
-            console.error('Error refreshing token: error', {
+            console.error('Error refreshing token: ', {
+                message: error.response.data.message,
+                status: error.response.status
+            })
+            return null
+        }
+    }
+    async logout() {
+        try {
+            const refreshToken = localStorage.getItem('refreshToken')
+            const resultLogout = await vonggaAxios.post('/auth/logout', { refreshToken })
+            clientToken.clearToken()
+            return resultLogout
+        } catch (error: any) {
+            console.error('Error logging out: ', {
                 message: error.response.data.message,
                 status: error.response.status
             })

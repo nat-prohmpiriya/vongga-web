@@ -3,7 +3,7 @@ import LeftSideBar from './components/LeftSideBar/index'
 import ShortListBar from './components/ShortListBar'
 import CreateContentBar from './components/CreateContentBar'
 import RightSideBar from './components/RightSideBar'
-import Posts from './components/Posts'
+import PostCard from './components/PostCard'
 import ContainerPage from '@/components/common/ContainerPage'
 
 export default function FeedPage() {
@@ -20,7 +20,7 @@ export default function FeedPage() {
                         <ShortListBar />
                     </div>
                     <CreateContentBar />
-                    <Posts />
+                    {/* <PostCard /> */}
                 </div>
                 <div className="sticky top-16 overflow-y-auto col-span-1">
                     <RightSideBar />

@@ -16,10 +16,11 @@ import { toast } from 'react-hot-toast'
 import Link from 'next/link'
 import authService from '@/services/auth.service'
 import { useAuthStore } from '@/store/auth.store'
+import { useEffect } from 'react'
 
 export default function Home() {
 	const router = useRouter()
-	const { setUser } = useAuthStore()
+	const { setUser, user } = useAuthStore()
 	const [showPassword, setShowPassword] = useState(false)
 	const [isLoading, setIsLoading] = useState(false)
 	const [formData, setFormData] = useState({
@@ -67,8 +68,6 @@ export default function Home() {
 				throw new Error('Invalid Firebase token')
 			}
 			try {
-				console.log(resultVerify.user)
-				debugger
 				setUser(resultVerify.user)
 			} catch (error: any) {
 				toast.error(error.message || 'Failed to set user')
@@ -82,6 +81,10 @@ export default function Home() {
 			setIsLoading(false)
 		}
 	}
+
+	useEffect(() => {
+		if (user) return router.push('/feed')
+	}, [user])
 
 	return (
 		<main className="flex min-h-screen">
