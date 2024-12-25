@@ -1,5 +1,6 @@
 import { create } from 'zustand'
 import { persist } from 'zustand/middleware'
+import { devtools } from 'zustand/middleware'
 import { User } from '../types/user'
 
 interface AuthState {
@@ -9,14 +10,16 @@ interface AuthState {
 }
 
 export const useAuthStore = create<AuthState>()(
-    persist(
-        (set) => ({
-            user: null,
-            setUser: (user: User) => set({ user }),
-            clearAuth: () => set({ user: null }),
-        }),
-        {
-            name: 'auth-storage',
-        }
+    devtools(
+        persist(
+            (set) => ({
+                user: null,
+                setUser: (user: User) => set({ user }),
+                clearAuth: () => set({ user: null }),
+            }),
+            {
+                name: 'auth-storage',
+            }
+        )
     )
 )

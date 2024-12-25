@@ -61,14 +61,14 @@ export default function Home() {
 			const provider = new GoogleAuthProvider()
 			const resultSignIn = await signInWithPopup(auth, provider)
 
-			const accessToken = (await resultSignIn.user.getIdTokenResult())
-				.token
-			const resultVerify =
-				await authService.verifyTokenFirebase(accessToken)
+			const accessToken = (await resultSignIn.user.getIdTokenResult()).token
+			const resultVerify = await authService.verifyTokenFirebase(accessToken)
 			if (!resultVerify) {
 				throw new Error('Invalid Firebase token')
 			}
 			try {
+				console.log(resultVerify.user)
+				debugger
 				setUser(resultVerify.user)
 			} catch (error: any) {
 				toast.error(error.message || 'Failed to set user')
