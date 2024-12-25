@@ -1,11 +1,11 @@
 "use client"
 
-import HeroBanner from './components/HeroBanner'
+import HeroBanner from '@/components/page/HeroBanner'
 import { useParams } from 'next/navigation'
 import { useEffect, useState } from 'react'
 import { User } from '@/types/user'
 import userService from '@/services/user.service'
-import PostSection from '../components/PostSection'
+import PostSection from '@/components/page/PostSection'
 
 const DetailPage = () => {
 

@@ -1,6 +1,6 @@
 "use client"
-import CreateContentBar from '@/app/feed/components/CreateContentBar'
-import PostCard from '@/app/feed/components/PostCard'
+import CreateContentBar from '@/components/feed/CreateContentBar'
+import PostCard from '@/components/feed/PostCard'
 import BaseProp from '@/types/baseProp'
 import { useAuthStore } from '@/store/auth.store'
 import { useEffect, useState } from 'react'

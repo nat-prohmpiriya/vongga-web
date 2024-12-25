@@ -30,7 +30,7 @@ const VAvatar = (props: VAvatarProps) => {
             className={`bg-gray-300 rounded-full shadow-sm h-10 w-10 flex items-center justify-center text-white `}
             onClick={props.onClick}
         >
-            {props.name[0].toUpperCase()}
+            {props?.name?.[0]?.toUpperCase()}
         </div>)
 }
 

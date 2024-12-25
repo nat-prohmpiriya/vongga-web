@@ -1,7 +1,7 @@
 
-import EventCard from './components/EventCard'
+import EventCard from '../../components/event/EventCard'
 import eventsData from '@/data/events'
-import SearchBar from '../components/SearchBar'
+import SearchBar from '../../components/common/SearchBar'
 import serverToken from '@/utils/serverToken'
 
 export default async function EventPage(params: { name: string }) {

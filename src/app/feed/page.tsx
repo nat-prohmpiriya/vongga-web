@@ -1,9 +1,9 @@
 "use client"
-import LeftSideBar from './components/LeftSideBar/index'
-import ShortListBar from './components/ShortListBar'
-import CreateContentBar from './components/CreateContentBar'
-import RightSideBar from './components/RightSideBar'
-import PostCard from './components/PostCard'
+import LeftSideBar from '@/components/feed/LeftSideBar/index'
+import ShortListBar from '@/components/feed/ShortListBar'
+import CreateContentBar from '@/components/feed/CreateContentBar'
+import RightSideBar from '@/components/feed/RightSideBar'
+import PostCard from '@/components/feed/PostCard'
 import ContainerPage from '@/components/common/ContainerPage'
 import { useAuthStore } from '@/store/auth.store'
 import { useEffect, useState } from 'react'
@@ -24,20 +24,22 @@ export default function FeedPage() {
             const posts = await postService.getPosts({ userId: user?.id })
             setPosts(posts)
         })()
+
+        if (!user) {
+            const token = clientToken.getToken()
+            if (!token.refreshToken) {
+                router.push('/')
+            } else if (!user) {
+                (async () => {
+                    const userInfo = await userService.getMyProfile()
+                    if (!userInfo) return router.push('/')
+                    setUser(userInfo)
+                })()
+            }
+        }
     }, [user])
 
-    if (!user) {
-        const token = clientToken.getToken()
-        if (!token.refreshToken) {
-            router.push('/')
-        } else if (!user) {
-            (async () => {
-                const userInfo = await userService.getMyProfile()
-                if (!userInfo) return router.push('/')
-                setUser(userInfo)
-            })()
-        }
-    }
+
     return (
         <ContainerPage>
             <div className="max-w-[1600px] mx-auto grid grid-cols-4 gap-6 py-4">

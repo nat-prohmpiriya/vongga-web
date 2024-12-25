@@ -1,6 +1,6 @@
 'use client'
 import { v4 as uuidv4 } from 'uuid'
-import ProductCard from './components/ProductCard'
+import ProductCard from '../../components/marketplace/ProductCard'
 
 export default function MarketplacePage() {
     const products = (number: number) => {

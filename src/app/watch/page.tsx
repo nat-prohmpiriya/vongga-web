@@ -1,5 +1,5 @@
 'use client'
-import SearchBar from '@/app/components/SearchBar'
+import SearchBar from '@/components/common/SearchBar'
 import { v4 as uuidv4 } from 'uuid'
 import { useRouter } from 'next/navigation'
 

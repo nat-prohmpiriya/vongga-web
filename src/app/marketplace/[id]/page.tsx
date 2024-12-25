@@ -1,11 +1,11 @@
 'use client'
 
 import { useParams } from 'next/navigation'
-import HeroBannerProductDetail from './components/HeroBannerProductDetail'
-import ShopInfo from './components/ShopInfo'
-import ReviewSection from './components/ReviewSection'
-import ProductInfo from './components/ProductInfo'
-import ProductCard from '../components/ProductCard'
+import HeroBannerProductDetail from '../../../components/marketplace/components/HeroBannerProductDetail'
+import ShopInfo from '../../../components/marketplace/components/ShopInfo'
+import ReviewSection from '../../../components/marketplace/components/ReviewSection'
+import ProductInfo from '../../../components/marketplace/components/ProductInfo'
+import ProductCard from '../../../components/marketplace/ProductCard'
 import { v4 as uuidv4 } from 'uuid'
 
 export default function ProductDetailPage() {

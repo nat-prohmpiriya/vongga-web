@@ -41,10 +41,10 @@ export interface Post {
     visibility: PostVisibility
     allowComments: boolean
     allowReactions: boolean
-    commentsCount: number
-    reactionsCount: number
-    sharesCount: number
-    viewsCount: number
+    commentCount: number
+    reactionCount: number
+    shareCount: number
+    viewCount: number
     subPosts?: SubPost[]
     editLogs?: EditLog[]
     createdAt: string // ISO date string

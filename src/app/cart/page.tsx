@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import CartCard from '@/app/cart/components/CartCard'
+import CartCard from '@/components/cart/CartCard'
 
 const CartPage = () => {
     const [cartItems, setCartItems] = useState(() =>
