@@ -34,8 +34,8 @@ class UserService {
             return response.data.user
         } catch (error: any) {
             console.error('getMyProfile error', {
-                message: error.response.data.message,
-                status: error.response.status
+                message: error?.response?.data?.message,
+                status: error?.response?.status
             })
             return null
         }

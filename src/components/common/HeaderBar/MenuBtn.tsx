@@ -9,7 +9,7 @@ import { MdWorkspacePremium } from 'react-icons/md'
 import { PiVideoLight } from 'react-icons/pi'
 import { CgGames } from 'react-icons/cg'
 import Link from 'next/link'
-import { Popover } from 'flowbite-react'
+import { Popover } from 'antd'
 import { IoCreateOutline } from 'react-icons/io5'
 import { BiBookOpen } from 'react-icons/bi'
 import { BsPlayBtn } from 'react-icons/bs'
@@ -78,55 +78,55 @@ export default function MenuBtn() {
             id: 1,
             icon: <IoCreateOutline className="w-6 h-6" />,
             label: 'Post',
-            onClick: () => {},
+            onClick: () => { },
         },
         {
             id: 2,
             icon: <BiBookOpen className="w-6 h-6" />,
             label: 'Story',
-            onClick: () => {},
+            onClick: () => { },
         },
         {
             id: 3,
             icon: <BsPlayBtn className="w-6 h-6" />,
             label: 'Reel',
-            onClick: () => {},
+            onClick: () => { },
         },
         {
             id: 4,
             icon: <FaRegStar className="w-6 h-6" />,
             label: 'Life event',
-            onClick: () => {},
+            onClick: () => { },
         },
         {
             id: 5,
             icon: <BiFlag className="w-6 h-6" />,
             label: 'Page',
-            onClick: () => {},
+            onClick: () => { },
         },
         {
             id: 6,
             icon: <HiOutlineSpeakerphone className="w-6 h-6" />,
             label: 'Ad',
-            onClick: () => {},
+            onClick: () => { },
         },
         {
             id: 7,
             icon: <RiGroupLine className="w-6 h-6" />,
             label: 'Group',
-            onClick: () => {},
+            onClick: () => { },
         },
         {
             id: 8,
             icon: <FaRegCalendarAlt className="w-6 h-6" />,
             label: 'Event',
-            onClick: () => {},
+            onClick: () => { },
         },
         {
             id: 9,
             icon: <BsShop className="w-6 h-6" />,
             label: 'Marketplace',
-            onClick: () => {},
+            onClick: () => { },
         },
     ]
     const content = (

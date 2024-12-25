@@ -1,5 +1,5 @@
 import { IoNotificationsOutline } from 'react-icons/io5'
-import { Popover } from 'flowbite-react'
+import { Popover } from 'antd'
 
 const NotiBtn = () => {
     const content = (

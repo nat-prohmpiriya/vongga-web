@@ -11,46 +11,18 @@ import { formatISOToTimeAgo } from '@/utils/converTime'
 import { PostVisibility } from '@/types/post'
 import { RiGitRepositoryPrivateLine } from "react-icons/ri";
 import { GiWorld } from "react-icons/gi";
-import { Popover } from 'flowbite-react'
+import { Popover } from 'antd'
 import { useRouter } from 'next/navigation'
 import { VscSend } from "react-icons/vsc";
 import commentService from '@/services/comment.service'
 import PostModal, { PostModalRef } from '@/components/feed/PostModal'
 import { useEffect } from 'react'
 import { Comment } from '@/types/comment'
+import CommentsBox from './CommentsBox'
+import { FaComment } from "react-icons/fa";
+import { IoMdShareAlt } from "react-icons/io";
+import ReactionButton from '../common/ReactionButton'
 
-interface CommentBoxProps extends BaseProp {
-    comment: Comment
-}
-
-const CommentBox = ({ comment }: CommentBoxProps) => (
-    <div className="py-3">
-        <div className="flex gap-3">
-            <img
-                src={comment?.user?.photoProfile}
-                alt={comment?.user?.username || ''}
-                className="w-10 h-10 rounded-full object-cover flex-shrink-0"
-            />
-            <div className="flex-1">
-                <div className="bg-gray-100 rounded-2xl px-4 py-2.5">
-                    <h4 className="font-semibold text-sm">{comment?.user?.username}</h4>
-                    <p className="text-sm text-gray-600">{comment?.content}</p>
-                </div>
-                <div className="flex items-center gap-4 mt-1 text-sm text-gray-500">
-                    <button className="hover:text-gray-900">
-                        Like {0}
-                    </button>
-                    <button className="hover:text-gray-900">Reply</button>
-                    {/* {replies && ( 
-                        <button className="hover:text-gray-900">
-                            View {replies} replies
-                        </button>)} */}
-                    <span>{formatISOToTimeAgo(comment?.createdAt)}</span>
-                </div>
-            </div>
-        </div>
-    </div>
-)
 
 interface PostProps extends BaseProp {
     post: Post
@@ -151,14 +123,14 @@ export default function PostCard(props: PostProps) {
 
             {/* Post Stats */}
             <div className="px-4 py-3 flex items-center justify-between border-t border-b border-gray-100">
-                <button className="text-sm text-gray-500 hover:text-gray-900">
-                    Liked ({0})
-                </button>
-                <button className="text-sm text-gray-500 hover:text-gray-900" onClick={() => postModalRef.current?.open()}>
-                    Comments ({props.post?.commentCount || 0})
-                </button>
-                <button className="text-sm text-gray-500 hover:text-gray-900">
-                    Share ({0})
+                <div className="flex items-center gap-4">
+                    <ReactionButton postId={props.post?.id} />
+                    <button className="text-sm text-gray-500 hover:text-gray-900 flex items-center gap-3 " onClick={() => postModalRef.current?.open()}>
+                        <FaComment className='text-lg' />Comments ({props.post?.commentCount || 0})
+                    </button>
+                </div>
+                <button className="text-sm text-gray-500 hover:text-gray-900 flex items-center gap-3">
+                    <IoMdShareAlt className='text-lg' />Share ({props?.post?.shareCount || 0})
                 </button>
             </div>
 
@@ -187,7 +159,7 @@ export default function PostCard(props: PostProps) {
 
                 {/* Comments List */}
                 <div className="space-y-1">
-                    {comments.map((comment) => <CommentBox comment={comment} key={comment.id} />)}
+                    {comments.map((comment) => <CommentsBox comment={comment} key={comment.id} />)}
                 </div>
 
                 <button className="text-gray-500 hover:text-gray-700 text-sm mt-3">

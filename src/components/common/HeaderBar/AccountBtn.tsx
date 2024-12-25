@@ -1,6 +1,6 @@
 
 import { useAuthStore } from '@/store/auth.store'
-import { Popover, Avatar } from 'flowbite-react'
+import { Popover, Avatar } from 'antd'
 import { FaRegUser } from 'react-icons/fa'
 import { IoSettingsOutline } from "react-icons/io5";
 import authService from '@/services/auth.service';
@@ -43,7 +43,7 @@ const AccountBtn = () => {
             {/* User Avatar */}
             <div className="w-10 h-10 rounded-full overflow-hidden cursor-pointer border-2 border-gray-300 shadow-md">
                 <Avatar
-                    img={user?.photoProfile}
+                    src={user?.photoProfile}
                     alt={user?.username || 'User'}
                     className="w-full h-full object-cover cursor-pointer "
                 />
