@@ -6,7 +6,12 @@ import { IoCloseCircleOutline } from "react-icons/io5";
 import { useSearchParams, usePathname } from 'next/navigation'
 import CommentsBox from './CommentsBox';
 import { IoArrowForwardCircleOutline, IoArrowBackCircleOutline } from "react-icons/io5";
+import { Avatar } from 'antd';
+import { formatISOToTimeAgo } from '@/utils/converTime';
+import { RiGitRepositoryPrivateLine } from "react-icons/ri";
+import { GiWorld } from "react-icons/gi";
 
+export type PostVisibility = 'public' | 'private'
 
 export interface ViewMediaRef {
     open: (index: number) => void
@@ -26,6 +31,7 @@ const ViewMedia = forwardRef<ViewMediaRef, ViewMediaProps>((prop, ref) => {
     const listSubposts = post.subPosts || []
     const allposts = [post, ...listSubposts]
     const [currentPostIndex, setCurrentPostIndex] = useState(0)
+    const [currentPost, setCurrentPost] = useState(allposts[currentPostIndex])
 
     useImperativeHandle(ref, () => ({
         open(index: number) {
@@ -39,7 +45,12 @@ const ViewMedia = forwardRef<ViewMediaRef, ViewMediaProps>((prop, ref) => {
     }))
 
     useEffect(() => {
-        const handleKeyDown = (e: KeyboardEvent) => e.key === 'Escape' && setIsOpen(false);
+        const handleKeyDown = (e: KeyboardEvent) => {
+            setIsOpen(false);
+            const deleteQueryMedia = pathname.replace(`?media=${queryMedia}`, '');
+            (window as Window).history.replaceState(null, '', deleteQueryMedia)
+            return e.key === 'Escape'
+        }
         if (isOpen) window.addEventListener('keydown', handleKeyDown);
         return () => window.removeEventListener('keydown', handleKeyDown);
     }, [isOpen]);
@@ -64,8 +75,11 @@ const ViewMedia = forwardRef<ViewMediaRef, ViewMediaProps>((prop, ref) => {
 
     useEffect(() => {
         if (!queryMedia) setIsOpen(false);
-        (window as Window).history.replaceState(null, '', pathname + `?media=${queryMedia}`)
     }, [queryMedia])
+
+    useEffect(() => {
+        setCurrentPost(allposts[currentPostIndex])
+    }, [currentPostIndex])
 
     if (!isOpen) return null
 
@@ -84,9 +98,10 @@ const ViewMedia = forwardRef<ViewMediaRef, ViewMediaProps>((prop, ref) => {
         setCurrentPostIndex((prev) => prev - 1)
     }
 
+
     return (
         <div className='fixed inset-0 z-[9999] overflow-y-auto bg-black/50 w-screen h-screen grid grid-cols-7'>
-            <div className='col-span-5 bg-black flex justify-center relative '>
+            <div className='col-span-5 bg-black flex justify-center relative h-screen '>
                 <button className='absolute top-4 left-4 text-white text-4xl bg-black/30 p-1 rounded-full' onClick={handlerClose}>
                     <IoCloseCircleOutline className='hover:scale-125 transition-all duration-300' />
                 </button>
@@ -96,18 +111,28 @@ const ViewMedia = forwardRef<ViewMediaRef, ViewMediaProps>((prop, ref) => {
                 <button className='absolute top-[calc(50%)] left-4 text-white text-4xl bg-black/30 p-1 rounded-full' onClick={handlerPrev}>
                     <IoArrowBackCircleOutline className='hover:scale-125 transition-all duration-300' />
                 </button>
-                <img src={allposts[currentPostIndex]?.media?.[0].url} className='h-screen object-cover' />
+                <img src={allposts[currentPostIndex]?.media?.[0].url} className='object-cover w-auto h-full' />
             </div>
-            <div className='col-span-2 bg-white'>
+            <div className='col-span-2 bg-white p-4'>
+                <div className='flex items-center gap-2 mb-4'>
+                    <Avatar size='large' src={post?.user?.photoProfile} />
+                    <div className='font-semibold'>{post?.user?.username}</div>
+                    <div>{formatISOToTimeAgo(post?.createdAt || '')}</div>
+                    <span className="flex items-center gap-1">
+                        <span className="text-gray-400 ">{post?.visibility === 'public' ? <GiWorld className="text-xl" /> : <RiGitRepositoryPrivateLine className="text-md" />}</span>
+                        <span className="font-semibold text-gray-400 text-xs">
+                            {post?.visibility === 'public' ? 'Public' : 'Private'}
+                        </span>
+                    </span>
+                </div>
+                <div>
+                    {currentPost?.content || currentPost?.id}
+                </div>
                 <div>
                     {allposts[currentPostIndex]?.content}
                 </div>
 
-                {/* {
-                    (prop.comments || []).map((comment) => (
-                        <CommentsBox key={comment.id} comment={comment} />
-                    ))
-                } */}
+                {/* status post */}
             </div>
         </div>
     )

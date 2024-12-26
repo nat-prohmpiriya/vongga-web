@@ -22,41 +22,41 @@ const LeftSideBar = () => {
 			icon: <IoHomeOutline className="text-xl" />,
 			href: '/feed',
 		},
-		{
-			name: 'Connections',
-			icon: <FaRegUser className="text-xl" />,
-			href: '/connections',
-		},
-		{
-			name: 'Groups',
-			icon: <GrGroup className="text-xl" />,
-			href: '/groups',
-		},
-		{
-			name: 'Articles',
-			icon: <IoNewspaperOutline className="text-xl" />,
-			href: '/articles',
-		},
-		{
-			name: 'Watch',
-			icon: <PiVideoLight className="text-xl" />,
-			href: '/watch',
-		},
-		{
-			name: 'Events',
-			icon: <IoCalendarOutline className="text-xl" />,
-			href: '/events',
-		},
-		{
-			name: 'Marketplace',
-			icon: <IoStorefrontOutline className="text-xl" />,
-			href: '/marketplace',
-		},
-		{
-			name: 'Games',
-			icon: <CgGames className="text-xl" />,
-			href: '/games',
-		},
+		// {
+		// 	name: 'Connections',
+		// 	icon: <FaRegUser className="text-xl" />,
+		// 	href: '/connections',
+		// },
+		// {
+		// 	name: 'Groups',
+		// 	icon: <GrGroup className="text-xl" />,
+		// 	href: '/groups',
+		// },
+		// {
+		// 	name: 'Articles',
+		// 	icon: <IoNewspaperOutline className="text-xl" />,
+		// 	href: '/articles',
+		// },
+		// {
+		// 	name: 'Watch',
+		// 	icon: <PiVideoLight className="text-xl" />,
+		// 	href: '/watch',
+		// },
+		// {
+		// 	name: 'Events',
+		// 	icon: <IoCalendarOutline className="text-xl" />,
+		// 	href: '/events',
+		// },
+		// {
+		// 	name: 'Marketplace',
+		// 	icon: <IoStorefrontOutline className="text-xl" />,
+		// 	href: '/marketplace',
+		// },
+		// {
+		// 	name: 'Games',
+		// 	icon: <CgGames className="text-xl" />,
+		// 	href: '/games',
+		// },
 	]
 	const goToProfilePage = () => {
 		const displayName = user?.username

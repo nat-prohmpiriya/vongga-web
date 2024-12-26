@@ -61,12 +61,12 @@ const HeaderBar = () => {
 			{/* Right section */}
 			<div className="col-span-1 flex items-center justify-end gap-5">
 				<MenuBtn />
-				<button
+				{/* <button
 					className="p-2 bg-gray-100 rounded-lg  hover:scale-125 transition-transform duration-300"
 					onClick={() => router.push('/cart')}
 				>
 					<BsCart3 className="text-xl text-gray-600" />
-				</button>
+				</button> */}
 				<button
 					className="p-2 bg-gray-100 rounded-lg  hover:scale-125 transition-transform duration-300"
 					onClick={() => router.push('/chatbot')}

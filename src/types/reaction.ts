@@ -2,7 +2,7 @@ import { User } from './user'
 import { Post } from './post'
 import { Comment } from './comment'
 
-export type ReactionType = 'like' | 'love' | 'haha' | 'wow' | 'sad' | 'angry'
+export type ReactionType = 'like' | 'love' | 'haha' | 'wow' | 'sad' | 'angry' | 'care'
 export type ReactionTargetType = 'post' | 'comment'
 
 export interface Reaction {

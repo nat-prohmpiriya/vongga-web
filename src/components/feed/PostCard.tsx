@@ -75,6 +75,8 @@ export default function PostCard(props: PostProps) {
         refreshComments()
     }, [])
 
+
+
     return (
         <div className="bg-white rounded-xl shadow-sm mb-4">
             {/* Post Header */}

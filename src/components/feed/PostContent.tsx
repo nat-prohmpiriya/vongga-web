@@ -35,8 +35,6 @@ const PostContent = (prop: PostContentProps) => {
         }
     }
 
-
-
     const contentPopver = (
         <div className="bg-white rounded-lg shadow-lg p-4">
             <p className="text-sm text-gray-600 mb-2 cursor-pointer hover:scale-125 transition-transform duration-300" onClick={() => { }}>Update</p>

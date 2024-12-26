@@ -13,6 +13,7 @@ export function formatISOToDate(isoString: string) {
 
 // output: 1 hr ago or 1 min or 1 day but if it's less than > 3 days is yyyy/mm/dd
 export function formatISOToTimeAgo(isoString: string) {
+    if (!isoString) return null
     const date = new Date(isoString);
     const now = new Date();
     const diff = now.getTime() - date.getTime();

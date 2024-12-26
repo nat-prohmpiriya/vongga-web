@@ -22,26 +22,13 @@ interface ReactionButtonProps {
 
 const ReactionButton = ({ postId, commentId }: ReactionButtonProps) => {
     const [reactionId, setReactionId] = useState('');
-    const [isClicked, setIsClicked] = useState(false);
     const [totalReaction, setTotalReaction] = useState(0);
+    const [currentReaction, setCurrentReaction] = useState<ReactionType | ''>('');
 
-    const handlerReactionSubmit = async (type: string) => {
+    const handlerReactionSubmit = async (type: ReactionType) => {
         if (!postId && !commentId) return;
-        const reaction: ReactionType = type.toLowerCase() as ReactionType;
-        const resutl = await reactionService.createReaction({ postId, commentId, type: reaction });
+        const resutl = await reactionService.createReaction({ postId, commentId, type });
         setReactionId(resutl.id);
-        setIsClicked(true);
-        if (!postId && !commentId) return;
-        if (postId) fetchReactionsPost();
-        if (commentId) fetchReactionsComment();
-    }
-
-    const addReactionLike = async () => {
-        if (!postId && !commentId) return;
-        const reaction: ReactionType = 'like';
-        const resutl = await reactionService.createReaction({ postId, commentId, type: reaction });
-        setReactionId(resutl.id);
-        setIsClicked(true);
         if (!postId && !commentId) return;
         if (postId) fetchReactionsPost();
         if (commentId) fetchReactionsComment();
@@ -50,21 +37,10 @@ const ReactionButton = ({ postId, commentId }: ReactionButtonProps) => {
     const removeReaction = async () => {
         if (!postId && !commentId || !reactionId) return;
         const resutl = await reactionService.deleteReaction(reactionId);
-        console.log('resutl', resutl);
         setReactionId('');
-        if (!postId && !commentId) return;
         if (postId) fetchReactionsPost();
         if (commentId) fetchReactionsComment();
-        setIsClicked(false);
     }
-
-    useEffect(() => {
-        if (isClicked) {
-            addReactionLike();
-        } else {
-            removeReaction();
-        }
-    }, [isClicked])
 
     const fetchReactionsPost = async () => {
         if (!postId) return;
@@ -80,22 +56,41 @@ const ReactionButton = ({ postId, commentId }: ReactionButtonProps) => {
         setTotalReaction(reactionTotal);
     }
 
+    const handlerReaction = async (reaction: string) => {
+        const reactionType = reaction.toLowerCase() as ReactionType;
+        const isSameCurrentReaction = reactionType === currentReaction;
+        if (isSameCurrentReaction) {
+            setCurrentReaction('');
+        } else {
+            // const resutl = await reactionService.deleteReaction(reactionId); // ? error next fix bug if clicke many reaction and dupicate is double reaction
+            setCurrentReaction(reactionType);
+        }
+    }
+
     useEffect(() => {
         if (!postId && !commentId) return;
         if (postId) fetchReactionsPost();
         if (commentId) fetchReactionsComment();
     }, [postId, commentId])
 
+    useEffect(() => {
+        if (currentReaction) {
+            handlerReactionSubmit(currentReaction);
+        } else {
+            removeReaction();
+        }
+    }, [currentReaction])
 
-    const className = "text-blue-500 hover:scale-150 transition-transform text-2xl"
+
+    const className = `hover:scale-150 transition-transform text-2xl cursor-pointer `
     const reactions = [
-        { icon: <FaThumbsUp className={className} />, label: 'Like' },
-        { icon: <BsFillEmojiHeartEyesFill className={className} />, label: 'Care' },
-        { icon: <FaHeart className={className} />, label: 'Love' },
-        { icon: <FaLaughSquint className={className} />, label: 'Haha' },
-        { icon: <FaSurprise className={className} />, label: 'Wow' },
-        { icon: <FaSadTear className={className} />, label: 'Sad' },
-        { icon: <FaAngry className={className} />, label: 'Angry' },
+        { icon: <FaThumbsUp className={className + `${currentReaction === 'like' ? 'text-blue-500' : 'text-gray-500'}`} />, label: 'Like' },
+        { icon: <BsFillEmojiHeartEyesFill className={className + `${currentReaction === 'care' ? 'text-blue-500' : 'text-gray-500'}`} />, label: 'Care' },
+        { icon: <FaHeart className={className + `${currentReaction === 'love' ? 'text-blue-500' : 'text-gray-500'}`} />, label: 'Love' },
+        { icon: <FaLaughSquint className={className + `${currentReaction === 'haha' ? 'text-blue-500' : 'text-gray-500'}`} />, label: 'Haha' },
+        { icon: <FaSurprise className={className + `${currentReaction === 'wow' ? 'text-blue-500' : 'text-gray-500'}`} />, label: 'Wow' },
+        { icon: <FaSadTear className={className + `${currentReaction === 'sad' ? 'text-blue-500' : 'text-gray-500'}`} />, label: 'Sad' },
+        { icon: <FaAngry className={className + `${currentReaction === 'angry' ? 'text-blue-500' : 'text-gray-500'}`} />, label: 'Angry' },
     ]
 
     const content = (
@@ -105,7 +100,7 @@ const ReactionButton = ({ postId, commentId }: ReactionButtonProps) => {
                     <div
                         key={index}
                         className="flex flex-col items-center gap-2 py-2 px-4 cursor-pointer"
-                        onClick={() => handlerReactionSubmit(reaction.label)}
+                        onClick={() => { handlerReaction(reaction.label) }}
                     >
                         <span >{reaction.icon}</span> <span className="text-xs">{reaction.label}</span>
                     </div>
@@ -115,7 +110,7 @@ const ReactionButton = ({ postId, commentId }: ReactionButtonProps) => {
     )
     return (
         <Popover trigger="hover" content={content}>
-            <div className={`flex items-center gap-2 cursor-pointer ${isClicked ? 'text-blue-500' : 'text-gray-500'} ${isClicked ? 'hover:text-blue-600' : 'hover:text-gray-600'}`} onClick={() => setIsClicked(!isClicked)} >
+            <div className={`flex items-center gap-2 cursor-pointer ${currentReaction === 'like' ? 'text-blue-500' : 'text-gray-500'} ${currentReaction === 'like' ? 'hover:text-blue-600' : 'hover:text-gray-600'}`} onClick={() => handlerReaction('Like')} >
                 {postId && <AiFillLike className="text-xl hover:scale-125" />} <span className="text-sm">Like {totalReaction}</span>
             </div>
         </Popover>
