@@ -39,6 +39,12 @@ export default function FeedPage() {
         }
     }, [user])
 
+    const handlerFetchPosts = async () => {
+        if (!user) return console.warn('user not found')
+        const posts = await postService.getPosts({ userId: user?.id })
+        setPosts(posts)
+    }
+
 
     return (
         <ContainerPage>
@@ -55,7 +61,7 @@ export default function FeedPage() {
                     <CreateContentBar />
                     {
                         posts?.map((post, index) => (
-                            <PostCard key={index} post={post} />
+                            <PostCard key={index} post={post} fetchPosts={handlerFetchPosts} />
                         ))
                     }
                 </div>

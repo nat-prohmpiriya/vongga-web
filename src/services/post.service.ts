@@ -75,6 +75,19 @@ class PostService {
             return null
         }
     }
+
+    async deletePost(id: string) {
+        try {
+            const response = await vonggaAxios.delete(`/posts/${id}`)
+            return response.data
+        } catch (error: any) {
+            console.error('deletePost error', {
+                message: error.response.data.message,
+                status: error.response.status
+            })
+            return null
+        }
+    }
 }
 
 export default new PostService()

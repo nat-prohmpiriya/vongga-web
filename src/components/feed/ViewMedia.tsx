@@ -30,7 +30,6 @@ const ViewMedia = forwardRef<ViewMediaRef, ViewMediaProps>((prop, ref) => {
     useImperativeHandle(ref, () => ({
         open(index: number) {
             (window as Window).history.replaceState(null, '', pathname + `?media=${post.id}`)
-            console.log('index', index)
             setCurrentPostIndex(index)
             setIsOpen(true)
         },
@@ -40,16 +39,28 @@ const ViewMedia = forwardRef<ViewMediaRef, ViewMediaProps>((prop, ref) => {
     }))
 
     useEffect(() => {
-        console.log('currentPostIndex', currentPostIndex)
-    }, [currentPostIndex])
-
-    useEffect(() => {
         const handleKeyDown = (e: KeyboardEvent) => e.key === 'Escape' && setIsOpen(false);
         if (isOpen) window.addEventListener('keydown', handleKeyDown);
         return () => window.removeEventListener('keydown', handleKeyDown);
     }, [isOpen]);
 
-    useEffect(() => { }, [])
+    useEffect(() => {
+        const handleKeyDown = (event: KeyboardEvent): void => {
+            if (event.key === 'ArrowRight') {
+                setCurrentPostIndex(prev => prev < allposts.length - 1 ? prev + 1 : prev)
+            }
+            if (event.key === 'ArrowLeft') {
+                setCurrentPostIndex(prev => prev > 0 ? prev - 1 : prev)
+            }
+        };
+
+        window.addEventListener('keydown', handleKeyDown);
+
+        return () => {
+            window.removeEventListener('keydown', handleKeyDown);
+        };
+    }, []);
+
 
     useEffect(() => {
         if (!queryMedia) setIsOpen(false);

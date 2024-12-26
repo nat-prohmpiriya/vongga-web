@@ -29,47 +29,35 @@ const DynamicPostImage = ({ post }: DynamicPostImageProps) => {
 
     if (post?.media?.[0]?.url && countSubPost === 1) {
         return (
-            <div className="grid grid-cols-2 h-96">
-                <div className="cursor-pointer ">
-                    <img
-                        src={post.media[0].url}
-                        alt="Post"
-                        className="w-full object-cover"
-                    />
-                </div>
-                <div className="cursor-pointer">
-                    <img
-                        src={post?.subPosts?.[0]?.media?.[0]?.url}
-                        alt="Post"
-                        className="w-full object-cover"
-                    />
+            <div className="bg-black">
+                <div className="flex">
+                    <div className="w-1/2 cursor-pointer" onClick={() => viewMediaRef?.current?.open(0)}>
+                        <img src={post.media[0].url} className="w-full h-full object-cover" />
+                    </div>
+                    <div className="w-1/2 cursor-pointer" onClick={() => viewMediaRef?.current?.open(1)}>
+                        <img src={post?.subPosts?.[0]?.media?.[0]?.url} className="w-full h-full object-cover" />
+                    </div>
                 </div>
                 <ViewMedia ref={viewMediaRef} post={post} />
             </div>
         )
     }
 
-    if (post?.media?.[0]?.url && countSubPost === 2) {
+    if (post?.media?.[0]?.url && countSubPost === 2) { // 3images
         return (
-            <div className="cursor-pointer h-96 grid grid-rows-2">
-                <div className="row-span-1">
-                    <img
-                        src={post.media[0].url}
-                        alt="Post"
-                        className="w-full object-cover"
-                    />
+            <div className="bg-black max-h-108 grid grid-cols-2">
+                <div className="col-span-1 max-h-108">
+                    <div className=" cursor-pointer h-full" onClick={() => viewMediaRef?.current?.open(0)}>
+                        <img src={post.media[0].url} className="w-full h-full object-cover" />
+                    </div>
                 </div>
-                <div className="row-span-1">
-                    <img
-                        src={post?.subPosts?.[0]?.media?.[0]?.url}
-                        alt="Post"
-                        className="w-full object-cover"
-                    />
-                    <img
-                        src={post?.subPosts?.[1]?.media?.[0]?.url}
-                        alt="Post"
-                        className="w-full object-cover"
-                    />
+                <div className="col-span-1 max-h-108">
+                    <div className="cursor-pointer h-1/2" onClick={() => viewMediaRef?.current?.open(1)}>
+                        <img src={post?.subPosts?.[0]?.media?.[0]?.url} className="w-full h-full object-cover" />
+                    </div>
+                    <div className=" cursor-pointer h-1/2" onClick={() => viewMediaRef?.current?.open(2)}>
+                        <img src={post?.subPosts?.[1]?.media?.[0]?.url} className="w-full h-full object-cover" />
+                    </div>
                 </div>
                 <ViewMedia ref={viewMediaRef} post={post} />
             </div>
@@ -78,32 +66,22 @@ const DynamicPostImage = ({ post }: DynamicPostImageProps) => {
 
     if (post?.media?.[0]?.url && countSubPost === 3) { // 4imageas
         return (
-            <div className="mb-3 cursor-pointer h-96 grid grid-rows-2">
-                <div className="row-span-1">
-                    <img
-                        src={post.media[0].url}
-                        alt="Post"
-                        className="w-full object-cover"
-                    />
+            <div className="bg-black">
+                <div className="flex">
+                    <div className="w-1/2 cursor-pointer" onClick={() => viewMediaRef?.current?.open(0)}>
+                        <img src={post.media[0].url} className="w-full h-full object-cover" />
+                    </div>
+                    <div className="w-1/2 cursor-pointer" onClick={() => viewMediaRef?.current?.open(1)}>
+                        <img src={post?.subPosts?.[0]?.media?.[0]?.url} className="w-full h-full object-cover" />
+                    </div>
                 </div>
-                <img
-                    src={post?.subPosts?.[0]?.media?.[0]?.url}
-                    alt="Post"
-                    className="w-full object-cover"
-                />
-                <div className="row-span-1">
-                    <img
-                        src={post?.subPosts?.[1]?.media?.[0]?.url}
-                        alt="Post"
-                        className="w-full object-cover"
-                    />
-                </div>
-                <div className="row-span-1">
-                    <img
-                        src={post?.subPosts?.[2]?.media?.[0]?.url}
-                        alt="Post"
-                        className="w-full object-cover"
-                    />
+                <div className="flex">
+                    <div className="w-1/2 cursor-pointer" onClick={() => viewMediaRef?.current?.open(2)}>
+                        <img src={post?.subPosts?.[1]?.media?.[0]?.url} className="w-full h-full object-cover" />
+                    </div>
+                    <div className="w-1/2 cursor-pointer" onClick={() => viewMediaRef?.current?.open(3)}>
+                        <img src={post?.subPosts?.[2]?.media?.[0]?.url} className="w-full h-full object-cover" />
+                    </div>
                 </div>
                 <ViewMedia ref={viewMediaRef} post={post} />
             </div>
@@ -135,48 +113,6 @@ const DynamicPostImage = ({ post }: DynamicPostImageProps) => {
                 </div>
                 <ViewMedia ref={viewMediaRef} post={post} />
             </div>
-
-            // <div className="mb-3 cursor-pointer h-[600px] grid grid-rows-2">
-            //     <div className="row-span-1 flex bg-black ">
-            //         <img
-            //             src={post.media[0].url}
-            //             alt="Post"
-            //             className=" w-full object-cover "
-            //         />
-            //         <img
-            //             src={post?.subPosts?.[0]?.media?.[0]?.url}
-            //             alt="Post"
-            //             className=" w-full object-cover "
-            //         />
-            //     </div>
-            //     <div className="row-span-1 flex  bg-black">
-            //         <img
-            //             src={post?.subPosts?.[1]?.media?.[0]?.url}
-            //             alt="Post"
-            //             className=" object-cover h-full "
-            //         />
-            //         <img
-            //             src={post?.subPosts?.[2]?.media?.[0]?.url}
-            //             alt="Post"
-            //             className="w-[225px] object-cover h-full "
-            //         />
-            //         <img
-            //             src={post?.subPosts?.[3]?.media?.[0]?.url}
-            //             alt="Post"
-            //             className="w-[225px] object-cover h-full "
-            //         />
-            //         {/* <img
-            //             src={post?.subPosts?.[2]?.media?.[0]?.url}
-            //             alt="Post"
-            //             className="w-full object-cover h-[200px] "
-            //         />
-            //         {countSubPost > 4 && (
-            //             <div className="">
-            //                 <span className="text-white text-2xl font-bold">+{countSubPost - 3}</span>
-            //             </div>
-            //         )} */}
-            //     </div>
-            // </div>
         )
     }
 }

@@ -14,11 +14,12 @@ export interface PostModalRef {
 interface PostModalProps {
     post: Post
     comments: Comment[]
+    deletePost: (id: string) => void
 }
 
 
 const PostModal = forwardRef<PostModalRef, PostModalProps>((prop, ref) => {
-    const { post, comments } = prop
+    const { post } = prop
 
     const [isModalOpen, setIsModalOpen] = useState(false)
 
@@ -27,11 +28,12 @@ const PostModal = forwardRef<PostModalRef, PostModalProps>((prop, ref) => {
             setIsModalOpen(isOpen)
         },
     }))
+
     return (
         <Modal width={800} title={`Post's ${post?.user?.displayName || post?.user?.username}`} open={isModalOpen} onCancel={() => setIsModalOpen(false)} footer={null}>
             <div className='border-t'>
                 {/* {post?.content} */}
-                <PostContent post={post} postType='modal' />
+                <PostContent post={post} postType='modal' deletePost={prop.deletePost} />
                 {
                     (prop.comments || []).map((comment) => (
                         <CommentsBox key={comment.id} comment={comment} />

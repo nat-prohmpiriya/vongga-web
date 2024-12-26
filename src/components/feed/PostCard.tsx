@@ -19,17 +19,17 @@ import CommentsBox from './CommentsBox'
 import { FaComment } from "react-icons/fa";
 import { IoMdShareAlt } from "react-icons/io";
 import ReactionButton from '../common/ReactionButton'
-import PostContent, { PostType } from './PostContent'
-
+import PostContent from './PostContent'
+import postService from '@/services/post.service'
 
 interface PostProps extends BaseProp {
     post: Post
+    fetchPosts: () => void
 }
 
 export default function PostCard(props: PostProps) {
     const { user } = useAuthStore()
     const createPostModalRef = useRef<CreatePostModalRef>(null)
-    const router = useRouter()
     const [comment, setComment] = useState('')
     const [comments, setComments] = useState<Comment[]>([])
     const postModalRef = useRef<PostModalRef>(null)
@@ -41,13 +41,6 @@ export default function PostCard(props: PostProps) {
             return <RiGitRepositoryPrivateLine className="text-md" />
         }
     }
-
-    const contentPopover = (
-        <div className="bg-white rounded-lg shadow-lg p-4">
-            <p className="text-sm text-gray-600 mb-2 cursor-pointer" onClick={() => createPostModalRef.current?.open()}>Update</p>
-            <p className="text-sm text-gray-600 cursor-pointer" onClick={() => { }}>Delete</p>
-        </div>
-    )
 
     const handlerSubmitComment = async () => {
         if (!comment || !props.post?.id) return
@@ -69,6 +62,15 @@ export default function PostCard(props: PostProps) {
         }
     }
 
+    const handleDeletePost = async (id: string) => {
+        try {
+            const result = await postService.deletePost(id)
+            props.fetchPosts()
+        } catch (error: any) {
+            console.log('Delete post error', error)
+        }
+    }
+
     useEffect(() => {
         refreshComments()
     }, [])
@@ -76,7 +78,7 @@ export default function PostCard(props: PostProps) {
     return (
         <div className="bg-white rounded-xl shadow-sm mb-4">
             {/* Post Header */}
-            <PostContent post={props.post} postType='card' />
+            <PostContent post={props.post} postType='card' deletePost={handleDeletePost} />
 
             {/* Post Stats */}
             <div className="px-4 py-3 flex items-center justify-between border-t border-b border-gray-100">
@@ -117,9 +119,9 @@ export default function PostCard(props: PostProps) {
                 {/* Comments List */}
                 <div className="space-y-1">
                     {comments.map((comment) => (
-                        <CommentsBox 
-                            comment={comment} 
-                            key={comment.id} 
+                        <CommentsBox
+                            comment={comment}
+                            key={comment.id}
                             onReplyAdded={refreshComments}
                         />
                     ))}
@@ -130,7 +132,7 @@ export default function PostCard(props: PostProps) {
                 </button>
             </div>
             <CreatePostModal ref={createPostModalRef} post={props.post} />
-            <PostModal ref={postModalRef} comments={comments} post={props.post} />
+            <PostModal ref={postModalRef} comments={comments} post={props.post} deletePost={handleDeletePost} />
         </div>
     )
 }
