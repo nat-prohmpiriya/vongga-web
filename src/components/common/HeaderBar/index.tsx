@@ -8,6 +8,7 @@ import MenuBtn from './MenuBtn'
 import { useAuthStore } from '@/store/auth.store'
 import { useState, useEffect } from 'react'
 import AccountBtn from './AccountBtn'
+import { RiRobot3Line } from "react-icons/ri";
 
 const HeaderBar = () => {
 	const router = useRouter()
@@ -65,6 +66,12 @@ const HeaderBar = () => {
 					onClick={() => router.push('/cart')}
 				>
 					<BsCart3 className="text-xl text-gray-600" />
+				</button>
+				<button
+					className="p-2 bg-gray-100 rounded-lg  hover:scale-125 transition-transform duration-300"
+					onClick={() => router.push('/chatbot')}
+				>
+					<RiRobot3Line className="text-xl text-gray-600" />
 				</button>
 				<button
 					className="p-2 bg-gray-100 rounded-lg  hover:scale-125 transition-transform duration-300"
