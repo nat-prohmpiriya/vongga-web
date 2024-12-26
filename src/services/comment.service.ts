@@ -3,12 +3,16 @@ import vonggaAxios from "@/utils/vonggaAxios";
 interface CreateComment {
     content: string
     postId: string
+    parentId?: string
 }
 
 class CommentService {
-    async createComment({ content, postId }: CreateComment) {
+    async createComment({ content, postId, parentId }: CreateComment) {
         try {
-            const response = await vonggaAxios.post(`/comments/posts/${postId}`, { content })
+            const response = await vonggaAxios.post(`/comments/posts/${postId}`, { 
+                content,
+                parentId 
+            })
             return response.data
         } catch (error: any) {
             console.error('createComment error', {
@@ -20,9 +24,10 @@ class CommentService {
 
     }
 
-    async getComments(postId: string) { // ({ postId: string }) {
+    async getComments(postId: string, parentId?: string) {
         try {
-            const response = await vonggaAxios.get(`/comments/posts/${postId}`)
+            const params = parentId ? `?parentId=${parentId}` : ''
+            const response = await vonggaAxios.get(`/comments/posts/${postId}${params}`)
             return response.data
         } catch (error: any) {
             console.error('getComments error', {

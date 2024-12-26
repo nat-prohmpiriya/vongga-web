@@ -54,21 +54,23 @@ export default function PostCard(props: PostProps) {
         const result = await commentService.createComment({ content: comment, postId: props.post?.id })
         if (result) {
             setComment('')
-            console.log('Create comment success')
+            refreshComments()
         } else {
             console.error('Create comment error')
         }
     }
 
+    const refreshComments = async () => {
+        const result = await commentService.getComments(props.post?.id)
+        if (result) {
+            setComments(result)
+        } else {
+            console.log('Get comments error')
+        }
+    }
+
     useEffect(() => {
-        (async () => {
-            const result = await commentService.getComments(props.post?.id)
-            if (result) {
-                setComments(result)
-            } else {
-                console.log('Get comments error')
-            }
-        })()
+        refreshComments()
     }, [])
 
     return (
@@ -114,7 +116,13 @@ export default function PostCard(props: PostProps) {
 
                 {/* Comments List */}
                 <div className="space-y-1">
-                    {comments.map((comment) => <CommentsBox comment={comment} key={comment.id} />)}
+                    {comments.map((comment) => (
+                        <CommentsBox 
+                            comment={comment} 
+                            key={comment.id} 
+                            onReplyAdded={refreshComments}
+                        />
+                    ))}
                 </div>
 
                 <button className="text-gray-500 hover:text-gray-700 text-sm mt-3">
@@ -126,4 +134,3 @@ export default function PostCard(props: PostProps) {
         </div>
     )
 }
-
