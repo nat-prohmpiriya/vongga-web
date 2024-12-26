@@ -2,16 +2,13 @@
 
 import BaseProp from '@/types/baseProp'
 import type { Post } from '@/types/post'
-import { IoEllipsisHorizontal } from 'react-icons/io5'
 import { useAuthStore } from '@/store/auth.store'
 import VAvatar from '@/components/common/VAvatar'
 import CreatePostModal, { CreatePostModalRef } from './CreatePostModal'
 import { useRef, useState } from 'react'
-import { formatISOToTimeAgo } from '@/utils/converTime'
 import { PostVisibility } from '@/types/post'
 import { RiGitRepositoryPrivateLine } from "react-icons/ri";
 import { GiWorld } from "react-icons/gi";
-import { Popover } from 'antd'
 import { useRouter } from 'next/navigation'
 import { VscSend } from "react-icons/vsc";
 import commentService from '@/services/comment.service'
@@ -22,6 +19,7 @@ import CommentsBox from './CommentsBox'
 import { FaComment } from "react-icons/fa";
 import { IoMdShareAlt } from "react-icons/io";
 import ReactionButton from '../common/ReactionButton'
+import PostContent, { PostType } from './PostContent'
 
 
 interface PostProps extends BaseProp {
@@ -77,55 +75,13 @@ export default function PostCard(props: PostProps) {
     return (
         <div className="bg-white rounded-xl shadow-sm mb-4">
             {/* Post Header */}
-            <div className="p-4 flex items-start justify-between">
-                <div className="flex gap-3">
-                    <VAvatar
-                        imageUrl={props.post?.user?.photoProfile}
-                        alt={props.post?.user?.username || ''}
-                        name={props.post?.user?.username || ''}
-                        onClick={() => { router.push(`/pages/${props.post?.user?.username}`) }}
-                    />
-                    <div>
-                        {/* <h3 className="font-semibold">{user.name}</h3> */}
-                        <div className="flex items-center gap-2 text-sm text-gray-500">
-                            <span>{formatISOToTimeAgo(props.post?.createdAt)}</span>
-                            <span className="flex items-center gap-1">
-                                <span className="text-gray-400 ">{statusPost(props.post?.visibility)}</span>
-                                <span className="font-semibold text-gray-400 text-xs">
-                                    {props.post?.visibility === 'public' ? 'Public' : 'Private'}
-                                </span>
-                            </span>
-                        </div>
-                    </div>
-                </div>
-                <Popover arrow={false} content={contentPopover}>
-                    <button className="text-gray-400 hover:text-gray-600 p-2">
-                        <IoEllipsisHorizontal className="text-xl" />
-                    </button>
-                </Popover>
-            </div>
-
-            {/* Post Content */}
-            <div className="px-4 pb-3">
-                <p className="text-gray-600">{props.post?.content}</p>
-            </div>
-
-            {/* Post Image */}
-            {props.post?.media?.[0]?.url && (
-                <div className="mb-3">
-                    <img
-                        src={props.post.media[0].url}
-                        alt="Post"
-                        className="w-full object-cover"
-                    />
-                </div>
-            )}
+            <PostContent post={props.post} postType='card' />
 
             {/* Post Stats */}
             <div className="px-4 py-3 flex items-center justify-between border-t border-b border-gray-100">
                 <div className="flex items-center gap-4">
                     <ReactionButton postId={props.post?.id} />
-                    <button className="text-sm text-gray-500 hover:text-gray-900 flex items-center gap-3 " onClick={() => postModalRef.current?.open()}>
+                    <button className="text-sm text-gray-500 hover:text-gray-900 flex items-center gap-3 " onClick={() => postModalRef.current?.open(true)}>
                         <FaComment className='text-lg' />Comments ({props.post?.commentCount || 0})
                     </button>
                 </div>
@@ -167,7 +123,7 @@ export default function PostCard(props: PostProps) {
                 </button>
             </div>
             <CreatePostModal ref={createPostModalRef} post={props.post} />
-            <PostModal ref={postModalRef} post={props.post} />
+            <PostModal ref={postModalRef} comments={comments} post={props.post} />
         </div>
     )
 }

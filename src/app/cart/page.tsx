@@ -2,6 +2,7 @@
 
 import { useState } from 'react'
 import CartCard from '@/components/cart/CartCard'
+import ContainerPage from '@/components/common/ContainerPage'
 
 const CartPage = () => {
     const [cartItems, setCartItems] = useState(() =>
@@ -27,26 +28,31 @@ const CartPage = () => {
     }
 
     return (
-        <div className="mx-auto p-4 bg-gray-100">
-            <div className="w-3/4 mx-auto">
+        <ContainerPage>
+            <div className="mx-auto p-4 bg-gray-100">
                 <h1 className="text-2xl font-bold mb-6">Shopping Cart</h1>
-                <div className="space-y-4">
-                    {cartItems.map((item) => (
-                        <CartCard
-                            key={item.id}
-                            id={item.id}
-                            storeName={item.storeName}
-                            productName={item.productName}
-                            variant={item.variant}
-                            price={item.price}
-                            quantity={item.quantity}
-                            imageUrl={item.imageUrl}
-                            onQuantityChange={handleQuantityChange}
-                        />
-                    ))}
+                <div className="grid grid-cols-5 gap-4">
+                    <div className="col-span-3">
+                        {cartItems.map((item) => (
+                            <CartCard
+                                key={item.id}
+                                id={item.id}
+                                storeName={item.storeName}
+                                productName={item.productName}
+                                variant={item.variant}
+                                price={item.price}
+                                quantity={item.quantity}
+                                imageUrl={item.imageUrl}
+                                onQuantityChange={handleQuantityChange}
+                            />
+                        ))}
+                    </div>
+                    <div className="col-span-2 bg-white rounded-md">
+
+                    </div>
                 </div>
             </div>
-        </div>
+        </ContainerPage>
     )
 }
 

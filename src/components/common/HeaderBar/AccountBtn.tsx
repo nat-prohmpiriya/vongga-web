@@ -5,6 +5,7 @@ import { FaRegUser } from 'react-icons/fa'
 import { IoSettingsOutline } from "react-icons/io5";
 import authService from '@/services/auth.service';
 import { useRouter } from 'next/navigation';
+import { AiOutlineLogout } from "react-icons/ai";
 
 
 const AccountBtn = () => {
@@ -18,20 +19,20 @@ const AccountBtn = () => {
     }
 
     const content = (
-        <div className="p-4 w-[200px] bg-gray-100">
-            <h3 className="text-lg font-semibold">Account</h3>
-            <div className='bg-white p-4 rounded-lg'>
-                <div className="flex flex-col gap-4 my-3">
-                    <div className='flex items-center gap-4 py-3 px-4 rounded-lg hover:bg-gray-100 cursor-pointer' onClick={() => router.push(`/pages/${user?.username}`)}>
-                        <FaRegUser />
-                        <p className="font-semibold text-sm">profile</p>
+        <div className="w-[200px] p-1">
+            <h3 className="text-lg font-semibold mb-2">Account</h3>
+            <div className="col-span-3 bg-white rounded-xl">
+                <div className="flex flex-col bg-white rounded-xl p-3">
+                    <div className='flex items-center gap-4 py-3 px-2 rounded-lg hover:bg-gray-100 cursor-pointer' onClick={() => router.push(`/pages/${user?.username}`)}>
+                        <FaRegUser size={18} />
+                        <p className="font-semibold text-sm">Profile</p>
                     </div>
-                    <div className='flex items-center gap-4 py-3 px-4 rounded-lg hover:bg-gray-100 cursor-pointer' onClick={() => router.push('/setting')}>
-                        <IoSettingsOutline />
+                    <div className='flex items-center gap-4 py-3 px-2 rounded-lg hover:bg-gray-100 cursor-pointer' onClick={() => router.push('/setting')}>
+                        <IoSettingsOutline size={18} />
                         <p className="font-semibold text-sm">Settings</p>
                     </div>
-                    <span className='flex items-center gap-4 py-3 px-4 rounded-lg hover:bg-gray-100 cursor-pointer' onClick={handleLogout}>
-                        <FaRegUser />
+                    <span className='flex items-center gap-4 py-3 px-2 rounded-lg hover:bg-gray-100 cursor-pointer' onClick={handleLogout}>
+                        <AiOutlineLogout size={18} />
                         <p className="font-semibold text-sm">Logout</p>
                     </span>
                 </div>
@@ -39,15 +40,14 @@ const AccountBtn = () => {
         </div>
     )
     return (
-        <Popover arrow={false} trigger="click" content={content}>
+        <Popover trigger="click" content={content} overlayInnerStyle={{ backgroundColor: '#F3F4F6' }}>
             {/* User Avatar */}
-            <div className="w-10 h-10 rounded-full overflow-hidden cursor-pointer border-2 border-gray-300 shadow-md">
-                <Avatar
-                    src={user?.photoProfile}
-                    alt={user?.username || 'User'}
-                    className="w-full h-full object-cover cursor-pointer "
-                />
-            </div>
+            <Avatar
+                size={'large'}
+                src={user?.photoProfile}
+                alt={user?.username || 'User'}
+                className=" cursor-pointer"
+            />
         </Popover>
     )
 }

@@ -19,8 +19,10 @@ import { HiOutlineSpeakerphone } from 'react-icons/hi'
 import { RiGroupLine } from 'react-icons/ri'
 import { FaRegCalendarAlt } from 'react-icons/fa'
 import { BsShop } from 'react-icons/bs'
+import { useRouter } from 'next/navigation'
 
 export default function MenuBtn() {
+    const router = useRouter()
     const listBtn = [
         {
             name: 'Feed',
@@ -130,16 +132,16 @@ export default function MenuBtn() {
         },
     ]
     const content = (
-        <div className="p-4 w-[600px] bg-gray-100">
-            <h3 className="text-lg font-semibold">Menu</h3>
-            <div className="grid grid-cols-5 p-1 gap-4 w-full">
+        <div className="p-1 w-[600px]">
+            <h3 className="text-lg font-semibold mb-2">Menu</h3>
+            <div className="grid grid-cols-5 gap-4">
                 <div className="col-span-3 bg-white rounded-xl p-4">
                     <h3 className="text-md font-semibold">Explore</h3>
                     {listBtn.map((item, index) => (
-                        <Link
+                        <span
                             key={index}
-                            href={item.href}
-                            className="flex items-center gap-4 py-3 px-4 rounded-lg hover:bg-gray-100"
+                            onClick={() => router.push(item.href)}
+                            className="flex items-center gap-4 py-3 px-4 rounded-lg hover:bg-gray-100 cursor-pointer"
                         >
                             {item.icon}
                             <div>
@@ -148,7 +150,7 @@ export default function MenuBtn() {
                                 </p>
                                 <p className="text-xs">{item.description}</p>
                             </div>
-                        </Link>
+                        </span>
                     ))}
                     <div className="divide-y divide-gray-200" />
                 </div>
@@ -177,7 +179,7 @@ export default function MenuBtn() {
     )
 
     return (
-        <Popover content={content} arrow={false}>
+        <Popover content={content} arrow={false} overlayInnerStyle={{ backgroundColor: '#F3F4F6' }}>
             <button className="p-2 bg-gray-100 rounded-lg">
                 <IoAppsOutline className="text-xl" />
             </button>

@@ -41,7 +41,6 @@ const ReactionButton = ({ postId, commentId }: ReactionButtonProps) => {
         const reaction: ReactionType = 'like';
         const resutl = await reactionService.createReaction({ postId, commentId, type: reaction });
         setReactionId(resutl.id);
-        console.log('resutl', resutl);
         setIsClicked(true);
         if (!postId && !commentId) return;
         if (postId) fetchReactionsPost();
@@ -63,7 +62,6 @@ const ReactionButton = ({ postId, commentId }: ReactionButtonProps) => {
         if (isClicked) {
             addReactionLike();
         } else {
-            console.log('removeReactionLike');
             removeReaction();
         }
     }, [isClicked])
@@ -73,7 +71,6 @@ const ReactionButton = ({ postId, commentId }: ReactionButtonProps) => {
         const result = await reactionService.getReactionsPost(postId);
         const reactionTotal = result ? result.length : 0;
         setTotalReaction(reactionTotal);
-        console.log('reactionTotal', reactionTotal);
     }
 
     const fetchReactionsComment = async () => {
