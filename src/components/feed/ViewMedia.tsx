@@ -5,10 +5,11 @@ import React, { forwardRef, useImperativeHandle, useState, useEffect } from 'rea
 import { IoCloseCircleOutline } from "react-icons/io5";
 import { useSearchParams, usePathname } from 'next/navigation'
 import CommentsBox from './CommentsBox';
-import PostContent from './PostContent';
+import { IoArrowForwardCircleOutline, IoArrowBackCircleOutline } from "react-icons/io5";
+
 
 export interface ViewMediaRef {
-    open: () => void
+    open: (index: number) => void
     close: () => void
 }
 
@@ -22,16 +23,25 @@ const ViewMedia = forwardRef<ViewMediaRef, ViewMediaProps>((prop, ref) => {
     const pathname = usePathname()
     const searchParams = useSearchParams()
     const queryMedia = searchParams.get('media')
+    const listSubposts = post.subPosts || []
+    const allposts = [post, ...listSubposts]
+    const [currentPostIndex, setCurrentPostIndex] = useState(0)
 
     useImperativeHandle(ref, () => ({
-        open() {
+        open(index: number) {
             (window as Window).history.replaceState(null, '', pathname + `?media=${post.id}`)
+            console.log('index', index)
+            setCurrentPostIndex(index)
             setIsOpen(true)
         },
         close() {
             setIsOpen(false)
         }
     }))
+
+    useEffect(() => {
+        console.log('currentPostIndex', currentPostIndex)
+    }, [currentPostIndex])
 
     useEffect(() => {
         const handleKeyDown = (e: KeyboardEvent) => e.key === 'Escape' && setIsOpen(false);
@@ -42,7 +52,8 @@ const ViewMedia = forwardRef<ViewMediaRef, ViewMediaProps>((prop, ref) => {
     useEffect(() => { }, [])
 
     useEffect(() => {
-        if (!queryMedia) setIsOpen(false)
+        if (!queryMedia) setIsOpen(false);
+        (window as Window).history.replaceState(null, '', pathname + `?media=${queryMedia}`)
     }, [queryMedia])
 
     if (!isOpen) return null
@@ -52,16 +63,35 @@ const ViewMedia = forwardRef<ViewMediaRef, ViewMediaProps>((prop, ref) => {
         setIsOpen(false)
     }
 
+    const handlerNext = () => {
+        if (currentPostIndex === allposts.length - 1) return setCurrentPostIndex(0)
+        setCurrentPostIndex((prev) => prev + 1)
+    }
+
+    const handlerPrev = () => {
+        if (currentPostIndex === 0) return setCurrentPostIndex(allposts.length - 1)
+        setCurrentPostIndex((prev) => prev - 1)
+    }
+
     return (
         <div className='fixed inset-0 z-[9999] overflow-y-auto bg-black/50 w-screen h-screen grid grid-cols-7'>
-            <div className='col-span-5 bg-black'>
+            <div className='col-span-5 bg-black flex justify-center relative '>
                 <button className='absolute top-4 left-4 text-white text-4xl bg-black/30 p-1 rounded-full' onClick={handlerClose}>
-                    <IoCloseCircleOutline />
+                    <IoCloseCircleOutline className='hover:scale-125 transition-all duration-300' />
                 </button>
-                <img src={post.media?.[0].url} className='w-full h-full object-cover' />
+                <button className='absolute top-[calc(50%)] right-4 text-white text-4xl bg-black/30 p-1 rounded-full' onClick={handlerNext}>
+                    <IoArrowForwardCircleOutline className='hover:scale-125 transition-all duration-300' />
+                </button>
+                <button className='absolute top-[calc(50%)] left-4 text-white text-4xl bg-black/30 p-1 rounded-full' onClick={handlerPrev}>
+                    <IoArrowBackCircleOutline className='hover:scale-125 transition-all duration-300' />
+                </button>
+                <img src={allposts[currentPostIndex]?.media?.[0].url} className='h-screen object-cover' />
             </div>
             <div className='col-span-2 bg-white'>
-                <PostContent post={post} postType='viewMedia' />
+                <div>
+                    {allposts[currentPostIndex]?.content}
+                </div>
+
                 {/* {
                     (prop.comments || []).map((comment) => (
                         <CommentsBox key={comment.id} comment={comment} />

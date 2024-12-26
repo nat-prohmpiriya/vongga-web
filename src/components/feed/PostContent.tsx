@@ -1,7 +1,7 @@
 "use client"
 
 import { Post } from '@/types/post'
-import { usePathname, useRouter } from 'next/navigation'
+import { useRouter } from 'next/navigation'
 import { formatISOToTimeAgo } from '@/utils/converTime'
 import { PostVisibility } from '@/types/post'
 import { RiGitRepositoryPrivateLine } from "react-icons/ri";
@@ -10,8 +10,7 @@ import { FaComment } from "react-icons/fa";
 import { IoMdShareAlt } from "react-icons/io";
 import ReactionButton from '../common/ReactionButton'
 import VAvatar from '../common/VAvatar'
-import ViewMedia, { ViewMediaRef } from './ViewMedia'
-import { useRef } from 'react'
+import DynamicPostImage from './DynamicPostImage'
 
 export type PostType = 'card' | 'modal' | 'viewMedia'
 
@@ -22,8 +21,8 @@ interface PostContentProps {
 
 const PostContent = (prop: PostContentProps) => {
     const { post, postType } = prop
+    const subposts = post?.subPosts
     const router = useRouter()
-    const viewMediaRef = useRef<ViewMediaRef>(null)
 
     const statusPost = (value: PostVisibility) => {
         if (value === 'public') {
@@ -63,18 +62,9 @@ const PostContent = (prop: PostContentProps) => {
                 <p className="text-gray-600">{post?.content}</p>
             </div>
 
-            {/* Post Image */}
-            {post?.media?.[0]?.url && postType !== 'viewMedia' && (
-                <div className="mb-3 cursor-pointer" onClick={viewMediaRef.current?.open}>
-                    <img
-                        src={post.media[0].url}
-                        alt="Post"
-                        className="w-full object-cover"
-                    />
-                </div>
-            )}
+            <DynamicPostImage post={post} />
             {/* post stats */}
-            {postType === 'modal' || postType === 'viewMedia' && (
+            {postType === 'modal' && (
                 <div className="px-4 py-3 flex items-center justify-between border-t border-b border-gray-100">
                     <div className="flex items-center gap-4">
                         <ReactionButton postId={post?.id} />
@@ -87,7 +77,6 @@ const PostContent = (prop: PostContentProps) => {
                     </button>
                 </div>
             )}
-            <ViewMedia ref={viewMediaRef} post={post} />
         </div>
     )
 }

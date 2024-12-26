@@ -54,26 +54,26 @@ export interface Post {
 }
 
 export interface SubPost {
-    id: string
+    id?: string
     postId: string
     userId: string
     user?: User
-    type: PostType
-    content: string
+    type?: PostType
+    content?: string
     media?: Media[]
-    order: number
+    order?: number
     visibility: PostVisibility
-    allowComments: boolean
-    allowReactions: boolean
-    commentsCount: number
-    reactionsCount: number
-    sharesCount: number
-    viewsCount: number
+    allowComments?: boolean
+    allowReaction?: boolean
+    commentsCount?: number
+    reactionsCount?: number
+    sharesCount?: number
+    viewsCount?: number
     editLogs?: EditLog[]
-    createdAt: string // ISO date string
-    updatedAt: string // ISO date string
+    createdAt?: string // ISO date string
+    updatedAt?: string // ISO date string
     deletedAt?: string // ISO date string
-    version: number
+    version?: number
 }
 
 export interface PostRepository {

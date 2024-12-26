@@ -34,19 +34,31 @@ export interface GetPosts {
 
 
 class PostService {
-    async createPost(post: CreatePost) {
+    async createPost(post: CreatePost | FormData) {
         try {
-            if (!post.visibility) {
-                post.visibility = 'public'
+            let config = {}
+            let postData = post
+
+            if (!(post instanceof FormData)) {
+                if (!post.visibility) {
+                    post.visibility = 'public'
+                }
+            } else {
+                config = {
+                    headers: {
+                        'Content-Type': 'multipart/form-data'
+                    }
+                }
             }
-            const response = await vonggaAxios.post('/posts', post)
+
+            const response = await vonggaAxios.post('/posts', postData, config)
             return response.data.post
         } catch (error: any) {
             console.error('createPost error', {
-                message: error.response.data.message,
-                status: error.response.status
+                message: error.response?.data?.message,
+                status: error.response?.status
             })
-            return null
+            throw error
         }
     }
 

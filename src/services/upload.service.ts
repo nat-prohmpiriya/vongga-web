@@ -5,8 +5,10 @@ export interface UploadResponse {
   fileName: string;
 }
 
+export type UploadType = 'photoProfile' | 'photoCover' | 'postMedia';
+
 export const uploadService = {
-  uploadFile: async (file: File, type: 'photoProfile' | 'photoCover'): Promise<UploadResponse> => {
+  uploadFile: async (file: File, type: UploadType): Promise<UploadResponse> => {
     try {
       const formData = new FormData();
       formData.append('file', file);
@@ -27,4 +29,14 @@ export const uploadService = {
       throw error
     }
   },
+
+  uploadMultipleFiles: async (files: File[], type: UploadType): Promise<UploadResponse[]> => {
+    try {
+      const uploadPromises = files.map(file => uploadService.uploadFile(file, type));
+      return await Promise.all(uploadPromises);
+    } catch (error: any) {
+      console.error('uploadMultipleFiles error', error);
+      throw error;
+    }
+  }
 };
