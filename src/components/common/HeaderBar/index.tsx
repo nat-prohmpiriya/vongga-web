@@ -3,7 +3,7 @@
 import { FaRegCommentDots } from 'react-icons/fa'
 import { useRouter, usePathname } from 'next/navigation'
 import { BsCart3 } from 'react-icons/bs'
-import NotiBtn from './NotiBtn'
+import NotiBtn from './NotiButton'
 import MenuBtn from './MenuBtn'
 import { useAuthStore } from '@/store/auth.store'
 import { useState, useEffect } from 'react'
@@ -61,13 +61,13 @@ const HeaderBar = () => {
 			<div className="col-span-1 flex items-center justify-end gap-5">
 				<MenuBtn />
 				<button
-					className="p-2 bg-gray-100 rounded-lg"
+					className="p-2 bg-gray-100 rounded-lg  hover:scale-125 transition-transform duration-300"
 					onClick={() => router.push('/cart')}
 				>
 					<BsCart3 className="text-xl text-gray-600" />
 				</button>
 				<button
-					className="p-2 bg-gray-100 rounded-lg"
+					className="p-2 bg-gray-100 rounded-lg  hover:scale-125 transition-transform duration-300"
 					onClick={() => router.push('/chat')}
 				>
 					<FaRegCommentDots className="text-xl text-gray-600" />

@@ -40,9 +40,9 @@ const AppleButton = ({ state }: AppleButtonProps) => {
     return (
         <button
             onClick={handleAppleSignIn}
-            className="w-full flex items-center justify-center gap-3 px-4 py-3 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
+            className="w-full flex items-center justify-center gap-3 px-4 py-3 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors opacity-50 cursor-not-allowed"
             type='button'
-            disabled={isLoading}
+            disabled={true}
         >
             <FaApple className="text-xl" />
             <span>{state === 'signIn' ? 'Sign in' : 'Sign up'} with Apple</span>

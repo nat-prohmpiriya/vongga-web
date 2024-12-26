@@ -40,13 +40,13 @@ const AccountBtn = () => {
         </div>
     )
     return (
-        <Popover trigger="click" content={content} overlayInnerStyle={{ backgroundColor: '#F3F4F6' }}>
+        <Popover trigger="hover" content={content} overlayInnerStyle={{ backgroundColor: '#F3F4F6' }}>
             {/* User Avatar */}
             <Avatar
                 size={'large'}
                 src={user?.photoProfile}
                 alt={user?.username || 'User'}
-                className=" cursor-pointer"
+                className=" cursor-pointer hover:scale-125 transition-transform duration-300"
             />
         </Popover>
     )

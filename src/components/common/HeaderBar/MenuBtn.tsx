@@ -179,8 +179,8 @@ export default function MenuBtn() {
     )
 
     return (
-        <Popover content={content} arrow={false} overlayInnerStyle={{ backgroundColor: '#F3F4F6' }}>
-            <button className="p-2 bg-gray-100 rounded-lg">
+        <Popover content={content} overlayInnerStyle={{ backgroundColor: '#F3F4F6' }}>
+            <button className="p-2 bg-gray-100 rounded-lg  hover:scale-125 transition-transform duration-300">
                 <IoAppsOutline className="text-xl" />
             </button>
         </Popover>

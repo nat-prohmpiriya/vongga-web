@@ -31,7 +31,7 @@ export default function SignUp() {
                     </p>
                 </div>
                 <GoogleButton state="signUp" />
-                {/* <AppleButton state="signUp" /> */}
+                <AppleButton state="signUp" />
                 <Divider>
                     <span className="px-2 bg-white text-gray-500">OR</span>
                 </Divider>

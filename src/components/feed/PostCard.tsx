@@ -63,7 +63,6 @@ export default function PostCard(props: PostProps) {
     useEffect(() => {
         (async () => {
             const result = await commentService.getComments(props.post?.id)
-            console.log(result)
             if (result) {
                 setComments(result)
             } else {
@@ -99,7 +98,7 @@ export default function PostCard(props: PostProps) {
                         alt={user?.username || ''}
                         name={user?.username || ''}
                     />
-                    <div className="flex-1 relative">
+                    <div className="flex-1 flex">
                         <input
                             type="text"
                             placeholder="Add a comment..."
@@ -107,8 +106,8 @@ export default function PostCard(props: PostProps) {
                             value={comment}
                             onChange={(e) => setComment(e.target.value)}
                         />
-                        <button className="absolute right-3 top-1/2 -translate-y-1/2 text-xl" onClick={handlerSubmitComment}>
-                            <VscSend />
+                        <button className="-ml-10 " onClick={handlerSubmitComment}>
+                            <VscSend className='hover:scale-125 text-lg text-gray-500 hover:text-gray-900' />
                         </button>
                     </div>
                 </div>

@@ -45,12 +45,11 @@ export default function Home() {
 					<div className="space-y-4">
 
 						<GoogleButton state='signIn' />
-						{/* <AppleButton state='signIn' /> */}
+						<AppleButton state='signIn' />
 						<Divider>
 							<span className="px-2 bg-white text-gray-500">OR</span>
 						</Divider>
 						<AuthForm type='signin' />
-						{/* Email and Password Form */}
 
 					</div>
 

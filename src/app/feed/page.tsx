@@ -59,7 +59,7 @@ export default function FeedPage() {
                         ))
                     }
                 </div>
-                <div className="sticky top-16 overflow-y-auto col-span-1">
+                <div className=" top-16  col-span-1">
                     <RightSideBar />
                 </div>
             </div>

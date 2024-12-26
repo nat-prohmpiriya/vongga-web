@@ -17,8 +17,8 @@ const NotiBtn = () => {
     )
 
     return (
-        <Popover trigger="click" content={content} overlayInnerStyle={{ backgroundColor: '#F3F4F6' }}>
-            <button className="p-2 bg-gray-100 rounded-lg">
+        <Popover trigger="hover" content={content} overlayInnerStyle={{ backgroundColor: '#F3F4F6' }}>
+            <button className="p-2 bg-gray-100 rounded-lg  hover:scale-125 transition-transform duration-300">
                 <IoNotificationsOutline className="text-xl text-gray-600" />
             </button>
         </Popover>
