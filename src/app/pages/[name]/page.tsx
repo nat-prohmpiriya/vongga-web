@@ -6,6 +6,7 @@ import { useEffect, useState } from 'react'
 import { User } from '@/types/user'
 import userService from '@/services/user.service'
 import PostSection from '@/components/page/PostSection'
+import ContainerPage from '@/components/common/ContainerPage'
 
 const DetailPage = () => {
 
@@ -24,10 +25,10 @@ const DetailPage = () => {
     }
 
     return (
-        <div>
+        <ContainerPage>
             <HeroBanner user={userProfile} />
             <PostSection userProfileId={userProfile?.id} />
-        </div>
+        </ContainerPage>
     )
 }
 
