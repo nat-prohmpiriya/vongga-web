@@ -27,11 +27,11 @@ const LeftSideBar = () => {
 			icon: <FaRegUser className="text-xl" />,
 			href: '/connections',
 		},
-		// {
-		// 	name: 'Groups',
-		// 	icon: <GrGroup className="text-xl" />,
-		// 	href: '/groups',
-		// },
+		{
+			name: 'Groups',
+			icon: <GrGroup className="text-xl" />,
+			href: '/groups',
+		},
 		// {
 		// 	name: 'Articles',
 		// 	icon: <IoNewspaperOutline className="text-xl" />,

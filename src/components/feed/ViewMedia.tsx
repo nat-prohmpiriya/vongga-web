@@ -111,7 +111,7 @@ const ViewMedia = forwardRef<ViewMediaRef, ViewMediaProps>((prop, ref) => {
                 <button className='absolute top-[calc(50%)] left-4 text-white text-4xl bg-black/30 p-1 rounded-full' onClick={handlerPrev}>
                     <IoArrowBackCircleOutline className='hover:scale-125 transition-all duration-300' />
                 </button>
-                <img src={allposts[currentPostIndex]?.media?.[0].url} className='object-cover w-auto h-full' />
+                <img src={allposts[currentPostIndex]?.media?.[0].url} className='object-contain' />
             </div>
             <div className='col-span-2 bg-white p-4'>
                 <div className='flex items-center gap-2 mb-4'>
