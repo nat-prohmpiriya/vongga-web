@@ -2,7 +2,7 @@
 
 import ContainerPage from '@/components/common/ContainerPage'
 import { Input } from 'antd'
-import { UserCard } from '@/components/page/UserCardList/UserCard'
+import { UserCard } from '@/components/page/UserCardSlide/UserCard'
 import { useState } from 'react'
 import { UserList } from '@/services/user.service'
 import userService from '@/services/user.service'

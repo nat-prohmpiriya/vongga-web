@@ -12,7 +12,7 @@ import { Post } from '@/types/post'
 import postService from '@/services/post.service'
 import clientToken from '@/utils/clientToken'
 import userService from '@/services/user.service'
-import { UserCardList } from '@/components/page/UserCardList'
+import { UserCardList } from '@/components/page/UserCardSlide'
 import { usersCardList } from '@/data/users'
 
 export default function FeedPage() {
