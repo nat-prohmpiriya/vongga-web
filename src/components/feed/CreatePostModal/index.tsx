@@ -14,7 +14,7 @@ import postService, { CreatePost } from '@/services/post.service'
 import VBtn from '@/components/common/VBtn'
 import { Post, Media, SubPost } from '@/types/post'
 import { useUpload } from '@/hooks/useUpload'
-import { Modal } from 'antd'
+import { Modal, Avatar } from 'antd'
 
 export interface CreatePostModalRef {
 	open: () => void
@@ -44,7 +44,7 @@ const CreatePostModal = forwardRef<CreatePostModalRef, ModalProps>((props, ref) 
 
 		const newFiles = Array.from(files).filter(file => {
 			const type = file.type.split('/')[0]
-			return type === 'image' || type === 'video'
+			return type === 'image' //|| type === 'video'
 		})
 
 		setMediaFiles(prev => [...prev, ...newFiles])
@@ -75,7 +75,7 @@ const CreatePostModal = forwardRef<CreatePostModalRef, ModalProps>((props, ref) 
 		setMediaPreviews(prev => prev.filter((_, i) => i !== index))
 	}
 
-	const createSubPosts = (mediaUrls: string[]): SubPost[] => {
+	const createSubPosts = (mediaUrls: string[]) => {
 
 		// Create one subpost for each media (except the first one which goes to main post)
 		return mediaUrls.map((url, index) => ({
@@ -163,28 +163,28 @@ const CreatePostModal = forwardRef<CreatePostModalRef, ModalProps>((props, ref) 
 			width={600}
 			footer={null}
 		>
-			<div className="relative border-b border-gray-200 p-4">
-				<h2 className="text-xl font-semibold text-center">{post?.content ? 'Update post' : 'Create post'}</h2>
+			<div className="relative border-b border-gray-200">
+				<h2 className="text-xl font-semibold text-center mb-4">{post?.content ? 'Update post' : 'Create post'}</h2>
 				<button
 					onClick={() => setIsClose(true)}
-					className="absolute right-4 top-4 p-1 rounded-full hover:bg-gray-100"
+					className="absolute right-4 top-1 p-1 rounded-full hover:bg-gray-100"
 				>
 					<IoClose size={24} />
 				</button>
 			</div>
 
 			<div className="p-4">
-				<div className="flex items-center gap-2 mb-4">
-					<div className="w-10 h-10 rounded-full overflow-hidden">
-						<Image
-							src={user?.photoProfile || ''}
-							alt="User avatar"
-							width={40}
-							height={40}
+				<div className="flex items-center gap-5 mb-4">
+					<div className="w-12 h-12 rounded-full overflow-hidden border border-gray-300 ">
+						<Avatar
+							size={64}
+							src={user?.photoProfile}
+							alt="Profile"
+							className="w-full h-full object-cover"
 						/>
 					</div>
 					<div>
-						<p className="font-semibold">Nat Prohmpiriya</p>
+						<p className="font-semibold">{user?.username}</p>
 						<button className="flex items-center gap-1 px-2 py-1 bg-gray-200 rounded-md text-sm">
 							<span>Only me</span>
 						</button>

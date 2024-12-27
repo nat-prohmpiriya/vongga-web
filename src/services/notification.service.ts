@@ -3,8 +3,8 @@ import vonggaAxios from "@/utils/vonggaAxios"
 
 export interface notificationResponseItem {
     id: string;
-    createdAt: Date;
-    updatedAt: Date;
+    createdAt: string;
+    updatedAt: string;
     isActive: boolean;
     version: number;
     recipientId: string;
@@ -14,7 +14,18 @@ export interface notificationResponseItem {
     refType: string;
     message: string;
     isRead: boolean;
+    sender: Sender;
 }
+
+export interface Sender {
+    userId: string;
+    username: string;
+    displayName: string;
+    photoProfile: string;
+    firstName: string;
+    lastName: string;
+}
+
 
 interface notificationResponse {
     notifications: notificationResponseItem[];
@@ -33,6 +44,21 @@ class NotifcationService {
             return null
         }
     }
+
+    async markNotificationAsRead(id: string) {
+        try {
+            const response = await vonggaAxios.post(`/notifications/${id}/read`)
+            return response.data
+        } catch (error: any) {
+            console.error('markNotificationAsRead error', {
+                message: error?.response?.data?.message || error.message,
+                status: error?.response?.status
+            })
+            return null
+        }
+    }
+
+
 }
 
 export default new NotifcationService()
