@@ -7,8 +7,8 @@ class FriendShipService {
             return response.data
         } catch (error: any) {
             console.error('followUser error', {
-                message: error.response.data.message,
-                status: error.response.status
+                message: error?.response?.data?.message || error.message,
+                status: error?.response?.status
             })
             return null
         }
@@ -20,8 +20,8 @@ class FriendShipService {
             return response.data
         } catch (error: any) {
             console.error('unfollowUser error', {
-                message: error.response.data.message,
-                status: error.response.status
+                message: error?.response?.data?.message || error.message,
+                status: error?.response?.status
             })
             return null
         }
@@ -33,8 +33,8 @@ class FriendShipService {
             return response.data
         } catch (error: any) {
             console.error('unfollowUser error', {
-                message: error.response.data.message,
-                status: error.response.status
+                message: error?.response?.data?.message || error.message,
+                status: error?.response?.status
             })
             return null
         }
@@ -45,8 +45,8 @@ class FriendShipService {
             return response.data
         } catch (error: any) {
             console.error('unfollowUser error', {
-                message: error.response.data.message,
-                status: error.response.status
+                message: error?.response?.data?.message || error.message,
+                status: error?.response?.status
             })
             return null
         }
@@ -57,8 +57,8 @@ class FriendShipService {
             return response.data
         } catch (error: any) {
             console.error('getFriendRequests error', {
-                message: error.response.data.message,
-                status: error.response.status
+                message: error?.response?.data?.message || error.message,
+                status: error?.response?.status
             })
             return null
         }

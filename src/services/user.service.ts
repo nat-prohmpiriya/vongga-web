@@ -38,8 +38,8 @@ class UserService {
             return response.data.user
         } catch (error: any) {
             console.error('getUserInfoByUsername error', {
-                message: error.response.data.message,
-                status: error.response.status
+                message: error?.response?.data?.message || error.message,
+                status: error?.response?.status
             })
             return null
         }
@@ -51,8 +51,8 @@ class UserService {
             return response.data.user
         } catch (error: any) {
             console.error('updateUserProfile error', {
-                message: error.response.data.message,
-                status: error.response.status
+                message: error?.response?.data?.message || error.message,
+                status: error?.response?.status
             })
             return null
         }
@@ -64,7 +64,7 @@ class UserService {
             return response.data.user
         } catch (error: any) {
             console.error('getMyProfile error', {
-                message: error?.response?.data?.message,
+                message: error?.response?.data?.message || error.message,
                 status: error?.response?.status
             })
             return null
@@ -77,8 +77,8 @@ class UserService {
             return response.data
         } catch (error: any) {
             console.error('getUsers error', {
-                message: error.response.data.message,
-                status: error.response.status
+                message: error?.response?.data?.message || error.message,
+                status: error?.response?.status
             })
             return null
         }

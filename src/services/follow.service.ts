@@ -8,8 +8,8 @@ class FollowService {
             return response.data
         } catch (error: any) {
             console.error('getFollowers error', {
-                message: error.response.data.message,
-                status: error.response.status
+                message: error?.response?.data?.message || error.message,
+                status: error?.response?.status
             })
             return null
         }
@@ -21,8 +21,8 @@ class FollowService {
             return response.data
         } catch (error: any) {
             console.error('getFollowers error', {
-                message: error.response.data.message,
-                status: error.response.status
+                message: error?.response?.data?.message || error.message,
+                status: error?.response?.status
             })
             return null
         }
@@ -34,8 +34,8 @@ class FollowService {
             return response.data
         } catch (error: any) {
             console.error('getFollowers error', {
-                message: error.response.data.message,
-                status: error.response.status
+                message: error?.response?.data?.message || error.message,
+                status: error?.response?.status
             })
             return null
         }
@@ -47,8 +47,8 @@ class FollowService {
             return response.data
         } catch (error: any) {
             console.error('getFollowers error', {
-                message: error.response.data.message,
-                status: error.response.status
+                message: error?.response?.data?.message || error.message,
+                status: error?.response?.status
             })
             return null
         }

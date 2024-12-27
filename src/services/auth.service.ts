@@ -19,8 +19,8 @@ class AuthService {
             return data
         } catch (error: any) {
             console.error('Error verifying Firebase token: ', {
-                message: error.response.data.message,
-                status: error.response.status
+                message: error?.response?.data?.message || error.message,
+                status: error?.response?.status
             })
             throw error
         }
@@ -36,8 +36,8 @@ class AuthService {
             return data
         } catch (error: any) {
             console.error('Error refreshing token: ', {
-                message: error.response.data.message,
-                status: error.response.status
+                message: error?.response?.data?.message || error.message,
+                status: error?.response?.status
             })
             return null
         }
@@ -50,8 +50,8 @@ class AuthService {
             return resultLogout
         } catch (error: any) {
             console.error('Error logging out: ', {
-                message: error.response.data.message,
-                status: error.response.status
+                message: error?.response?.data?.message || error.message,
+                status: error?.response?.status
             })
             return null
         }

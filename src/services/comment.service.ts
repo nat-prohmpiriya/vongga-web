@@ -9,15 +9,15 @@ interface CreateComment {
 class CommentService {
     async createComment({ content, postId, parentId }: CreateComment) {
         try {
-            const response = await vonggaAxios.post(`/comments/posts/${postId}`, { 
+            const response = await vonggaAxios.post(`/comments/posts/${postId}`, {
                 content,
-                parentId 
+                parentId
             })
             return response.data
         } catch (error: any) {
             console.error('createComment error', {
-                message: error.response.data.message,
-                status: error.response.status
+                message: error?.response?.data?.message || error.message,
+                status: error?.response?.status
             })
             return null
         }
@@ -31,8 +31,8 @@ class CommentService {
             return response.data
         } catch (error: any) {
             console.error('getComments error', {
-                message: error.response.data.message,
-                status: error.response.status
+                message: error?.response?.data?.message || error.message,
+                status: error?.response?.status
             })
             return null
         }
@@ -45,8 +45,8 @@ class CommentService {
             return response.data
         } catch (error: any) {
             console.error('deleteComment error', {
-                message: error.response.data.message,
-                status: error.response.status
+                message: error?.response?.data?.message || error.message,
+                status: error?.response?.status
             })
             return null
         }

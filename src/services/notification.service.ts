@@ -27,8 +27,8 @@ class NotifcationService {
             return response.data
         } catch (error: any) {
             console.error('getNotifications error', {
-                message: error.response.data.message,
-                status: error.response.status
+                message: error?.response?.data?.message || error.message,
+                status: error?.response?.status
             })
             return null
         }

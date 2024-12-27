@@ -15,8 +15,8 @@ class ReactionService {
             return response.data
         } catch (error: any) {
             console.error('createReaction error', {
-                message: error.response.data.message,
-                status: error.response.status
+                message: error?.response?.data?.message || error.message,
+                status: error?.response?.status
             })
             return null
         }
@@ -28,8 +28,8 @@ class ReactionService {
             return response.data
         } catch (error: any) {
             console.error('getReactions error', {
-                message: error.response.data.message,
-                status: error.response.status
+                message: error?.response?.data?.message || error.message,
+                status: error?.response?.status
             })
             return null
         }
@@ -41,8 +41,8 @@ class ReactionService {
             return response.data
         } catch (error: any) {
             console.error('getReactionsComment error', {
-                message: error.response.data.message,
-                status: error.response.status
+                message: error?.response?.data?.message || error.message,
+                status: error?.response?.status
             })
             return null
         }
@@ -54,8 +54,8 @@ class ReactionService {
             return response.data
         } catch (error: any) {
             console.error('deleteReaction error', {
-                message: error.response.data.message,
-                status: error.response.status
+                message: error?.response?.data?.message || error.message,
+                status: error?.response?.status
             })
             return null
         }

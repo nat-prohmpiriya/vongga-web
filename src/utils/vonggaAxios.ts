@@ -63,7 +63,7 @@ vonggaAxios.interceptors.response.use(
                 })
                 .catch((error) => {
                     console.error('Error refreshing token expired: ', {
-                        message: error?.response?.data?.message,
+                        message: error?.response?.data?.message || error.message,
                         status: error?.response?.status
                     })
                     if (isClient()) {
