@@ -12,6 +12,8 @@ import { Post } from '@/types/post'
 import postService from '@/services/post.service'
 import clientToken from '@/utils/clientToken'
 import userService from '@/services/user.service'
+import { UserCardList } from '@/components/page/UserCardList'
+import { usersCardList } from '@/data/users'
 
 export default function FeedPage() {
     const { user, setUser } = useAuthStore()
@@ -54,11 +56,15 @@ export default function FeedPage() {
                         <LeftSideBar />
                     </div>
                 </div>
+                {/* Content Center */}
                 <div className="space-y-6 col-span-2">
                     <div className="bg-white rounded-xl overflow-hidden">
                         <ShortListBar />
                     </div>
                     <CreateContentBar />
+                    <UserCardList users={usersCardList} />
+
+                    {/* Posts */}
                     {
                         posts?.map((post, index) => (
                             <PostCard key={index} post={post} fetchPosts={handlerFetchPosts} />

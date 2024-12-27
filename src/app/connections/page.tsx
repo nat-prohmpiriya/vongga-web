@@ -1,61 +1,75 @@
-import SearchBar from '@/components/common/SearchBar'
+"use client"
+
 import ContainerPage from '@/components/common/ContainerPage'
+import { Input } from 'antd'
+import { UserCard } from '@/components/page/UserCardList/UserCard'
+import { useState } from 'react'
+import { UserList } from '@/services/user.service'
+import userService from '@/services/user.service'
+import { useEffect } from 'react'
 
 export default function ConnectionsPage() {
+    const [users, setUsers] = useState<UserList[]>([])
+    const [loading, setLoading] = useState(false)
+    const [search, setSearch] = useState('')
+    const [currentPage, setCurrentPage] = useState(1)
+    const [totalPages, setTotalPages] = useState(1)
+    const [pageSize, setPageSize] = useState(10)
+
+    const handlerSearch = async (value: string) => {
+        if (value) {
+            setLoading(true)
+            const result = await userService.getUsers({
+                page: currentPage,
+                pageSize,
+                sortBy: 'createdAt',
+                sortDir: 'desc',
+                search: value
+            })
+            if (result) {
+                setUsers(result.users)
+                setTotalPages(result.totalCount)
+                setCurrentPage(result.page)
+                setLoading(false)
+            }
+        } else {
+            setLoading(true)
+            const result = await userService.getUsers({
+                page: currentPage,
+                pageSize,
+                sortBy: 'createdAt',
+                sortDir: 'desc',
+                search: ''
+            })
+            if (result) {
+                setUsers(result.users)
+                setTotalPages(result.totalCount)
+                setCurrentPage(result.page)
+                setLoading(false)
+            }
+        }
+    }
+
+    useEffect(() => {
+        handlerSearch(search)
+    }, [])
+
+    useEffect(() => {
+        handlerSearch(search)
+    }, [search])
+
     return (
         <ContainerPage>
-            <div className="min-h-screen bg-gray-100 p-4 grid grid-cols-4 gap-4">
-                <div className="col-span-1 space-y-4 ">
-                    <div className="bg-white rounded-xl p-4 h-64">
-                        <h1>Sponser 1</h1>
-                    </div>
-                    <div className="bg-white rounded-xl p-4 h-64">
-                        <h1>Sponser 2</h1>
-                    </div>
-                    <div className="bg-white rounded-xl p-4 h-96">
-                        <h1>Sponser 3</h1>
-                    </div>
+            <div className="min-h-[calc(100vh-70px)] grid grid-cols-5 gap-4 pt-4">
+                <div className='col-span-1 bg-white rounded-lg'>
                 </div>
-                <div className="col-span-3">
-                    {/* Search ar */}
-                    <SearchBar title="Connections" />
-                    {/* Herobanner */}
-                    <div className="grid grid-cols-3 gap-2">
-                        <div className="col-span-1 space-y-4">
-                            <img
-                                src="https://picsum.photos/1501/701"
-                                alt="Banner"
-                                className="w-full h-[192px] object-cover rounded-xl"
-                            />
-                            <img
-                                src="https://picsum.photos/1502/702"
-                                alt="Banner"
-                                className="w-full h-[192px] object-cover rounded-xl"
-                            />
-                        </div>
-                        <div className="col-span-1 space-y-4">
-                            <img
-                                src="https://picsum.photos/1503/703"
-                                alt="Banner"
-                                className="w-full h-[192px] object-cover rounded-xl"
-                            />
-                            <img
-                                src="https://picsum.photos/1504/704"
-                                alt="Banner"
-                                className="w-full h-[192px] object-cover rounded-xl"
-                            />
-                        </div>
-                        <div className="col-span-1">
-                            <img
-                                src="https://picsum.photos/1505/705"
-                                alt="Banner"
-                                className="w-full h-[400px] object-cover rounded-xl"
-                            />
-                        </div>
+                <div className='col-span-4 bg-white p-4 rounded-lg'>
+                    <Input.Search size='large' placeholder="Search People" allowClear enterButton onSearch={handlerSearch} />
+                    <div className='flex flex-wrap gap-4 mt-4'>
+                        {users.map((user) => (
+                            <UserCard key={user.id} {...user} />
+                        ))}
                     </div>
-
-                    {/*People you may know  */}
-                    <div className="grid grid-cols-4 gap-4 mt-4"></div>
                 </div>
             </div>
         </ContainerPage>
