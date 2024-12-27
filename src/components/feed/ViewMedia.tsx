@@ -4,7 +4,7 @@ import { Post } from '@/types/post'
 import React, { forwardRef, useImperativeHandle, useState, useEffect } from 'react'
 import { IoCloseCircleOutline } from "react-icons/io5";
 import { useSearchParams, usePathname } from 'next/navigation'
-import CommentsBox from './CommentsBox';
+import CommentsBox from './CommentContent';
 import { IoArrowForwardCircleOutline, IoArrowBackCircleOutline } from "react-icons/io5";
 import { Avatar } from 'antd';
 import { formatISOToTimeAgo } from '@/utils/converTime';

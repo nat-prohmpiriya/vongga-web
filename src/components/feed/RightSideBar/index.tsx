@@ -29,11 +29,10 @@ const FollowUser: React.FC<FollowUserProps> = ({
             <p className="text-gray-500 text-xs truncate">{role}</p>
         </div>
         <button
-            className={`w-8 h-8 flex items-center justify-center rounded-full ${
-                isFollowing
-                    ? 'bg-blue-600 text-white'
-                    : 'bg-gray-100 hover:bg-gray-200'
-            }`}
+            className={`w-8 h-8 flex items-center justify-center rounded-full ${isFollowing
+                ? 'bg-blue-600 text-white'
+                : 'bg-gray-100 hover:bg-gray-200'
+                }`}
         >
             {isFollowing ? (
                 <IoPersonAdd className="text-lg" />
@@ -111,6 +110,14 @@ const RightSideBar = () => {
 
     return (
         <div className="space-y-6">
+            {/* premium ads */}
+            <div className="bg-white rounded-xl p-4">
+                <h2 className="font-semibold">Premium ads</h2>
+            </div>
+            {/* invite use chatbot */}
+            <div className="bg-white rounded-xl p-4">
+                <h2 className="font-semibold">Invite use Chatbot</h2>
+            </div>
             {/* Who to follow */}
             <div className="bg-white rounded-xl p-4">
                 <div className="flex items-center justify-between mb-4">
@@ -126,25 +133,6 @@ const RightSideBar = () => {
                 </div>
                 <button className="w-full text-center text-blue-500 hover:text-blue-600 text-sm font-medium mt-4">
                     View more
-                </button>
-            </div>
-
-            {/* Today's news */}
-            <div className="bg-white rounded-xl p-4">
-                <div className="flex items-center justify-between mb-4">
-                    <h2 className="font-semibold">Today's news</h2>
-                    <button className="text-gray-400 hover:text-gray-600">
-                        <IoEllipsisHorizontal className="text-xl" />
-                    </button>
-                </div>
-                <div className="divide-y">
-                    {news.map((item, index) => (
-                        <NewsItem key={index} {...item} />
-                    ))}
-                </div>
-                <button className="w-full text-center text-gray-500 hover:text-gray-600 text-sm font-medium mt-4 flex items-center justify-center gap-1">
-                    <IoEllipsisHorizontal className="text-lg" />
-                    View all latest news
                 </button>
             </div>
         </div>

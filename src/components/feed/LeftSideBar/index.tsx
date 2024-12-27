@@ -22,11 +22,11 @@ const LeftSideBar = () => {
 			icon: <IoHomeOutline className="text-xl" />,
 			href: '/feed',
 		},
-		// {
-		// 	name: 'Connections',
-		// 	icon: <FaRegUser className="text-xl" />,
-		// 	href: '/connections',
-		// },
+		{
+			name: 'Connections',
+			icon: <FaRegUser className="text-xl" />,
+			href: '/connections',
+		},
 		// {
 		// 	name: 'Groups',
 		// 	icon: <GrGroup className="text-xl" />,

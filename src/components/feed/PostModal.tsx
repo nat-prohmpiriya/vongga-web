@@ -2,7 +2,7 @@
 
 import React, { useImperativeHandle, useState, forwardRef } from 'react'
 import { Modal } from 'antd'
-import CommentsBox from './CommentsBox'
+import CommentsBox from './CommentContent'
 import type { Post } from '@/types/post'
 import type { Comment } from '@/types/comment'
 import PostContent from './PostContent'

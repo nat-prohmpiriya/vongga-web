@@ -10,9 +10,10 @@ import commentService from '@/services/comment.service'
 interface CommentBoxProps extends BaseProp {
     comment: Comment
     onReplyAdded?: () => void
+    deleteComment: (id: string) => void
 }
 
-const CommentBox = ({ comment, onReplyAdded }: CommentBoxProps) => {
+const CommentContent = ({ comment, onReplyAdded, deleteComment }: CommentBoxProps) => {
     const { user } = useAuthStore()
     const [showReplyInput, setShowReplyInput] = useState(false)
     const [replyContent, setReplyContent] = useState('')
@@ -56,14 +57,14 @@ const CommentBox = ({ comment, onReplyAdded }: CommentBoxProps) => {
                     </div>
                     <div className="flex items-center gap-4 mt-1 text-sm text-gray-500">
                         <ReactionButton commentId={comment?.id} />
-                        <button 
+                        <button
                             className="hover:text-gray-900"
                             onClick={() => setShowReplyInput(!showReplyInput)}
                         >
                             Reply
                         </button>
                         {comment.repliesCount > 0 && (
-                            <button 
+                            <button
                                 className="hover:text-gray-900"
                                 onClick={showReplies ? () => setShowReplies(false) : loadReplies}
                             >
@@ -71,6 +72,14 @@ const CommentBox = ({ comment, onReplyAdded }: CommentBoxProps) => {
                             </button>
                         )}
                         <span>{formatISOToTimeAgo(comment?.createdAt)}</span>
+                        {comment?.user?.userId === user?.id && (
+                            <button
+                                className="hover:text-gray-900"
+                                onClick={() => deleteComment?.(comment?.id)}
+                            >
+                                Delete
+                            </button>
+                        )}
                     </div>
 
                     {showReplyInput && (
@@ -98,10 +107,11 @@ const CommentBox = ({ comment, onReplyAdded }: CommentBoxProps) => {
                     {showReplies && replies.length > 0 && (
                         <div className="ml-8 mt-3 space-y-3">
                             {replies.map(reply => (
-                                <CommentBox 
-                                    key={reply.id} 
+                                <CommentContent
+                                    key={reply.id}
                                     comment={reply}
                                     onReplyAdded={loadReplies}
+                                    deleteComment={deleteComment}
                                 />
                             ))}
                         </div>
@@ -112,4 +122,4 @@ const CommentBox = ({ comment, onReplyAdded }: CommentBoxProps) => {
     )
 }
 
-export default CommentBox
+export default CommentContent

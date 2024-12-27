@@ -15,7 +15,7 @@ import commentService from '@/services/comment.service'
 import PostModal, { PostModalRef } from '@/components/feed/PostModal'
 import { useEffect } from 'react'
 import { Comment } from '@/types/comment'
-import CommentsBox from './CommentsBox'
+import CommentsBox from './CommentContent'
 import { FaComment } from "react-icons/fa";
 import { IoMdShareAlt } from "react-icons/io";
 import ReactionButton from '../common/ReactionButton'
@@ -34,13 +34,6 @@ export default function PostCard(props: PostProps) {
     const [comments, setComments] = useState<Comment[]>([])
     const postModalRef = useRef<PostModalRef>(null)
 
-    const statusPost = (value: PostVisibility) => {
-        if (value === 'public') {
-            return <GiWorld className="text-xl" />
-        } else {
-            return <RiGitRepositoryPrivateLine className="text-md" />
-        }
-    }
 
     const handlerSubmitComment = async () => {
         if (!comment || !props.post?.id) return
@@ -68,6 +61,15 @@ export default function PostCard(props: PostProps) {
             props.fetchPosts()
         } catch (error: any) {
             console.log('Delete post error', error)
+        }
+    }
+
+    const handleDeleteComment = async (id: string) => {
+        try {
+            const result = await commentService.deleteComment(id)
+            refreshComments()
+        } catch (error: any) {
+            console.log('Delete comment error', error)
         }
     }
 
@@ -125,6 +127,7 @@ export default function PostCard(props: PostProps) {
                             comment={comment}
                             key={comment.id}
                             onReplyAdded={refreshComments}
+                            deleteComment={handleDeleteComment}
                         />
                     ))}
                 </div>

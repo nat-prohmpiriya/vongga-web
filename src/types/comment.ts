@@ -6,7 +6,14 @@ export interface Comment {
     postId: string
     post?: Post
     userId: string
-    user?: User
+    user?: {
+        userId: string
+        username: string
+        displayName: string
+        photoProfile: string
+        firstName: string
+        lastName: string
+    }
     parentId?: string
     parent?: Comment
     content: string
