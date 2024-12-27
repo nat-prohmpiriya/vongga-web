@@ -3,7 +3,7 @@ import vonggaAxios from "@/utils/vonggaAxios";
 class FriendShipService {
     async sendFriendRequest(userId: string) {
         try {
-            const response = await vonggaAxios.post(`/friendship/request${userId}`)
+            const response = await vonggaAxios.post(`/friendships/request/${userId}`)
             return response.data
         } catch (error: any) {
             console.error('followUser error', {
@@ -16,7 +16,7 @@ class FriendShipService {
 
     async acceptFriendRequest(userId: string) {
         try {
-            const response = await vonggaAxios.post(`/friendship/${userId}`)
+            const response = await vonggaAxios.post(`/friendships/${userId}`)
             return response.data
         } catch (error: any) {
             console.error('unfollowUser error', {
@@ -29,7 +29,7 @@ class FriendShipService {
 
     async rejectFriendRequest(userId: string) {
         try {
-            const response = await vonggaAxios.post(`/friendship/reject/${userId}`)
+            const response = await vonggaAxios.post(`/friendships/reject/${userId}`)
             return response.data
         } catch (error: any) {
             console.error('unfollowUser error', {
@@ -41,7 +41,7 @@ class FriendShipService {
     }
     async unFriend(userId: string) {
         try {
-            const response = await vonggaAxios.post(`/friendship/${userId}`)
+            const response = await vonggaAxios.post(`/friendships/${userId}`)
             return response.data
         } catch (error: any) {
             console.error('unfollowUser error', {
@@ -53,7 +53,7 @@ class FriendShipService {
     }
     async getFriendRequests() {
         try {
-            const response = await vonggaAxios.get(`/friendship/requests`)
+            const response = await vonggaAxios.get(`/friendships/requests`)
             return response.data
         } catch (error: any) {
             console.error('getFriendRequests error', {

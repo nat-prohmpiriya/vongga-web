@@ -4,7 +4,7 @@ import vonggaAxios from "@/utils/vonggaAxios";
 class FollowService {
     async followUser(userId: string) {
         try {
-            const response = await vonggaAxios.get(`/follow/${userId}`)
+            const response = await vonggaAxios.post(`/follows/${userId}`)
             return response.data
         } catch (error: any) {
             console.error('getFollowers error', {
@@ -17,7 +17,7 @@ class FollowService {
 
     async unfollowUser(userId: string) {
         try {
-            const response = await vonggaAxios.delete(`/follow/${userId}`)
+            const response = await vonggaAxios.delete(`/follows/${userId}`)
             return response.data
         } catch (error: any) {
             console.error('getFollowers error', {
@@ -30,7 +30,7 @@ class FollowService {
 
     async blockUser(userId: string) {
         try {
-            const response = await vonggaAxios.get(`/follow/${userId}`)
+            const response = await vonggaAxios.post(`/follows/${userId}`)
             return response.data
         } catch (error: any) {
             console.error('getFollowers error', {
@@ -43,7 +43,7 @@ class FollowService {
 
     async unblockUser(userId: string) {
         try {
-            const response = await vonggaAxios.delete(`/follow/${userId}`)
+            const response = await vonggaAxios.delete(`/follows/${userId}`)
             return response.data
         } catch (error: any) {
             console.error('getFollowers error', {

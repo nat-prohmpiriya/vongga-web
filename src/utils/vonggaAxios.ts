@@ -48,21 +48,33 @@ vonggaAxios.interceptors.response.use(
             } else {
                 refreshToken = (await serverToken.getToken()).refreshToken
             }
-            const response = await axios.post(
-                `${process.env.NEXT_PUBLIC_VONGGA_API_URL}/auth/refresh`,
-                { refreshToken }
-            )
-            if (response?.status === 200) {
-                const token = response.data
-                if (isClient()) {
-                    clientToken.setToken(token)
-                } else {
-                    serverToken.setToken(token)
-                }
-                const retryConfig = error.config
-                retryConfig.headers.Authorization = `Bearer ${token.accessToken}`
-                return axios(retryConfig)
-            }
+
+            await axios.post(`${process.env.NEXT_PUBLIC_VONGGA_API_URL}/auth/refresh`, { refreshToken })
+                .then((response) => {
+                    const token = response.data
+                    if (isClient()) {
+                        clientToken.setToken(token)
+                    } else {
+                        serverToken.setToken(token)
+                    }
+                    const retryConfig = error.config
+                    retryConfig.headers.Authorization = `Bearer ${token.accessToken}`
+                    return axios(retryConfig)
+                })
+                .catch((error) => {
+                    console.error('Error refreshing token expired: ', {
+                        message: error?.response?.data?.message,
+                        status: error?.response?.status
+                    })
+                    if (isClient()) {
+                        clientToken.clearToken()
+                        localStorage.removeItem('auth-storage')
+                        window.location.href = '/'
+                    }
+                    return Promise.reject(error)
+                })
+
+
         } catch (error) {
             return Promise.reject(error)
         }
