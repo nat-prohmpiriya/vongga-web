@@ -1,7 +1,7 @@
 "use client"
 
 import { IoNotificationsOutline } from 'react-icons/io5'
-import { Avatar, Popover } from 'antd'
+import { Avatar, Popover, Button } from 'antd'
 import { useEffect, useState } from 'react'
 import { useAuthStore } from '@/store/auth.store'
 import notificationService, { notificationResponseItem } from '@/services/notification.service'
@@ -45,7 +45,7 @@ const NotiBtn = () => {
 
 
     const content = (
-        <div className="w-[350px] p-1">
+        <div className="w-[355px] p-1">
             <h3 className="text-lg font-semibold mb-3 ">Notifications</h3>
             <div className="flex flex-col bg-white rounded-t-xl ">
                 <div className="flex gap-4 my-3 px-4">
@@ -93,9 +93,13 @@ const NotiBtn = () => {
     return (
         <Popover trigger="click" content={content} overlayInnerStyle={{ backgroundColor: '#F3F4F6' }}>
             <Badge count={countNotRead(notificationsData)}>
-                <button className="p-2 bg-gray-100 rounded-lg  hover:scale-125 transition-transform duration-300">
-                    <IoNotificationsOutline className="text-xl text-gray-600" />
-                </button>
+                <Button
+                    color="default"
+                    variant="filled"
+                    icon={<IoNotificationsOutline size={24} />}
+                    shape='circle'
+                    size='large'
+                />
             </Badge>
         </Popover>
     )

@@ -9,7 +9,6 @@ import { MdWorkspacePremium } from 'react-icons/md'
 import { PiVideoLight } from 'react-icons/pi'
 import { CgGames } from 'react-icons/cg'
 import Link from 'next/link'
-import { Popover } from 'antd'
 import { IoCreateOutline } from 'react-icons/io5'
 import { BiBookOpen } from 'react-icons/bi'
 import { BsPlayBtn } from 'react-icons/bs'
@@ -20,6 +19,7 @@ import { RiGroupLine } from 'react-icons/ri'
 import { FaRegCalendarAlt } from 'react-icons/fa'
 import { BsShop } from 'react-icons/bs'
 import { useRouter } from 'next/navigation'
+import { Row, Col, Flex, Button, Popover } from 'antd'
 
 export default function MenuBtn() {
     const router = useRouter()
@@ -132,10 +132,10 @@ export default function MenuBtn() {
         // },
     ]
     const content = (
-        <div className="p-1 w-[600px]">
+        <div className="p-1 w-[360px] md:w-[500px] lg:w-[625px]">
             <h3 className="text-lg font-semibold mb-2">Menu</h3>
-            <div className="grid grid-cols-5 gap-4">
-                <div className="col-span-3 bg-white rounded-xl p-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+                <div className="col-span-1 md:col-span-2 bg-white rounded-xl p-4">
                     <h3 className="text-md font-semibold">Explore</h3>
                     {listBtn.map((item, index) => (
                         <span
@@ -155,8 +155,8 @@ export default function MenuBtn() {
                     <div className="divide-y divide-gray-200" />
                 </div>
 
-                <div className="col-span-2 bg-white rounded-xl p-4">
-                    <h3 className="text-lg font-semibold mb-2">Create</h3>
+                <div className="col-span-1 md:col-span-1  bg-white rounded-xl p-4">
+                    <h3 className="text-md font-semibold">Create</h3>
                     {menuItems.map((item) => (
                         <div
                             key={item.id}
@@ -179,10 +179,8 @@ export default function MenuBtn() {
     )
 
     return (
-        <Popover content={content} overlayInnerStyle={{ backgroundColor: '#F3F4F6' }}>
-            <button className="p-2 bg-gray-100 rounded-lg  hover:scale-125 transition-transform duration-300">
-                <IoAppsOutline className="text-xl" />
-            </button>
-        </Popover>
+        <Popover trigger={'click'} content={content} overlayInnerStyle={{ backgroundColor: '#F3F4F6' }}>
+            <Button color="default" variant="filled" icon={<IoAppsOutline size={24} />} shape='circle' size='large' />
+        </Popover >
     )
 }

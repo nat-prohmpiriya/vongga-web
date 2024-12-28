@@ -32,7 +32,7 @@ export const UserCardList: React.FC<UserCardListProps> = ({
     };
 
     return (
-        <Card>
+        <Card className="shadow-lg">
             <Space direction="vertical" style={{ width: '100%' }} size="small">
                 <Title level={5} style={{ margin: 0 }}>{title}</Title>
                 <div style={{ position: 'relative' }}>

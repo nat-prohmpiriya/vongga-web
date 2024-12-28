@@ -19,7 +19,7 @@ const AccountBtn = () => {
     }
 
     const content = (
-        <div className="w-[300px] p-1">
+        <div className="w-[355px] p-1">
             <h3 className="text-lg font-semibold mb-2">Account</h3>
             <div className="col-span-3 bg-white rounded-xl">
                 <div className="flex flex-col bg-white rounded-xl p-3">
@@ -40,13 +40,13 @@ const AccountBtn = () => {
         </div>
     )
     return (
-        <Popover trigger="hover" content={content} overlayInnerStyle={{ backgroundColor: '#F3F4F6' }}>
+        <Popover trigger="click" content={content} overlayInnerStyle={{ backgroundColor: '#F3F4F6' }}>
             {/* User Avatar */}
             <Avatar
-                size={'large'}
+                size='large'
                 src={user?.photoProfile}
                 alt={user?.username || 'User'}
-                className=" cursor-pointer hover:scale-125 transition-transform duration-300"
+                className=" cursor-pointer"
             />
         </Popover>
     )

@@ -2,7 +2,7 @@
 
 import React, { useImperativeHandle, useState, forwardRef } from 'react'
 import { Modal } from 'antd'
-import CommentsBox from './CommentContent'
+import CommentContent from './CommentContent'
 import type { Post } from '@/types/post'
 import type { Comment } from '@/types/comment'
 import PostContent from './PostContent'
@@ -36,7 +36,7 @@ const PostModal = forwardRef<PostModalRef, PostModalProps>((prop, ref) => {
                 <PostContent post={post} postType='modal' deletePost={prop.deletePost} />
                 {
                     (prop.comments || []).map((comment) => (
-                        <CommentsBox key={comment.id} comment={comment} />
+                        <CommentContent key={comment.id} comment={comment} />
                     ))
                 }
             </div>

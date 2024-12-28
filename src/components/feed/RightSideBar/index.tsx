@@ -109,13 +109,13 @@ const RightSideBar = () => {
     ]
 
     return (
-        <div className="space-y-6">
+        <div className="space-y-4">
             {/* premium ads */}
-            <div className="bg-white rounded-xl p-4">
+            <div className="bg-white rounded-xl p-2 h-40">
                 <h2 className="font-semibold">Premium ads</h2>
             </div>
             {/* invite use chatbot */}
-            <div className="bg-white rounded-xl p-4">
+            <div className="bg-white rounded-xl p-2 h-40">
                 <h2 className="font-semibold">Invite use Chatbot</h2>
             </div>
             {/* Who to follow */}

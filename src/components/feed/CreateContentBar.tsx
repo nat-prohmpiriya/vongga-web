@@ -16,9 +16,9 @@ const CreateContentBar = () => {
 
 
     return (
-        <div className="bg-white rounded-xl p-4 shadow-sm" onClick={() => modalRef.current?.open()}>
+        <div className="bg-white rounded-xl p-4 shadow-sm mb-4" onClick={() => modalRef.current?.open()}>
             {/* Input Area */}
-            <div className="flex items-center gap-3 mb-4">
+            <div className="flex items-center gap-3">
                 <div className="w-10 h-10 rounded-full overflow-hidden flex-shrink-0">
                     <img
                         src={user?.photoProfile}
@@ -36,7 +36,7 @@ const CreateContentBar = () => {
             </div>
 
             {/* Action Buttons */}
-            <div className="flex items-center justify-between pt-2 border-t">
+            {/* <div className="flex items-center justify-between pt-2 border-t">
                 <button className="flex items-center gap-2 px-4 py-2 hover:bg-gray-100 rounded-lg text-gray-600">
                     <IoImageOutline className="text-xl text-green-500" />
                     <span>Photo</span>
@@ -56,7 +56,7 @@ const CreateContentBar = () => {
                 <button className="p-2 hover:bg-gray-100 rounded-lg text-gray-600">
                     <IoEllipsisHorizontalOutline className="text-xl" />
                 </button>
-            </div>
+            </div> */}
             <CreatePostModal ref={modalRef} />
         </div>
     )

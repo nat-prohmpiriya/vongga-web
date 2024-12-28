@@ -1,6 +1,6 @@
 "use client"
 import LeftSideBar from '@/components/feed/LeftSideBar/index'
-import ShortListBar from '@/components/feed/ShortListBar'
+import StoriesSlide from '@/components/story/StoriesSlide'
 import CreateContentBar from '@/components/feed/CreateContentBar'
 import RightSideBar from '@/components/feed/RightSideBar'
 import PostCard from '@/components/feed/PostCard'
@@ -14,6 +14,7 @@ import clientToken from '@/utils/clientToken'
 import userService from '@/services/user.service'
 import { UserCardList } from '@/components/page/UserCardSlide'
 import { usersCardList } from '@/data/users'
+import { Row, Col, Button } from 'antd'
 
 export default function FeedPage() {
     const { user, setUser } = useAuthStore()
@@ -49,32 +50,28 @@ export default function FeedPage() {
 
 
     return (
-        <ContainerPage>
-            <div className="max-w-[1600px] mx-auto grid grid-cols-4 gap-6 py-4">
-                <div className="sticky top-16 overflow-y-auto col-span-1">
-                    <div className="bg-white rounded-xl overflow-hidden">
-                        <LeftSideBar />
-                    </div>
+        <Row gutter={[16, 16]} className='min-h-[100vh] bg-gray-100 pt-4'>
+            <Col xs={0} sm={0} md={6} className="">
+                <div className="bg-white rounded-xl overflow-hidden">
+                    <LeftSideBar />
                 </div>
-                {/* Content Center */}
-                <div className="space-y-6 col-span-2">
-                    <div className="bg-white rounded-xl overflow-hidden">
-                        <ShortListBar />
-                    </div>
-                    <CreateContentBar />
-                    <UserCardList users={usersCardList} />
+            </Col>
+            {/* Content Center */}
+            <Col xs={24} sm={24} md={12} className="">
+                <StoriesSlide />
+                <CreateContentBar />
+                <UserCardList users={usersCardList} />
 
-                    {/* Posts */}
-                    {
-                        posts?.map((post, index) => (
-                            <PostCard key={index} post={post} fetchPosts={handlerFetchPosts} />
-                        ))
-                    }
-                </div>
-                <div className=" top-16  col-span-1">
-                    <RightSideBar />
-                </div>
-            </div>
-        </ContainerPage>
+                {/* Posts */}
+                {
+                    posts?.map((post, index) => (
+                        <PostCard key={index} post={post} fetchPosts={handlerFetchPosts} />
+                    ))
+                }
+            </Col>
+            <Col xs={0} sm={0} md={6} className="">
+                <RightSideBar />
+            </Col>
+        </Row>
     )
 }

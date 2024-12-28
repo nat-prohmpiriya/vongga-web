@@ -9,6 +9,8 @@ import { useAuthStore } from '@/store/auth.store'
 import { useState, useEffect } from 'react'
 import AccountBtn from './AccountBtn'
 import { RiRobot3Line } from "react-icons/ri";
+import { Row, Col, Flex, Button } from 'antd'
+import ChatButton from './ChatButton'
 
 const HeaderBar = () => {
 	const router = useRouter()
@@ -33,56 +35,36 @@ const HeaderBar = () => {
 	}
 
 	return (
-		<div className="w-full h-16 bg-white border-b flex items-center px-4 grid grid-cols-3 fixed top-0 left-0 right-0 z-50">
-			{/* Left section */}
-			<div className="col-span-1">
-				<span
-					className="p-2 cursor-pointer rounded-lg"
-					onClick={() => goToFeedPage()}
-				>
-					<span className="font-semibold text-black">
-						SABAIMAI
-					</span>
-				</span>
-			</div>
+		<Row justify='space-between' align={'middle'} className="bg-white h-[64px] sticky top-0 z-50">
+			<Col xs={0} sm={12} md={8} className='flex items-center'>
+				<Flex justify="start" className='px-4' align="center" gap={16}>
+					<h1 className="text-2xl font-bold cursor-pointer" onClick={goToFeedPage}>Vongga</h1>
 
-			{/* Center section - Search */}
-			<div className="col-span-1">
-				{/* <div className="relative">
-            <input
-              type="text"
-              placeholder="Search..."
-              className="w-full px-4 py-2 pl-10 bg-gray-100 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-            />
-            <IoMdSearch className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 text-xl" />
-          </div> */}
-			</div>
-
-			{/* Right section */}
-			<div className="col-span-1 flex items-center justify-end gap-5">
-				<MenuBtn />
-				{/* <button
-					className="p-2 bg-gray-100 rounded-lg  hover:scale-125 transition-transform duration-300"
-					onClick={() => router.push('/cart')}
-				>
-					<BsCart3 className="text-xl text-gray-600" />
-				</button> */}
-				<button
-					className="p-2 bg-gray-100 rounded-lg  hover:scale-125 transition-transform duration-300"
-					onClick={() => router.push('/chatbot')}
-				>
-					<RiRobot3Line className="text-xl text-gray-600" />
-				</button>
-				<button
-					className="p-2 bg-gray-100 rounded-lg  hover:scale-125 transition-transform duration-300"
-					onClick={() => router.push('/chat')}
-				>
-					<FaRegCommentDots className="text-xl text-gray-600" />
-				</button>
-				<NotiBtn />
-				<AccountBtn />
-			</div>
-		</div>
+				</Flex>
+			</Col>
+			<Col xs={0} sm={0} md={8} className=''></Col>
+			<Col xs={0} sm={12} md={8}>
+				<Flex justify="end" className='px-4' align="center" gap={16}>
+					<MenuBtn />
+					<NotiBtn />
+					<ChatButton />
+					<AccountBtn />
+				</Flex>
+			</Col>
+			<Col xs={4} sm={0} md={0} className='flex items-center'>
+				<Flex justify="start" className='px-4' align="center" gap={16}>
+					<h1 className="text-2xl font-bold cursor-pointer" onClick={goToFeedPage}>Vongga</h1>
+				</Flex>
+			</Col>
+			<Col xs={20} sm={0} md={0} className='flex items-center'>
+				<Flex justify="end" className='px-4' align="center" gap={10}>
+					<MenuBtn />
+					<NotiBtn />
+					<ChatButton />
+					<AccountBtn />
+				</Flex>
+			</Col>
+		</Row>
 	)
 }
 

@@ -1,10 +1,23 @@
 
+"use client"
 
 import React from 'react'
+import { Button, Popover } from 'antd'
+import { LuMessageCircleMore } from "react-icons/lu";
+import { AiOutlineMessage } from "react-icons/ai";
+
 
 const ChatButton = () => {
     return (
-        <div>ChatButton</div>
+        <Popover title="Chat" trigger={'click'} content={<div>Chat content</div>}>
+            <Button
+                color="default"
+                variant="filled"
+                icon={<AiOutlineMessage size={24} />}
+                shape='circle'
+                size='large'
+            />
+        </Popover>
     )
 }
 
