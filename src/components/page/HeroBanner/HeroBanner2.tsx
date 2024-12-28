@@ -1,7 +1,6 @@
 "use client"
 
-import React from 'react'
-import { useState } from 'react'
+import { useState, useRef } from 'react'
 import { User } from '@/types/user'
 import { Row, Col, Button, Flex } from 'antd'
 import { MdAddAPhoto } from "react-icons/md";
@@ -10,14 +9,21 @@ import { TbPhotoEdit } from "react-icons/tb";
 import { HiDotsHorizontal } from "react-icons/hi";
 import { useAuthStore } from '@/store/auth.store'
 import { IoMdPersonAdd } from "react-icons/io";
+import UpdatePhotoModal, { UpdatePhotoModalRef } from '../UpdatePhotoModal'
+import UpdateProfileModal, { UpdateProfileModalRef } from '../UpdateProfileModal'
+import CreateStoryModal, { CreateStoryModalRef } from '@/components/story/CreateStoryModal2'
+
 
 type HeroBannerProp = {
     profilePage: User
 }
 
 const HeroBanner2 = (props: HeroBannerProp) => {
-    const [profilePage, setProfilePage] = useState<User | null>(null)
     const { user } = useAuthStore()
+    const updatePhotoModalRef = useRef<UpdatePhotoModalRef>(null)
+    const updateProfileModalRef = useRef<UpdateProfileModalRef>(null)
+    const createStoryModalRef = useRef<CreateStoryModalRef>(null)
+
     return (
         <div className="bg-white mb-4">
             {/* photoCover */}
@@ -44,6 +50,7 @@ const HeroBanner2 = (props: HeroBannerProp) => {
                             shape='circle'
                             size='large'
                             className='-mt-8 ml-[120px] z-10'
+                            onClick={() => updatePhotoModalRef.current?.open('photoProfile')}
                         />}
                         <h2 className="text-lg font-semibold mt-4">{props.profilePage.displayName || props.profilePage.username}</h2>
                         <p className="text-gray-500 mb-2">{props.profilePage.bio}</p>
@@ -63,6 +70,7 @@ const HeroBanner2 = (props: HeroBannerProp) => {
                             size='large'
                             className='mr-10 mt-5'
                             style={{ width: 120 }}
+                            onClick={() => updatePhotoModalRef.current?.open('photoCover')}
                         />}
                     </Flex>
                 </Col>
@@ -79,6 +87,7 @@ const HeroBanner2 = (props: HeroBannerProp) => {
                                     size='large'
                                     block
                                     icon={<TbPhotoEdit size={24} />}
+                                    onClick={() => createStoryModalRef.current?.open()}
                                 >
                                     Add Story
                                 </Button>
@@ -89,6 +98,7 @@ const HeroBanner2 = (props: HeroBannerProp) => {
                                     size='large'
                                     icon={<FaEdit size={24} />}
                                     block
+                                    onClick={() => updateProfileModalRef.current?.open()}
                                 >
                                     Edit Profile
                                 </Button>
@@ -136,6 +146,9 @@ const HeroBanner2 = (props: HeroBannerProp) => {
                         </Col>
                 }
             </Row>
+            <UpdatePhotoModal ref={updatePhotoModalRef} />
+            <UpdateProfileModal ref={updateProfileModalRef} />
+            <CreateStoryModal ref={createStoryModalRef} />
         </div>
     )
 }

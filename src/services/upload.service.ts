@@ -5,7 +5,7 @@ export interface UploadResponse {
   fileName: string;
 }
 
-export type UploadType = 'photoProfile' | 'photoCover' | 'postMedia';
+export type UploadType = 'photoProfile' | 'photoCover' | 'postMedia' | 'storyMedia';
 
 export const uploadService = {
   uploadFile: async (file: File, type: UploadType): Promise<UploadResponse> => {

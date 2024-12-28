@@ -7,8 +7,9 @@ import { AiOutlineMessage } from "react-icons/ai";
 
 
 const ChatButton = () => {
+    const content = <div>Chat content</div>
     return (
-        <Popover title="Chat" trigger={'click'} content={<div>Chat content</div>}>
+        <Popover title="Chat" trigger={'click'} content={content}>
             <Button
                 color="default"
                 variant="filled"
