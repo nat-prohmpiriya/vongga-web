@@ -10,7 +10,6 @@ import AuthForm from '@/components/common/SingInForm'
 import FooterLink from '@/components/common/FooterLink'
 import { Divider } from 'antd'
 
-
 export default function Home() {
 	const router = useRouter()
 	const { user } = useAuthStore()

@@ -39,6 +39,7 @@ const NotiBtn = () => {
     }
 
     useEffect(() => {
+        if (!user) return
         fetchNotifications()
     }, [user])
 

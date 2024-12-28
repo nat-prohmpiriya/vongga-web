@@ -1,6 +1,6 @@
 "use client"
 import LeftSideBar from '@/components/feed/LeftSideBar/index'
-import ShortListBar from '@/components/feed/ShortListBar'
+import StorySlider from '@/components/story/StoriesSlide'
 import CreateContentBar from '@/components/feed/CreateContentBar'
 import RightSideBar from '@/components/feed/RightSideBar'
 import PostCard from '@/components/feed/PostCard'
@@ -58,9 +58,7 @@ export default function FeedPage() {
                 </div>
                 {/* Content Center */}
                 <div className="space-y-6 col-span-2">
-                    <div className="bg-white rounded-xl overflow-hidden">
-                        <ShortListBar />
-                    </div>
+                    <StorySlider />
                     <CreateContentBar />
                     <UserCardList users={usersCardList} />
 
