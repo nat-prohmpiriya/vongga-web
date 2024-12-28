@@ -69,7 +69,7 @@ vonggaAxios.interceptors.response.use(
                     if (isClient()) {
                         clientToken.clearToken()
                         localStorage.removeItem('auth-storage')
-                        window.location.href = '/'
+                        // window.location.href = '/'
                     }
                     return Promise.reject(error)
                 })
