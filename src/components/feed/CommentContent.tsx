@@ -10,7 +10,7 @@ import commentService from '@/services/comment.service'
 interface CommentBoxProps extends BaseProp {
     comment: Comment
     onReplyAdded?: () => void
-    deleteComment: (id: string) => void
+    deleteComment?: (id: string) => void
 }
 
 const CommentContent = ({ comment, onReplyAdded, deleteComment }: CommentBoxProps) => {

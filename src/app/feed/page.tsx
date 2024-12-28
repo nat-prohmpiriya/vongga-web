@@ -57,12 +57,15 @@ export default function FeedPage() {
                 </div>
             </Col>
             {/* Content Center */}
-            <Col xs={24} sm={24} md={12} className="">
+            <Col xs={24} sm={24} md={12}>
                 <StoriesSlide />
                 <CreateContentBar />
                 <UserCardList users={usersCardList} />
 
                 {/* Posts */}
+                <div className="mt-4">
+                    <h2 className="text-lg font-semibold mb-4">Latest Updates</h2>
+                </div>
                 {
                     posts?.map((post, index) => (
                         <PostCard key={index} post={post} fetchPosts={handlerFetchPosts} />

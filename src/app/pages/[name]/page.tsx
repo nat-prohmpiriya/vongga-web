@@ -1,6 +1,6 @@
 "use client"
 
-import HeroBanner from '@/components/page/HeroBanner'
+import HeroBanner from '@/components/page/HeroBanner/HeroBanner2'
 import { useParams } from 'next/navigation'
 import { useEffect, useState } from 'react'
 import { User } from '@/types/user'
@@ -55,15 +55,14 @@ const DetailPage = () => {
     }
 
     return (
-        <ContainerPage>
+        <div>
             <HeroBanner profilePage={profilePage} />
             {!section && <PostSection profilePageId={profilePage?.id} />}
             {section === 'about' && <AboutSection />}
             {section === 'friends' && <ConnectionSection />}
             {section === 'gallery' && <GallerySection profilePageId={profilePage?.id} />}
             {/* {section === 'videos' && <VideosSection />} */}
-
-        </ContainerPage>
+        </div>
     )
 }
 
