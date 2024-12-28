@@ -55,8 +55,8 @@ export interface Post {
 
 export interface SubPost {
     id?: string
-    postId: string
-    userId: string
+    postId?: string
+    userId?: string
     user?: User
     type?: PostType
     content?: string

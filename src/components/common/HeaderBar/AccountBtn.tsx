@@ -19,13 +19,13 @@ const AccountBtn = () => {
     }
 
     const content = (
-        <div className="w-[200px] p-1">
+        <div className="w-[300px] p-1">
             <h3 className="text-lg font-semibold mb-2">Account</h3>
             <div className="col-span-3 bg-white rounded-xl">
                 <div className="flex flex-col bg-white rounded-xl p-3">
                     <div className='flex items-center gap-4 py-3 px-2 rounded-lg hover:bg-gray-100 cursor-pointer' onClick={() => router.push(`/pages/${user?.username}`)}>
                         <FaRegUser size={18} />
-                        <p className="font-semibold text-sm">Profile</p>
+                        <p className="font-semibold text-sm">{user?.displayName || user?.username}</p>
                     </div>
                     <div className='flex items-center gap-4 py-3 px-2 rounded-lg hover:bg-gray-100 cursor-pointer' onClick={() => router.push('/setting')}>
                         <IoSettingsOutline size={18} />

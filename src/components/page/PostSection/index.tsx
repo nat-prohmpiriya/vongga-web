@@ -9,7 +9,7 @@ import { Post } from '@/types/post'
 
 
 interface PostSectionProps extends BaseProp {
-    userProfileId: string
+    profilePageId: string
 }
 
 export default function PostSection(props: PostSectionProps) {
@@ -17,18 +17,18 @@ export default function PostSection(props: PostSectionProps) {
     const [posts, setPosts] = useState<Post[]>([])
 
     useEffect(() => {
-        if (props.userProfileId)
+        if (props.profilePageId)
             (async () => {
-                const posts = await postService.getPosts({ userId: props.userProfileId })
+                const posts = await postService.getPosts({ userId: props.profilePageId })
                 setPosts(posts)
             })()
-    }, [props.userProfileId])
+    }, [props.profilePageId])
 
     return (
         <div className='grid grid-cols-5 gap-4 mx-auto w-5/6 pt-4'>
             <div className="col-span-3 space-y-4">
                 <div className={`mx-auto ${props.className}`}>
-                    {user?.id === props.userProfileId && <CreateContentBar />}
+                    {user?.id === props.profilePageId && <CreateContentBar />}
                     <div className="mt-4">
                         <h2 className="text-lg font-semibold mb-4">Latest Updates</h2>
                     </div>

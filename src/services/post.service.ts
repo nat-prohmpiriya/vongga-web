@@ -30,6 +30,8 @@ export interface GetPosts {
     offset?: number
     userId: string
     includeSubPosts?: boolean
+    hasMedia?: boolean
+    mediaType?: 'image' | 'video'
 }
 
 
@@ -69,6 +71,34 @@ class PostService {
             return response.data
         } catch (error: any) {
             console.error('getPosts error', {
+                message: error?.response?.data?.message || error.message,
+                status: error?.response?.status
+            })
+            return null
+        }
+    }
+
+    async getPostVideos(userId: string) {
+        try {
+            const url = `posts?limit=10&offset=0&userId=${userId}&includeSubPosts=true&hasMedia=true&mediaType=video`
+            const response = await vonggaAxios.get(url)
+            return response.data
+        } catch (error: any) {
+            console.error('getPostVideos error', {
+                message: error?.response?.data?.message || error.message,
+                status: error?.response?.status
+            })
+            return null
+        }
+    }
+
+    async getPostImages(userId: string) {
+        try {
+            const url = `posts?limit=10&offset=0&userId=${userId}&includeSubPosts=true&hasMedia=true&mediaType=image`
+            const response = await vonggaAxios.get(url)
+            return response.data
+        } catch (error: any) {
+            console.error('getPostImages error', {
                 message: error?.response?.data?.message || error.message,
                 status: error?.response?.status
             })

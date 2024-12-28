@@ -24,7 +24,7 @@ import postService from '@/services/post.service'
 
 interface PostProps extends BaseProp {
     post: Post
-    fetchPosts: () => void
+    fetchPosts?: () => void
 }
 
 export default function PostCard(props: PostProps) {
@@ -58,7 +58,7 @@ export default function PostCard(props: PostProps) {
     const handleDeletePost = async (id: string) => {
         try {
             const result = await postService.deletePost(id)
-            props.fetchPosts()
+            props?.fetchPosts?.()
         } catch (error: any) {
             console.log('Delete post error', error)
         }

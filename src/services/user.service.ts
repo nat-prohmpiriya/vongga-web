@@ -35,7 +35,9 @@ class UserService {
     async getUserInfoByUsername(username: string): Promise<User | null> {
         try {
             const response = await vonggaAxios.get(`/users/${username}`)
-            return response.data.user
+            const user = response?.data?.user
+            if (!user) console.log('getUserInfoByUsername', response)
+            return user
         } catch (error: any) {
             console.error('getUserInfoByUsername error', {
                 message: error?.response?.data?.message || error.message,
