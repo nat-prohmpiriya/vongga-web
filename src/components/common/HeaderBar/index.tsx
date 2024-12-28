@@ -37,9 +37,8 @@ const HeaderBar = () => {
 	return (
 		<Row justify='space-between' align={'middle'} className="bg-white h-[64px] sticky top-0 z-50">
 			<Col xs={0} sm={12} md={8} className='flex items-center'>
-				<Flex justify="start" className='px-4' align="center" gap={16}>
-					<h1 className="text-2xl font-bold cursor-pointer" onClick={goToFeedPage}>Vongga</h1>
-
+				<Flex justify="start" className='px-4' align="center" gap={16} onClick={goToFeedPage}>
+					<h1 className="text-2xl font-bold cursor-pointer" >Vongga</h1>
 				</Flex>
 			</Col>
 			<Col xs={0} sm={0} md={8} className=''></Col>
@@ -52,8 +51,8 @@ const HeaderBar = () => {
 				</Flex>
 			</Col>
 			<Col xs={4} sm={0} md={0} className='flex items-center'>
-				<Flex justify="start" className='px-4' align="center" gap={16}>
-					<h1 className="text-2xl font-bold cursor-pointer" onClick={goToFeedPage}>Vongga</h1>
+				<Flex justify="start" className='px-4' align="center" gap={16} onClick={goToFeedPage}>
+					<h1 className="text-2xl font-bold cursor-pointer">Vongga</h1>
 				</Flex>
 			</Col>
 			<Col xs={20} sm={0} md={0} className='flex items-center'>

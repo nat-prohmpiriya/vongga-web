@@ -8,6 +8,7 @@ import { IoHappyOutline } from 'react-icons/io5'
 import { IoEllipsisHorizontalOutline } from 'react-icons/io5'
 import CreatePostModal, { CreatePostModalRef } from './CreatePostModal'
 import { useAuthStore } from '@/store/auth.store'
+import { Button } from 'antd'
 
 
 const CreateContentBar = () => {
@@ -16,7 +17,7 @@ const CreateContentBar = () => {
 
 
     return (
-        <div className="bg-white rounded-xl p-4 shadow-sm mb-4" onClick={() => modalRef.current?.open()}>
+        <div className="bg-white rounded-md p-4 shadow-sm mb-1" onClick={() => modalRef.current?.open()}>
             {/* Input Area */}
             <div className="flex items-center gap-3">
                 <div className="w-10 h-10 rounded-full overflow-hidden flex-shrink-0">
@@ -26,12 +27,13 @@ const CreateContentBar = () => {
                         className="w-full h-full object-cover"
                     />
                 </div>
-                <div className="flex-1">
+                <div className="flex justify-between items-center w-full gap-4 ">
                     <input
                         type="text"
                         placeholder="Share your thoughts..."
                         className="w-full px-4 py-2 bg-gray-100 rounded-full text-gray-600 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500"
                     />
+                    <IoImageOutline size={38} className="text-green-500 cursor-pointer" />
                 </div>
             </div>
 
