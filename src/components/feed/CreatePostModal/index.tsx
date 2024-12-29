@@ -153,13 +153,11 @@ const CreatePostModal = forwardRef<CreatePostModalRef, ModalProps>((props, ref) 
 	if (!isOpen) return null
 
 	return (
-		// <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
-		// 	<div className="relative bg-white rounded-lg shadow-lg w-[500px]">
 		<Modal
 			open={isOpen}
 			onCancel={() => setIsOpen(false)}
 			closable={false}
-			style={{ top: 20, maxHeight: 'calc(100vh - 40px)', maxWidth: '600px', overflow: 'auto' }}
+			style={{ top: 20, maxHeight: 'calc(100vh - 40px)', overflow: 'auto' }}
 			width={600}
 			footer={null}
 		>
@@ -258,12 +256,12 @@ const CreatePostModal = forwardRef<CreatePostModalRef, ModalProps>((props, ref) 
 						<button className="p-2 hover:bg-gray-100 rounded-full">
 							<IoLocationSharp />
 						</button>
-						<button className="p-2 hover:bg-gray-100 rounded-full">
+						{/* <button className="p-2 hover:bg-gray-100 rounded-full">
 							<PiGifBold />
 						</button>
 						<button className="p-2 hover:bg-gray-100 rounded-full">
 							<BsThreeDots />
-						</button>
+						</button> */}
 					</div>
 				</div>
 

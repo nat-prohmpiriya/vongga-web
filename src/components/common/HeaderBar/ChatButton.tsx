@@ -4,12 +4,25 @@
 import React from 'react'
 import { Button, Popover } from 'antd'
 import { AiOutlineMessage } from "react-icons/ai";
-
+import { useRouter } from 'next/navigation';
 
 const ChatButton = () => {
-    const content = <div>Chat content</div>
+    const router = useRouter()
+    const content = (
+        <div className="w-[355px] p-1">
+            <div className="flex flex-col bg-white rounded-md h-[400px] ">
+
+            </div>
+        </div>
+    )
     return (
-        <Popover title="Chat" trigger={'click'} content={content}>
+
+        <Popover
+            title={<span className='font-semibold cursor-pointer' onClick={() => router.push('/chat')}>Chat</span>}
+            trigger="click"
+            content={content}
+            overlayInnerStyle={{ backgroundColor: '#F3F4F6' }}
+        >
             <Button
                 color="default"
                 variant="filled"

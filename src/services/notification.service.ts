@@ -50,7 +50,7 @@ class NotifcationService {
             const response = await vonggaAxios.post(`/notifications/${id}/read`)
             return response.data
         } catch (error: any) {
-            console.error('markNotificationAsRead error', {
+            console.warn('markNotificationAsRead error', {
                 message: error?.response?.data?.message || error.message,
                 status: error?.response?.status
             })

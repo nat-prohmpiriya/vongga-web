@@ -9,6 +9,39 @@ export interface CreateStory {
     location: string
 }
 
+export interface StoryResponse {
+    id: string
+    createdAt: string
+    updatedAt: string
+    version: number
+    userId: string
+    media: Media
+    caption: string
+    location: string
+    viewersCount: number
+    viewers: any
+    expiresAt: string
+    isArchive: boolean
+    isActive: boolean
+    user: User
+}
+
+interface Media {
+    url: string
+    type: string
+    duration: number
+    thumbnail: string
+}
+
+interface User {
+    userId: string
+    username: string
+    displayName: string
+    photoProfile: string
+    firstName: string
+    lastName: string
+}
+
 class StoryService {
     async createStory(story: CreateStory) {
         try {
@@ -26,7 +59,7 @@ class StoryService {
     async getAtiveStories() {
         try {
             const response = await vonggaAxios.get("/stories/active")
-            return response.data
+            return response?.data?.stories
         } catch (error: any) {
             console.error('getAtiveStories error', {
                 message: error?.response?.data?.message || error.message,
