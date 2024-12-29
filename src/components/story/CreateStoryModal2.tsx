@@ -18,9 +18,10 @@ interface ModalProps {
     onClose?: () => void;
     onUploadSuccess?: (url: string) => void;
     callback?: () => void;
+    fetchStories?: () => void;
 }
 
-const CreateStoryModal = forwardRef<CreateStoryModalRef, ModalProps>(({ onOpen, onClose, onUploadSuccess }, ref) => {
+const CreateStoryModal = forwardRef<CreateStoryModalRef, ModalProps>(({ onOpen, onClose, onUploadSuccess, fetchStories }, ref) => {
     const [isOpen, setIsOpen] = useState(false);
     const [type, setType] = useState<'image' | 'video'>('image');
     const [selectedFile, setSelectedFile] = useState<File | null>(null);
@@ -40,6 +41,7 @@ const CreateStoryModal = forwardRef<CreateStoryModalRef, ModalProps>(({ onOpen, 
             }
             onUploadSuccess?.(String(url));
             setIsOpen(false);
+            fetchStories?.();
         },
     });
 

@@ -19,7 +19,7 @@ export interface StoryResponse {
     caption: string
     location: string
     viewersCount: number
-    viewers: any
+    viewers: Viewer[]
     expiresAt: string
     isArchive: boolean
     isActive: boolean
@@ -33,8 +33,15 @@ interface Media {
     thumbnail: string
 }
 
-interface User {
+interface Viewer {
+    isArchive: boolean
     userId: string
+    viewdAt: string
+
+}
+
+interface User {
+    id: string
     username: string
     displayName: string
     photoProfile: string
@@ -85,7 +92,7 @@ class StoryService {
     async getStoryById(id: string) {
         try {
             const response = await vonggaAxios.get(`/stories/${id}`)
-            return response.data
+            return response.data.story
         } catch (error: any) {
             console.error('getStoryById error', {
                 message: error?.response?.data?.message || error.message,

@@ -3,6 +3,7 @@
 import { useImperativeHandle, useState, forwardRef, useEffect } from 'react'
 import { IoCloseCircleOutline } from 'react-icons/io5'
 import storyService, { StoryResponse } from '@/services/story.service'
+import { useAuthStore } from '@/store/auth.store'
 
 export interface ViewScreenStoryRef {
     open: () => void
@@ -11,11 +12,13 @@ export interface ViewScreenStoryRef {
 
 export interface ViewScreenStoryProps {
     story: StoryResponse | undefined
+    updateViewStory: (styory: StoryResponse) => void
 }
 
 const ViewScreenStory = forwardRef<ViewScreenStoryRef, ViewScreenStoryProps>((prop, ref) => {
-    const { story } = prop
+    const { story, updateViewStory } = prop
     const [isViewScreenOpen, setIsViewScreenOpen] = useState(false)
+    const { user } = useAuthStore()
 
     useImperativeHandle(ref, () => ({
         open: () => {
@@ -34,9 +37,24 @@ const ViewScreenStory = forwardRef<ViewScreenStoryRef, ViewScreenStoryProps>((pr
         return () => window.removeEventListener('keydown', handleKeyDown);
     }, [isViewScreenOpen]);
 
-    const viewStory = () => {
+    useEffect(() => {
+
+    }, [story])
+
+    const isViewStory = () => {
+        const isViewed = story?.viewers?.find(viewer => viewer.userId === user?.id)
+        return !!isViewed
+    }
+
+    const viewStory = async () => {
         if (story) {
-            storyService.viewStory(story.id)
+            if (!isViewStory()) {
+                console.log('viewStory', isViewStory())
+                const result = await storyService.viewStory(story.id)
+                if (result === 'OK') {
+                    updateViewStory(story)
+                }
+            }
         }
     }
 
