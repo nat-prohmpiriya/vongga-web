@@ -32,7 +32,6 @@ export default async function RootLayout({
 						{children}
 					</AntdRegistry>
 				</ChatProvider>
-
 			</body>
 		</html>
 	)

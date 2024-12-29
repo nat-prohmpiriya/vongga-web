@@ -43,15 +43,9 @@ vonggaAxios.interceptors.request.use(
             // Auto detect environment
             if (isClient()) {
                 const token = clientToken.getToken()
-                if (!token.accessToken) {
-                    throw new Error('No access token available')
-                }
                 headers.Authorization = `Bearer ${token.accessToken}`
             } else {
                 const token = await serverToken.getToken()
-                if (!token.accessToken) {
-                    throw new Error('No access token available')
-                }
                 headers.Authorization = `Bearer ${token.accessToken}`
                 // Add server-side specific header
                 headers['X-Request-Type'] = 'server'
@@ -72,7 +66,7 @@ vonggaAxios.interceptors.response.use(
     async (error: AxiosError) => {
         const originalRequest = error.config as InternalAxiosRequestConfig
 
-        if (error?.response?.status !== 401 || 
+        if (error?.response?.status !== 401 ||
             originalRequest.url?.includes('/auth/refresh')) {
             return Promise.reject(error)
         }
@@ -103,14 +97,13 @@ vonggaAxios.interceptors.response.use(
                 }
             }
 
-            const response = await axios.post(
-                `${process.env.NEXT_PUBLIC_VONGGA_API_URL}/auth/refresh`,
-                { refreshToken },
-                { 
-                    timeout: isClient() ? 10000 : 5000,
-                    headers: isClient() ? {} : { 'X-Request-Type': 'server' }
-                }
-            )
+            const url = `${process.env.NEXT_PUBLIC_VONGGA_API_URL}/auth/refresh`
+            const data = { refreshToken }
+            const options = {
+                timeout: isClient() ? 10000 : 5000,
+                headers: isClient() ? {} : { 'X-Request-Type': 'server' }
+            }
+            const response = await axios.post(url, data, options)
 
             const newToken = response.data
 
@@ -131,7 +124,7 @@ vonggaAxios.interceptors.response.use(
 
             if (isClient()) {
                 clientToken.clearToken()
-                document.cookie = 'auth-storage=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;'
+                localStorage.removeItem('auth-storage')
                 window.location.href = '/'
             }
 

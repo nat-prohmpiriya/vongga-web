@@ -58,32 +58,53 @@ class ChatService {
     connect() {
         const token = this.token.getToken()
 
+        // Check if token exists
+        if (!token.accessToken) {
+            console.warn('No access token found')
+            return null
+        }
+
         const wsUrl = `${process.env.NEXT_PUBLIC_VONGGA_API_URL}/ws?token=${token.accessToken}`
-        this.ws = new WebSocket(wsUrl)
 
-        this.ws.onopen = () => {
+        try {
+            this.ws = new WebSocket(wsUrl)
 
-            this.messageQueue.forEach(msg => this.ws?.send(JSON.stringify(msg)))
-            this.messageQueue = []
+            this.ws.onopen = () => {
+                console.log('WebSocket connected')
+                // Send queued messages
+                this.messageQueue.forEach(msg => this.ws?.send(JSON.stringify(msg)))
+                this.messageQueue = []
+            }
+
+            this.ws.onclose = (event) => {
+                console.log('WebSocket disconnected:', event.code, event.reason)
+
+                // Don't reconnect if token is invalid (status code 1008)
+                if (event.code === 1008) {
+                    console.error('Invalid token, not attempting to reconnect')
+                    return
+                }
+
+                // Try to reconnect after 5 seconds
+                console.log('Attempting to reconnect in 5 seconds...')
+                setTimeout(() => this.connect(), 5000)
+            }
+
+            this.ws.onerror = (error) => {
+                console.error('WebSocket error:', error)
+            }
+
+            this.ws.onmessage = (event) => {
+                console.log('Received message:', event.data)
+                const message = JSON.parse(event.data)
+                this.handleMessage(message)
+            }
+
+            return this.ws
+        } catch (error) {
+            console.error('Failed to create WebSocket connection:', error)
+            return null
         }
-
-        this.ws.onclose = () => {
-
-            // Try to reconnect after 5 seconds
-            setTimeout(() => this.connect(), 5000)
-        }
-
-        this.ws.onerror = (error) => {
-            console.error('WebSocket error:', error)
-        }
-
-        this.ws.onmessage = (event) => {
-            console.log('Received message:', event.data)
-            const message = JSON.parse(event.data)
-            this.handleMessage(message)
-        }
-
-        return this.ws
     }
 
     handleMessage(message: any) {

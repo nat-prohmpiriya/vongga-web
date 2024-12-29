@@ -2,6 +2,7 @@
 
 import { createContext, useContext, useEffect, ReactNode } from 'react'
 import chatService from '@/services/chat.service'
+import { useAuthStore } from '@/store/auth.store'
 
 interface ChatContextType {
     sendMessage: (roomId: string, content: string) => void
@@ -11,7 +12,10 @@ interface ChatContextType {
 const ChatContext = createContext<ChatContextType | null>(null)
 
 export function ChatProvider({ children }: { children: ReactNode }) {
+    const user = useAuthStore((state) => state.user)
+
     useEffect(() => {
+        if (!user) return
         // เริ่มต้นการเชื่อมต่อ WebSocket
         const ws = chatService.connect()
         if (!ws) {
@@ -35,7 +39,7 @@ export function ChatProvider({ children }: { children: ReactNode }) {
 
         // Cleanup เมื่อ unmount
         return () => chatService.disconnect()
-    }, [])
+    }, [user])
 
     const value = {
         sendMessage: chatService.sendMessage.bind(chatService),
