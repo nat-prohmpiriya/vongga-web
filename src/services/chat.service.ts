@@ -11,8 +11,8 @@ export interface ChatMessage {
     fileType?: string
     fileSize?: number
     readBy: string[]
-    createdAt: Date
-    updatedAt: Date
+    createdAt: string
+    updatedAt: string
 
 }
 
@@ -30,9 +30,13 @@ export interface ChatRoom {
     name: string
     type: 'private' | 'group'
     members: string[]
-    createdAt: Date
-    updatedAt: Date
+    createdAt: string
+    updatedAt: string
     users: User[]
+    lastMessage?: {
+        content: string
+        createdAt: string
+    }
 }
 
 export interface ChatNotification {
@@ -40,13 +44,20 @@ export interface ChatNotification {
     type: string
     content: string
     isRead: boolean
-    createdAt: Date
+    createdAt: string
 }
 
 export interface UserStatus {
     userId: string
     status: 'online' | 'offline' | 'away'
-    lastSeen: Date
+    lastSeen: string
+}
+
+interface WebSocketMessage {
+    type: 'message' | 'typing'
+    roomId: string
+    userId?: string
+    content: string
 }
 
 class ChatService {
@@ -70,14 +81,14 @@ class ChatService {
             this.ws = new WebSocket(wsUrl)
 
             this.ws.onopen = () => {
-                console.log('WebSocket connected')
+                // console.log('WebSocket connected')
                 // Send queued messages
                 this.messageQueue.forEach(msg => this.ws?.send(JSON.stringify(msg)))
                 this.messageQueue = []
             }
 
             this.ws.onclose = (event) => {
-                console.log('WebSocket disconnected:', event.code, event.reason)
+                // console.log('WebSocket disconnected:', event.code, event.reason)
 
                 // Don't reconnect if token is invalid (status code 1008)
                 if (event.code === 1008) {
@@ -86,7 +97,7 @@ class ChatService {
                 }
 
                 // Try to reconnect after 5 seconds
-                console.log('Attempting to reconnect in 5 seconds...')
+                // console.log('Attempting to reconnect in 5 seconds...')
                 setTimeout(() => this.connect(), 5000)
             }
 
@@ -105,10 +116,6 @@ class ChatService {
             console.error('Failed to create WebSocket connection:', error)
             return null
         }
-    }
-
-    handleMessage(message: any) {
-        console.log('Received message:', message)
     }
 
     disconnect() {
@@ -189,6 +196,7 @@ class ChatService {
                 console.warn('roomId or content not found')
                 return null
             }
+            console.log('Sending message:', { roomId, content, type })
             const response = await vonggaAxios.post('/chat/messages', { roomId, content, type })
             return response.data
         } catch (error: any) {
@@ -373,6 +381,108 @@ class ChatService {
                 status: error?.response?.status
             })
             return null
+        }
+    }
+
+    async getChatMessagesNew(roomId: string): Promise<ChatMessage[] | null> {
+        try {
+            const response = await vonggaAxios.get(`/chat/rooms/${roomId}/messages`)
+            return response.data
+        } catch (error: any) {
+            console.error('getChatMessagesNew error', {
+                message: error?.response?.data?.message || error.message,
+                status: error?.response?.status
+            })
+            return null
+        }
+    }
+
+    sendMessageNewMethod(roomId: string, content: string) {
+        const message = {
+            type: 'message',
+            roomId,
+            content
+        }
+
+        if (this.ws?.readyState === WebSocket.OPEN) {
+            this.ws.send(JSON.stringify(message))
+        } else {
+            this.messageQueue.push(message)
+        }
+    }
+
+    sendTypingStatusNew(roomId: string, isTyping: boolean) {
+        const status = {
+            type: 'typing',
+            roomId,
+            isTyping
+        }
+
+        if (this.ws?.readyState === WebSocket.OPEN) {
+            this.ws.send(JSON.stringify(status))
+        }
+    }
+
+    async getMessages(roomId: string): Promise<ChatMessage[]> {
+        try {
+            console.log('Fetching messages for room:', roomId)
+            const response = await vonggaAxios.get(`/chat/rooms/${roomId}/messages`)
+            console.log('Raw API Response:', response)
+            console.log('Response data:', response.data)
+            console.log('Response data type:', typeof response.data)
+
+            // ถ้า response.data เป็น string (อาจจะเป็น JSON string)
+            let data = response.data
+            if (typeof data === 'string') {
+                try {
+                    data = JSON.parse(data)
+                } catch (e) {
+                    console.error('Failed to parse response data:', e)
+                }
+            }
+
+            if (!data) {
+                console.error('No data in response')
+                return []
+            }
+
+            // ดูว่าข้อความอยู่ที่ data.messages หรือที่ data เลย
+            const messages = Array.isArray(data.messages) ? data.messages :
+                Array.isArray(data) ? data : []
+
+            console.log('Parsed messages:', messages)
+            return messages
+
+        } catch (error: any) {
+            console.error('Error getting messages:', {
+                error: error.message,
+                status: error.response?.status,
+                data: error.response?.data
+            })
+            return []
+        }
+    }
+
+    sendWebSocketMessage(message: WebSocketMessage) {
+        if (!this.ws || this.ws.readyState !== WebSocket.OPEN) {
+            // ถ้า WebSocket ยังไม่พร้อม ให้เก็บข้อความไว้ใน queue
+            this.messageQueue.push(message)
+            return
+        }
+        this.ws.send(JSON.stringify(message))
+    }
+
+    handleMessage(message: any) {
+        // Handle different message types
+        switch (message.type) {
+            case 'message':
+                // Handle new message
+                break
+            case 'typing':
+                // Handle typing status
+                break
+            default:
+                console.warn('Unknown message type:', message.type)
         }
     }
 }

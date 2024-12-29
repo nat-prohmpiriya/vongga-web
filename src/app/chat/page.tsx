@@ -1,133 +1,159 @@
 'use client'
 
 import { useChat } from '@/providers/ChatProvider'
-import { Input, Row, Button, Col, Avatar } from 'antd'
+import { Row, Col, Spin } from 'antd'
 import { useState, useEffect } from 'react'
 import userService, { UserList } from '@/services/user.service'
-import { UserOutlined } from '@ant-design/icons'
 import { useAuthStore } from '@/store/auth.store'
-import chatService, { ChatMessage, ChatRoom } from '@/services/chat.service'
+import chatService, { ChatRoom } from '@/services/chat.service'
+import { ChatFriendsList } from '@/components/chat/ChatFriendsList'
+import { ChatRoomsList } from '@/components/chat/ChatRoomsList'
+import { ChatHeader } from '@/components/chat/ChatHeader'
+import { ChatMessageList } from '@/components/chat/ChatMessageList'
+import { TypingIndicator } from '@/components/chat/TypingIndicator'
+import ChatInput from '@/components/chat/ChatInput'
 
 export default function ChatRoomPage() {
-    const { sendMessage, sendTypingStatus } = useChat()
+    const { messages: chatMessages, loadMessages, sendMessage } = useChat()
     const [listFriends, setListFriends] = useState<UserList[]>([])
+    const [filteredFriends, setFilteredFriends] = useState<UserList[]>([])
     const [roomId, setRoomId] = useState('')
     const [talkingWith, setTalkingWith] = useState<UserList | null>(null)
     const { user } = useAuthStore()
     const [rooms, setRooms] = useState<ChatRoom[] | null>(null)
-    const [messages, setMessages] = useState('')
+    const [filteredRooms, setFilteredRooms] = useState<ChatRoom[] | null>(null)
+    const [loading, setLoading] = useState(false)
+    const [searchFriend, setSearchFriend] = useState('')
+    const [searchRoom, setSearchRoom] = useState('')
+    const [mounted, setMounted] = useState(false)
 
     useEffect(() => {
+        setMounted(true)
         fetchListFriends()
         fetchRoom()
+        return () => setMounted(false)
     }, [])
 
-    const handleSendMessage = () => {
-        if (!roomId) return console.warn('roomId not found')
-        sendMessage(roomId, messages)
-        setMessages('')
+    useEffect(() => {
+        if (!listFriends) return
+        const filtered = listFriends.filter(friend =>
+            friend.username.toLowerCase().includes(searchFriend.toLowerCase())
+        )
+        setFilteredFriends(filtered)
+    }, [searchFriend, listFriends])
+
+    useEffect(() => {
+        if (!rooms) return
+        const filtered = rooms.filter(room => {
+            const member = room.users.find(m => m.id !== user?.id)
+            return member?.username.toLowerCase().includes(searchRoom.toLowerCase())
+        })
+        setFilteredRooms(filtered)
+    }, [searchRoom, rooms, user?.id])
+
+    useEffect(() => {
+        if (roomId) {
+            loadMessages(roomId)
+        }
+    }, [roomId])
+
+    const handleSendMessage = (content: string) => {
+        if (!roomId || !content.trim()) return
+        sendMessage(roomId, content)
     }
 
     const fetchRoom = async () => {
-        const rooms = await chatService.getRooms()
-        setRooms(rooms)
+        setLoading(true)
+        try {
+            const rooms = await chatService.getRooms()
+            setRooms(rooms)
+            setFilteredRooms(rooms)
+        } catch (error) {
+            console.error('Error fetching rooms:', error)
+        } finally {
+            setLoading(false)
+        }
     }
 
     const fetchListFriends = async () => {
+        setLoading(true)
         try {
             const response = await userService.getUsers({
                 page: 1,
-                pageSize: 10,
+                pageSize: 50,
                 sortBy: 'createdAt',
                 sortDir: 'desc',
                 search: ''
             })
             if (!response) return
             setListFriends(response.users)
+            setFilteredFriends(response.users)
         } catch (error) {
             console.error('Error fetching list of friends:', error)
+        } finally {
+            setLoading(false)
         }
     }
 
-    const handleTyping = () => {
-        if (!roomId) return
-        sendTypingStatus(roomId, true)
-    }
-
-    const createPrivateChat = async () => {
+    const createPrivateChat = async (e: React.MouseEvent, friend: UserList) => {
+        e.stopPropagation()
         try {
-            if (!user?.id || !talkingWith) return console.warn('user not found', { user, talkingWith })
-            const response = await chatService.createPrivateChat({ userId1: user?.id, userId2: talkingWith.id })
+            if (!user?.id || !friend) return
+            const response = await chatService.createPrivateChat({ userId1: user.id, userId2: friend.id })
             if (!response) return
-            console.log('createPrivateChat response', response)
-            fetchRoom()
+            await fetchRoom()
+            setRoomId(response.id)
+            setTalkingWith(friend)
         } catch (error) {
             console.error('Error creating private chat:', error)
         }
     }
 
-
+    if (!mounted) {
+        return (
+            <div className='flex justify-center items-center min-h-screen'>
+                <Spin size='large' />
+            </div>
+        )
+    }
 
     return (
         <div className='bg-gray-100 min-h-screen p-4'>
-            <Row justify='center' gutter={[16, 16]} className='min-h-screen'>
-                <Col span={8}>
-                    <div className='overflow-y-scroll border rounded-lg p-4 mb-4 bg-white'>
-                        {listFriends.map((friend) => (
-                            user?.id !== friend.id ? (
-                                <div
-                                    key={friend.id}
-                                    className='flex items-center gap-3 py-3 px-2 rounded-lg hover:bg-gray-100 cursor-pointer'
-                                    onClick={() => setTalkingWith(friend)}
-                                >
-                                    {friend.photoProfile ? (
-                                        <Avatar size={64} src={friend.photoProfile} alt='Avatar' className='w-10 h-10 rounded-full' />
-                                    ) : (
-                                        <Avatar size={64} icon={<UserOutlined />} />
-                                    )}
-                                    <span>{friend.username}</span>
-                                    <Button type='primary' size='large' onClick={createPrivateChat}>
-                                        Create Private Chat
-                                    </Button>
-                                </div>
-                            ) : null
-                        ))}
-                    </div>
-                    <div>
-                        <p>Room</p>
-                        {rooms?.map((room) => {
-                            const member = room.users.find((member) => member.id !== user?.id)
-                            return (
-                                <div key={room.id} className='border-2 border-gray-300 rounded-lg p-4 mb-4 bg-white cursor-pointer' onClick={() => setRoomId(room.id)}>
-                                    <div>{room.id}</div>
-                                    <div className="flex ">
-                                        <Avatar size={64} src={member?.photoProfile} alt='Avatar' className='w-10 h-10 rounded-full border-2 border-gray-300 shadow-lg' />
-                                        <span>{member?.username}</span>
-                                    </div>
-                                </div>
-                            )
-                        })}
+            <Row gutter={[16, 16]} className='min-h-screen'>
+                <Col xs={24} sm={8}>
+                    <ChatFriendsList
+                        friends={filteredFriends}
+                        loading={loading}
+                        onSearch={setSearchFriend}
+                        onChatClick={createPrivateChat}
+                    />
 
-                    </div>
+                    <ChatRoomsList
+                        rooms={filteredRooms}
+                        loading={loading}
+                        onSearch={setSearchRoom}
+                        onRoomSelect={setRoomId}
+                        currentUserId={user?.id}
+                        selectedRoomId={roomId}
+                    />
                 </Col>
-                <Col span={16}>
-                    <div className='h-[400px] overflow-y-scroll border rounded-lg p-4 mb-4 bg-white'>
-                        <div className='flex'>
-                            <p>Room {roomId}</p> <Button onClick={() => setRoomId('')} >Delete</Button>
-                        </div>
-                        <div >
-                            {talkingWith ? (
-                                <div>
-                                    <Avatar size={64} src={talkingWith.photoProfile} alt='Avatar' className='w-10 h-10 rounded-full' />
-                                    <span>{talkingWith.username}</span>
-                                </div>
-                            ) : null}
-                        </div>
+
+                <Col xs={24} sm={16}>
+                    <div className='bg-white rounded-lg shadow-md h-full flex flex-col'>
+                        <ChatHeader talkingWith={talkingWith} />
+
+                        <ChatMessageList
+                            messages={chatMessages[roomId] || []}
+                            currentUserId={user?.id}
+                        />
+
+                        <TypingIndicator roomId={roomId} />
+
+                        <ChatInput
+                            roomId={roomId}
+                            onSendMessage={handleSendMessage}
+                        />
                     </div>
-                    <Input.TextArea onChange={(e) => setMessages(e.target.value)} onKeyDown={handleTyping} value={messages} />
-                    <Button type='primary' block size='large' className='mt-4' onClick={() => handleSendMessage()}>
-                        send message
-                    </Button>
                 </Col>
             </Row>
         </div>
