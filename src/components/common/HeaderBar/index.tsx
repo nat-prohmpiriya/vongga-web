@@ -27,6 +27,7 @@ const HeaderBar = () => {
 	}, [parthname])
 
 	const goToFeedPage = () => {
+		console.log('goToFeedPage')
 		router.push('/feed')
 	}
 
@@ -35,15 +36,15 @@ const HeaderBar = () => {
 	}
 
 	return (
-		<Row justify='space-between' align={'middle'} className="bg-white h-[64px] sticky top-0 z-50">
+		<Row justify='space-between' align={'middle'} className="bg-white h-[64px] sticky top-0 z-50 fixed">
 			<Col xs={0} sm={12} md={8} className='flex items-center'>
-				<Flex justify="start" className='px-4' align="center" gap={16} onClick={goToFeedPage}>
+				<Flex justify="start" className='pl-4' align="center" gap={16} onClick={() => goToFeedPage()}>
 					<h1 className="text-2xl font-bold cursor-pointer" >Vongga</h1>
 				</Flex>
 			</Col>
 			<Col xs={0} sm={0} md={8} className=''></Col>
 			<Col xs={0} sm={12} md={8}>
-				<Flex justify="end" className='px-4' align="center" gap={16}>
+				<Flex justify="end" className='pr-4' align="center" gap={16}>
 					<MenuBtn />
 					<NotiBtn />
 					<ChatButton />
@@ -51,7 +52,7 @@ const HeaderBar = () => {
 				</Flex>
 			</Col>
 			<Col xs={4} sm={0} md={0} className='flex items-center'>
-				<Flex justify="start" className='px-4' align="center" gap={16} onClick={goToFeedPage}>
+				<Flex justify="start" className='px-4' align="center" gap={16} onClick={() => goToFeedPage()}>
 					<h1 className="text-2xl font-bold cursor-pointer">Vongga</h1>
 				</Flex>
 			</Col>

@@ -19,10 +19,17 @@ import { RiGroupLine } from 'react-icons/ri'
 import { FaRegCalendarAlt } from 'react-icons/fa'
 import { BsShop } from 'react-icons/bs'
 import { useRouter } from 'next/navigation'
-import { Row, Col, Flex, Button, Popover } from 'antd'
+import { Row, Col, Flex, Button, Popover, Menu } from 'antd'
+import { useState } from 'react'
 
 export default function MenuBtn() {
     const router = useRouter()
+    const [isOpen, setIsOpen] = useState(false)
+
+    const handleToggle = () => {
+        setIsOpen(!isOpen)
+    }
+
     const listBtn = [
         {
             name: 'Feed',
@@ -140,7 +147,7 @@ export default function MenuBtn() {
                     {listBtn.map((item, index) => (
                         <span
                             key={index}
-                            onClick={() => router.push(item.href)}
+                            onClick={() => { router.push(item.href); handleToggle() }}
                             className="flex items-center gap-4 py-3 px-4 rounded-lg hover:bg-gray-100 cursor-pointer"
                         >
                             {item.icon}
@@ -178,8 +185,9 @@ export default function MenuBtn() {
         </div>
     )
 
+
     return (
-        <Popover trigger={'click'} content={content} overlayInnerStyle={{ backgroundColor: '#F3F4F6' }}>
+        <Popover open={isOpen} onOpenChange={setIsOpen} trigger={'click'} content={content} overlayInnerStyle={{ backgroundColor: '#F3F4F6' }}>
             <Button color="default" variant="filled" icon={<IoAppsOutline size={24} />} shape='circle' size='large' />
         </Popover >
     )

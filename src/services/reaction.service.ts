@@ -12,7 +12,7 @@ class ReactionService {
     async createReaction(reaction: CreateReaction) {
         try {
             const response = await vonggaAxios.post('/reactions', reaction)
-            return response.data
+            return response?.data
         } catch (error: any) {
             console.error('createReaction error', {
                 message: error?.response?.data?.message || error.message,
@@ -25,7 +25,7 @@ class ReactionService {
     async getReactionsPost(postId: string) {
         try {
             const response = await vonggaAxios.get(`/reactions/post/${postId}`)
-            return response.data
+            return response?.data
         } catch (error: any) {
             console.error('getReactions error', {
                 message: error?.response?.data?.message || error.message,
@@ -38,7 +38,7 @@ class ReactionService {
     async getReactionsComment(commentId: string) {
         try {
             const response = await vonggaAxios.get(`/reactions/comment/${commentId}`)
-            return response.data
+            return response?.data
         } catch (error: any) {
             console.error('getReactionsComment error', {
                 message: error?.response?.data?.message || error.message,
@@ -51,7 +51,7 @@ class ReactionService {
     async deleteReaction(id: string) {
         try {
             const response = await vonggaAxios.delete(`/reactions/${id}`)
-            return response.data
+            return response?.data
         } catch (error: any) {
             console.error('deleteReaction error', {
                 message: error?.response?.data?.message || error.message,
