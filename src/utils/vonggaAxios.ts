@@ -1,7 +1,11 @@
-import axios from 'axios'
+import axios, { AxiosError, InternalAxiosRequestConfig } from 'axios'
 import clientToken from './clientToken'
 import serverToken from './serverToken'
 import isClient from './isClient'
+
+// ป้องกัน race condition ในการ refresh token
+let isRefreshing = false
+let refreshSubscribers: ((token: string) => void)[] = []
 
 const vonggaAxios = axios.create({
     withCredentials: true,
@@ -9,74 +13,129 @@ const vonggaAxios = axios.create({
     timeout: 30000,
 })
 
+// เพิ่มฟังก์ชันสำหรับ retry request
+const retryRequest = (request: InternalAxiosRequestConfig, accessToken: string) => {
+    request.headers.Authorization = `Bearer ${accessToken}`
+    return axios(request)
+}
+
+// จัดการ subscribers
+const onRefreshed = (accessToken: string) => {
+    refreshSubscribers.forEach(callback => callback(accessToken))
+    refreshSubscribers = []
+}
+
+const addRefreshSubscriber = (callback: (token: string) => void) => {
+    refreshSubscribers.push(callback)
+}
+
 vonggaAxios.interceptors.request.use(
     async (config) => {
-        // For multipart/form-data, let the browser set the Content-Type
-        if (config.data instanceof FormData) {
-            delete config.headers['Content-Type'];
-        }
+        try {
+            // สำหรับ FormData ให้ browser จัดการ Content-Type เอง
+            if (config.data instanceof FormData) {
+                delete config.headers['Content-Type']
+            }
 
-        const { headers } = config
-        if (headers.Authorization) return config
+            const { headers } = config
+            if (headers.Authorization) return config
 
-        if (isClient()) {
-            const token = clientToken.getToken()
-            headers.Authorization = `Bearer ${token.accessToken}`
-        } else {
-            const token = await serverToken.getToken()
-            headers.Authorization = `Bearer ${token.accessToken}`
+            if (isClient()) {
+                const token = clientToken.getToken()
+                if (!token.accessToken) {
+                    throw new Error('No access token available')
+                }
+                headers.Authorization = `Bearer ${token.accessToken}`
+            } else {
+                const token = await serverToken.getToken()
+                if (!token.accessToken) {
+                    throw new Error('No access token available')
+                }
+                headers.Authorization = `Bearer ${token.accessToken}`
+            }
+            config.headers = headers
+            return config
+        } catch (error) {
+            return Promise.reject(error)
         }
-        config.headers = headers
-        return config
     },
-    (error) => {
-        return Promise.reject(error)
-    }
+    (error) => Promise.reject(error)
 )
 
 vonggaAxios.interceptors.response.use(
-    (response) => {
-        return response
-    },
-    async (error) => {
-        console.log(error)
-        if (error?.response?.status !== 401) return Promise.reject(error)
+    (response) => response,
+    async (error: AxiosError) => {
+        const originalRequest = error.config as InternalAxiosRequestConfig
+
+        // ถ้าไม่ใช่ 401 หรือเป็น request refresh token อยู่แล้ว ให้ reject เลย
+        if (error?.response?.status !== 401 || 
+            originalRequest.url?.includes('/auth/refresh')) {
+            return Promise.reject(error)
+        }
+
         try {
+            // ถ้ากำลัง refresh token อยู่ ให้รอและ retry
+            if (isRefreshing) {
+                return new Promise(resolve => {
+                    addRefreshSubscriber(token => {
+                        resolve(retryRequest(originalRequest, token))
+                    })
+                })
+            }
+
+            isRefreshing = true
+
+            // ดึง refresh token
             let refreshToken = ''
             if (isClient()) {
                 refreshToken = clientToken.getToken().refreshToken
+                if (!refreshToken) {
+                    throw new Error('No refresh token available')
+                }
             } else {
-                refreshToken = (await serverToken.getToken()).refreshToken
+                const token = await serverToken.getToken()
+                refreshToken = token.refreshToken
+                if (!refreshToken) {
+                    throw new Error('No refresh token available')
+                }
             }
 
-            await axios.post(`${process.env.NEXT_PUBLIC_VONGGA_API_URL}/auth/refresh`, { refreshToken })
-                .then((response) => {
-                    const token = response.data
-                    if (isClient()) {
-                        clientToken.setToken(token)
-                    } else {
-                        serverToken.setToken(token)
-                    }
-                    const retryConfig = error.config
-                    retryConfig.headers.Authorization = `Bearer ${token.accessToken}`
-                    return axios(retryConfig)
-                })
-                .catch((error) => {
-                    console.error('Error refreshing token expired: ', {
-                        message: error?.response?.data?.message || error.message,
-                        status: error?.response?.status
-                    })
-                    if (isClient()) {
-                        clientToken.clearToken()
-                        localStorage.removeItem('auth-storage')
-                        window.location.href = '/'
-                    }
-                    return Promise.reject(error)
-                })
+            // เรียก refresh token
+            const response = await axios.post(
+                `${process.env.NEXT_PUBLIC_VONGGA_API_URL}/auth/refresh`,
+                { refreshToken },
+                { timeout: 10000 } // timeout 10 วินาที
+            )
 
+            const newToken = response.data
 
-        } catch (error) {
-            return Promise.reject(error)
+            // บันทึก token ใหม่
+            if (isClient()) {
+                clientToken.setToken(newToken)
+            } else {
+                serverToken.setToken(newToken)
+            }
+
+            // แจ้ง subscribers และ retry requests ที่รอ
+            onRefreshed(newToken.accessToken)
+            isRefreshing = false
+
+            // retry original request
+            return retryRequest(originalRequest, newToken.accessToken)
+
+        } catch (refreshError) {
+            isRefreshing = false
+            refreshSubscribers = []
+
+            // จัดการ error และ logout ถ้าจำเป็น
+            if (isClient()) {
+                clientToken.clearToken()
+                // ใช้ httpOnly cookie แทน localStorage
+                document.cookie = 'auth-storage=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;'
+                window.location.href = '/'
+            }
+
+            return Promise.reject(refreshError)
         }
     }
 )

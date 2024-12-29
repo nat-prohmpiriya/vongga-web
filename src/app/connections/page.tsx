@@ -64,7 +64,7 @@ export default function ConnectionsPage() {
     return (
         <div>
             <Row className='bg-gray-100 min-h-screen pt-2' gutter={[16, 16]} >
-                <Col xs={0} sm={0} md={8} className='bg-white'>
+                <Col xs={0} sm={0} md={6} className='bg-white'>
                 </Col>
                 <Col xs={24} sm={24} md={0}>
                     <div className='px-2'>
@@ -79,7 +79,7 @@ export default function ConnectionsPage() {
                     </div>
                     <Row>
                         {/* mobile */}
-                        <Col xs={24} md={12} className=''>
+                        <Col xs={24} md={18} className=''>
                             <div className='flex gap-2 my-2 px-2'>
                                 {/* <Button type="primary">Suggested Friend </Button> */}
                                 <Button

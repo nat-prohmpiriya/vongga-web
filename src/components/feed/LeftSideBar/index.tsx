@@ -27,11 +27,11 @@ const LeftSideBar = () => {
 			icon: <FaRegUser className="text-xl" />,
 			href: '/connections',
 		},
-		{
-			name: 'Groups',
-			icon: <GrGroup className="text-xl" />,
-			href: '/groups',
-		},
+		// {
+		// 	name: 'Groups',
+		// 	icon: <GrGroup className="text-xl" />,
+		// 	href: '/groups',
+		// },
 		// {
 		// 	name: 'Articles',
 		// 	icon: <IoNewspaperOutline className="text-xl" />,
@@ -126,18 +126,18 @@ const LeftSideBar = () => {
 			{/* Navigation Menu */}
 			<nav className="mt-6 px-2">
 				{listMenu.map((item, index) => (
-					<Link
+					<span
 						key={index}
-						href={item.href}
 						className={
 							item.href === '/feed'
-								? 'flex items-center gap-3 py-3 px-4 rounded-lg bg-blue-100 text-blue-600 '
-								: 'flex items-center gap-3 py-3 px-4 rounded-lg hover:bg-gray-100'
+								? 'flex items-center gap-3 py-3 px-4 rounded-lg bg-blue-100 text-blue-600 mb-2 cursor-pointer'
+								: 'flex items-center gap-3 py-3 px-4 rounded-lg hover:bg-gray-100 mb-2 cursor-pointer'
 						}
+						onClick={() => router.push(item.href)}
 					>
 						{item.icon}
 						<span className="font-medium">{item.name}</span>
-					</Link>
+					</span>
 				))}
 			</nav>
 		</div>

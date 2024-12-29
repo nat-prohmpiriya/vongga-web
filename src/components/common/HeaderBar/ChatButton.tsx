@@ -8,6 +8,7 @@ import { useRouter } from 'next/navigation';
 
 const ChatButton = () => {
     const router = useRouter()
+    const [open, setOpen] = React.useState(false);
     const content = (
         <div className="w-[355px] p-1">
             <div className="flex flex-col bg-white rounded-md h-[400px] ">
@@ -18,7 +19,9 @@ const ChatButton = () => {
     return (
 
         <Popover
-            title={<span className='font-semibold cursor-pointer' onClick={() => router.push('/chat')}>Chat</span>}
+            open={open}
+            onOpenChange={setOpen}
+            title={<span className='font-semibold cursor-pointer' onClick={() => { router.push('/chat'); setOpen(false); }}>Chat</span>}
             trigger="click"
             content={content}
             overlayInnerStyle={{ backgroundColor: '#F3F4F6' }}

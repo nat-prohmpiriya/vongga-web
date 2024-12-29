@@ -34,7 +34,7 @@ export default function MenuBtn() {
         {
             name: 'Feed',
             description: 'Discover personalized content and latest updates from your network',
-            icon: <IoHomeOutline className="text-3xl" />,
+            icon: <IoHomeOutline className="text-xl" />,
             href: '/feed',
         },
         {
@@ -45,7 +45,7 @@ export default function MenuBtn() {
         },
         // {
         //     name: 'Groups',
-        //     description: 'Lorem ipsum dolor sit amet.',
+        //     description: 'Join groups and connect with like-minded individuals',
         //     icon: <GrGroup className="text-xl" />,
         //     href: '/groups',
         // },
@@ -77,7 +77,7 @@ export default function MenuBtn() {
         {
             name: 'Premium',
             description: 'Access exclusive features and premium content',
-            icon: <MdWorkspacePremium className="text-3xl" />,
+            icon: <MdWorkspacePremium className="text-xl" />,
             href: '/premium',
         },
     ]
@@ -150,7 +150,9 @@ export default function MenuBtn() {
                             onClick={() => { router.push(item.href); handleToggle() }}
                             className="flex items-center gap-4 py-3 px-4 rounded-lg hover:bg-gray-100 cursor-pointer"
                         >
-                            {item.icon}
+                            <div>
+                                {item.icon}
+                            </div>
                             <div>
                                 <p className="font-semibold text-sm">
                                     {item.name}
