@@ -13,13 +13,13 @@ const vonggaAxios = axios.create({
     timeout: 30000,
 })
 
-// เพิ่มฟังก์ชันสำหรับ retry request
+// Retry request helper
 const retryRequest = (request: InternalAxiosRequestConfig, accessToken: string) => {
     request.headers.Authorization = `Bearer ${accessToken}`
     return axios(request)
 }
 
-// จัดการ subscribers
+// Subscriber helpers
 const onRefreshed = (accessToken: string) => {
     refreshSubscribers.forEach(callback => callback(accessToken))
     refreshSubscribers = []
@@ -29,10 +29,10 @@ const addRefreshSubscriber = (callback: (token: string) => void) => {
     refreshSubscribers.push(callback)
 }
 
+// Request interceptor
 vonggaAxios.interceptors.request.use(
     async (config) => {
         try {
-            // สำหรับ FormData ให้ browser จัดการ Content-Type เอง
             if (config.data instanceof FormData) {
                 delete config.headers['Content-Type']
             }
@@ -40,6 +40,7 @@ vonggaAxios.interceptors.request.use(
             const { headers } = config
             if (headers.Authorization) return config
 
+            // Auto detect environment
             if (isClient()) {
                 const token = clientToken.getToken()
                 if (!token.accessToken) {
@@ -52,7 +53,10 @@ vonggaAxios.interceptors.request.use(
                     throw new Error('No access token available')
                 }
                 headers.Authorization = `Bearer ${token.accessToken}`
+                // Add server-side specific header
+                headers['X-Request-Type'] = 'server'
             }
+
             config.headers = headers
             return config
         } catch (error) {
@@ -62,19 +66,18 @@ vonggaAxios.interceptors.request.use(
     (error) => Promise.reject(error)
 )
 
+// Response interceptor
 vonggaAxios.interceptors.response.use(
     (response) => response,
     async (error: AxiosError) => {
         const originalRequest = error.config as InternalAxiosRequestConfig
 
-        // ถ้าไม่ใช่ 401 หรือเป็น request refresh token อยู่แล้ว ให้ reject เลย
         if (error?.response?.status !== 401 || 
             originalRequest.url?.includes('/auth/refresh')) {
             return Promise.reject(error)
         }
 
         try {
-            // ถ้ากำลัง refresh token อยู่ ให้รอและ retry
             if (isRefreshing) {
                 return new Promise(resolve => {
                     addRefreshSubscriber(token => {
@@ -85,8 +88,8 @@ vonggaAxios.interceptors.response.use(
 
             isRefreshing = true
 
-            // ดึง refresh token
             let refreshToken = ''
+            // Auto detect environment
             if (isClient()) {
                 refreshToken = clientToken.getToken().refreshToken
                 if (!refreshToken) {
@@ -100,37 +103,34 @@ vonggaAxios.interceptors.response.use(
                 }
             }
 
-            // เรียก refresh token
             const response = await axios.post(
                 `${process.env.NEXT_PUBLIC_VONGGA_API_URL}/auth/refresh`,
                 { refreshToken },
-                { timeout: 10000 } // timeout 10 วินาที
+                { 
+                    timeout: isClient() ? 10000 : 5000,
+                    headers: isClient() ? {} : { 'X-Request-Type': 'server' }
+                }
             )
 
             const newToken = response.data
 
-            // บันทึก token ใหม่
             if (isClient()) {
                 clientToken.setToken(newToken)
             } else {
                 serverToken.setToken(newToken)
             }
 
-            // แจ้ง subscribers และ retry requests ที่รอ
             onRefreshed(newToken.accessToken)
             isRefreshing = false
 
-            // retry original request
             return retryRequest(originalRequest, newToken.accessToken)
 
         } catch (refreshError) {
             isRefreshing = false
             refreshSubscribers = []
 
-            // จัดการ error และ logout ถ้าจำเป็น
             if (isClient()) {
                 clientToken.clearToken()
-                // ใช้ httpOnly cookie แทน localStorage
                 document.cookie = 'auth-storage=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;'
                 window.location.href = '/'
             }
