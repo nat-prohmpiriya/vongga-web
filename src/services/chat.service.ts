@@ -1,7 +1,7 @@
 import clientToken from '@/utils/clientToken'
 import vonggaAxios from '@/utils/vonggaAxios'
 
-interface ChatMessage {
+export interface ChatMessage {
     id: string
     roomId: string
     senderId: string
@@ -13,18 +13,29 @@ interface ChatMessage {
     readBy: string[]
     createdAt: Date
     updatedAt: Date
+
 }
 
-interface ChatRoom {
+export interface User {
+    id: string
+    username: string
+    displayName: string
+    photoProfile: string
+    firstName: string
+    lastName: string
+}
+
+export interface ChatRoom {
     id: string
     name: string
     type: 'private' | 'group'
     members: string[]
     createdAt: Date
     updatedAt: Date
+    users: User[]
 }
 
-interface ChatNotification {
+export interface ChatNotification {
     id: string
     type: string
     content: string
@@ -32,7 +43,7 @@ interface ChatNotification {
     createdAt: Date
 }
 
-interface UserStatus {
+export interface UserStatus {
     userId: string
     status: 'online' | 'offline' | 'away'
     lastSeen: Date
@@ -46,20 +57,37 @@ class ChatService {
     // WebSocket Connection
     connect() {
         const token = this.token.getToken()
-        this.ws = new WebSocket(`${process.env.NEXT_PUBLIC_WS_URL}/api/chat/ws`)
+
+        const wsUrl = `${process.env.NEXT_PUBLIC_VONGGA_API_URL}/ws?token=${token.accessToken}`
+        this.ws = new WebSocket(wsUrl)
 
         this.ws.onopen = () => {
-            console.log('Connected to chat')
+
             this.messageQueue.forEach(msg => this.ws?.send(JSON.stringify(msg)))
             this.messageQueue = []
         }
 
         this.ws.onclose = () => {
-            console.log('Disconnected from chat')
-            setTimeout(() => this.connect(), 1000)
+
+            // Try to reconnect after 5 seconds
+            setTimeout(() => this.connect(), 5000)
+        }
+
+        this.ws.onerror = (error) => {
+            console.error('WebSocket error:', error)
+        }
+
+        this.ws.onmessage = (event) => {
+            console.log('Received message:', event.data)
+            const message = JSON.parse(event.data)
+            this.handleMessage(message)
         }
 
         return this.ws
+    }
+
+    handleMessage(message: any) {
+        console.log('Received message:', message)
     }
 
     disconnect() {
@@ -68,7 +96,7 @@ class ChatService {
     }
 
     // Room Methods
-    async createPrivateChat(userId1: string, userId2: string): Promise<ChatRoom | null> {
+    async createPrivateChat({ userId1, userId2 }: { userId1: string, userId2: string }): Promise<ChatRoom | null> {
         try {
             const response = await vonggaAxios.post('/chat/rooms/private', { userId1, userId2 })
             return response.data
@@ -136,6 +164,10 @@ class ChatService {
     // Message Methods
     async sendMessage(roomId: string, content: string, type: string = 'text'): Promise<ChatMessage | null> {
         try {
+            if (!roomId || content === '') {
+                console.warn('roomId or content not found')
+                return null
+            }
             const response = await vonggaAxios.post('/chat/messages', { roomId, content, type })
             return response.data
         } catch (error: any) {
@@ -256,6 +288,72 @@ class ChatService {
             }))
         }
     }
+
+    // New Methods
+    async getRooms(): Promise<ChatRoom[] | null> {
+        try {
+            const response = await vonggaAxios.get('/chat/rooms')
+            return response.data
+        } catch (error: any) {
+            console.error('getRooms error', {
+                message: error?.response?.data?.message || error.message,
+                status: error?.response?.status
+            })
+            return null
+        }
+    }
+
+    async createPrivateRoom(userId: string): Promise<ChatRoom | null> {
+        try {
+            const response = await vonggaAxios.post('/chat/rooms/private', { userId })
+            return response.data
+        } catch (error: any) {
+            console.error('createPrivateRoom error', {
+                message: error?.response?.data?.message || error.message,
+                status: error?.response?.status
+            })
+            return null
+        }
+    }
+
+    async createGroupRoom(name: string, memberIds: string[]): Promise<ChatRoom | null> {
+        try {
+            const response = await vonggaAxios.post('/chat/rooms/group', { name, memberIds })
+            return response.data
+        } catch (error: any) {
+            console.error('createGroupRoom error', {
+                message: error?.response?.data?.message || error.message,
+                status: error?.response?.status
+            })
+            return null
+        }
+    }
+
+    async sendMessageNew(roomId: string, content: string, type: string = 'text'): Promise<ChatMessage | null> {
+        try {
+            const response = await vonggaAxios.post('/chat/messages', { roomId, content, type })
+            return response.data
+        } catch (error: any) {
+            console.error('sendMessageNew error', {
+                message: error?.response?.data?.message || error.message,
+                status: error?.response?.status
+            })
+            return null
+        }
+    }
+
+    async getRoomMessagesNew(roomId: string, limit: number = 50, offset: number = 0): Promise<ChatMessage[] | null> {
+        try {
+            const response = await vonggaAxios.get(`/chat/rooms/${roomId}/messages?limit=${limit}&offset=${offset}`)
+            return response.data
+        } catch (error: any) {
+            console.error('getRoomMessagesNew error', {
+                message: error?.response?.data?.message || error.message,
+                status: error?.response?.status
+            })
+            return null
+        }
+    }
 }
 
-export const chatService = new ChatService()
+export default new ChatService()

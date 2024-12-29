@@ -3,6 +3,7 @@ import { Geist, Geist_Mono } from 'next/font/google'
 import './globals.css'
 import HeaderBar from '../components/common/HeaderBar'
 import { AntdRegistry } from '@ant-design/nextjs-registry';
+import { ChatProvider } from '@/providers/ChatProvider';
 
 const geistSans = Geist({
 	variable: '--font-geist-sans',
@@ -25,10 +26,12 @@ export default async function RootLayout({
 	return (
 		<html lang="en">
 			<body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
-				<AntdRegistry>
-					<HeaderBar />
-					{children}
-				</AntdRegistry>
+				<ChatProvider>
+					<AntdRegistry>
+						<HeaderBar />
+						{children}
+					</AntdRegistry>
+				</ChatProvider>
 
 			</body>
 		</html>
