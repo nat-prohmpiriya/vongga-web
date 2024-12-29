@@ -24,6 +24,20 @@ interface ChatRoom {
     updatedAt: Date
 }
 
+interface ChatNotification {
+    id: string
+    type: string
+    content: string
+    isRead: boolean
+    createdAt: Date
+}
+
+interface UserStatus {
+    userId: string
+    status: 'online' | 'offline' | 'away'
+    lastSeen: Date
+}
+
 class ChatService {
     private ws: WebSocket | null = null
     private messageQueue: any[] = []
@@ -36,14 +50,12 @@ class ChatService {
 
         this.ws.onopen = () => {
             console.log('Connected to chat')
-            // Send queued messages
             this.messageQueue.forEach(msg => this.ws?.send(JSON.stringify(msg)))
             this.messageQueue = []
         }
 
         this.ws.onclose = () => {
             console.log('Disconnected from chat')
-            // Implement reconnection logic
             setTimeout(() => this.connect(), 1000)
         }
 
@@ -55,102 +67,186 @@ class ChatService {
         this.ws = null
     }
 
-    // REST API Methods
-    async createPrivateChat(userId: string): Promise<ChatRoom> {
-        const response = await fetch('/api/chat/rooms/private', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${this.token.getToken().accessToken}`
-            },
-            body: JSON.stringify({ userId })
-        })
-        return response.json()
+    // Room Methods
+    async createPrivateChat(userId1: string, userId2: string): Promise<ChatRoom | null> {
+        try {
+            const response = await vonggaAxios.post('/chat/rooms/private', { userId1, userId2 })
+            return response.data
+        } catch (error: any) {
+            console.error('createPrivateChat error', {
+                message: error?.response?.data?.message || error.message,
+                status: error?.response?.status
+            })
+            return null
+        }
     }
 
-    async createGroupChat(name: string, memberIds: string[]): Promise<ChatRoom> {
-        const response = await fetch('/api/chat/rooms/group', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${this.token.getToken().accessToken}`
-            },
-            body: JSON.stringify({ name, memberIds })
-        })
-        return response.json()
+    async createGroupChat(name: string, memberIds: string[]): Promise<ChatRoom | null> {
+        try {
+            const response = await vonggaAxios.post('/chat/rooms/group', { name, memberIds })
+            return response.data
+        } catch (error: any) {
+            console.error('createGroupChat error', {
+                message: error?.response?.data?.message || error.message,
+                status: error?.response?.status
+            })
+            return null
+        }
     }
 
-    async getUserChats(): Promise<ChatRoom[]> {
-        const response = await fetch('/api/chat/rooms', {
-            headers: {
-                'Authorization': `Bearer ${this.token.getToken().accessToken}`
-            }
-        })
-        return response.json()
+    async getUserChats(): Promise<ChatRoom[] | null> {
+        try {
+            const response = await vonggaAxios.get('/chat/rooms')
+            return response.data
+        } catch (error: any) {
+            console.error('getUserChats error', {
+                message: error?.response?.data?.message || error.message,
+                status: error?.response?.status
+            })
+            return null
+        }
     }
 
-    async getChatMessages(roomId: string, limit = 20, offset = 0): Promise<ChatMessage[]> {
-        const response = await fetch(`/api/chat/rooms/${roomId}/messages?limit=${limit}&offset=${offset}`, {
-            headers: {
-                'Authorization': `Bearer ${this.token.getToken().accessToken}`
-            }
-        })
-        return response.json()
+    async addMemberToGroup(roomId: string, userId: string): Promise<boolean> {
+        try {
+            await vonggaAxios.post(`/chat/rooms/${roomId}/members`, { userId })
+            return true
+        } catch (error: any) {
+            console.error('addMemberToGroup error', {
+                message: error?.response?.data?.message || error.message,
+                status: error?.response?.status
+            })
+            return false
+        }
     }
 
-    async addMemberToGroup(roomId: string, userId: string): Promise<void> {
-        await fetch(`/api/chat/rooms/${roomId}/members`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${this.token.getToken().accessToken}`
-            },
-            body: JSON.stringify({ userId })
-        })
+    async removeMemberFromGroup(roomId: string, userId: string): Promise<boolean> {
+        try {
+            await vonggaAxios.delete(`/chat/rooms/${roomId}/members/${userId}`)
+            return true
+        } catch (error: any) {
+            console.error('removeMemberFromGroup error', {
+                message: error?.response?.data?.message || error.message,
+                status: error?.response?.status
+            })
+            return false
+        }
     }
 
-    async removeMemberFromGroup(roomId: string, userId: string): Promise<void> {
-        await fetch(`/api/chat/rooms/${roomId}/members/${userId}`, {
-            method: 'DELETE',
-            headers: {
-                'Authorization': `Bearer ${this.token.getToken().accessToken}`
-            }
-        })
+    // Message Methods
+    async sendMessage(roomId: string, content: string, type: string = 'text'): Promise<ChatMessage | null> {
+        try {
+            const response = await vonggaAxios.post('/chat/messages', { roomId, content, type })
+            return response.data
+        } catch (error: any) {
+            console.error('sendMessage error', {
+                message: error?.response?.data?.message || error.message,
+                status: error?.response?.status
+            })
+            return null
+        }
+    }
+
+    async sendFileMessage(roomId: string, file: File): Promise<ChatMessage | null> {
+        try {
+            const formData = new FormData()
+            formData.append('file', file)
+            formData.append('roomId', roomId)
+
+            const response = await vonggaAxios.post('/chat/messages/file', formData)
+            return response.data
+        } catch (error: any) {
+            console.error('sendFileMessage error', {
+                message: error?.response?.data?.message || error.message,
+                status: error?.response?.status
+            })
+            return null
+        }
+    }
+
+    async getChatMessages(roomId: string, limit: number = 20, offset: number = 0): Promise<ChatMessage[] | null> {
+        try {
+            const response = await vonggaAxios.get(`/chat/rooms/${roomId}/messages`, {
+                params: { limit, offset }
+            })
+            return response.data
+        } catch (error: any) {
+            console.error('getChatMessages error', {
+                message: error?.response?.data?.message || error.message,
+                status: error?.response?.status
+            })
+            return null
+        }
+    }
+
+    async markMessageRead(messageId: string): Promise<boolean> {
+        try {
+            await vonggaAxios.put(`/chat/messages/${messageId}/read`)
+            return true
+        } catch (error: any) {
+            console.error('markMessageRead error', {
+                message: error?.response?.data?.message || error.message,
+                status: error?.response?.status
+            })
+            return false
+        }
+    }
+
+    // User Status Methods
+    async updateUserStatus(isOnline: boolean): Promise<boolean> {
+        try {
+            await vonggaAxios.put('/chat/status', { isOnline })
+            return true
+        } catch (error: any) {
+            console.error('updateUserStatus error', {
+                message: error?.response?.data?.message || error.message,
+                status: error?.response?.status
+            })
+            return false
+        }
+    }
+
+    async getUserStatus(userId: string): Promise<UserStatus | null> {
+        try {
+            const response = await vonggaAxios.get(`/chat/status/${userId}`)
+            return response.data
+        } catch (error: any) {
+            console.error('getUserStatus error', {
+                message: error?.response?.data?.message || error.message,
+                status: error?.response?.status
+            })
+            return null
+        }
+    }
+
+    // Notification Methods
+    async getUserNotifications(): Promise<ChatNotification[] | null> {
+        try {
+            const response = await vonggaAxios.get('/chat/notifications')
+            return response.data
+        } catch (error: any) {
+            console.error('getUserNotifications error', {
+                message: error?.response?.data?.message || error.message,
+                status: error?.response?.status
+            })
+            return null
+        }
+    }
+
+    async markNotificationRead(notificationId: string): Promise<boolean> {
+        try {
+            await vonggaAxios.put(`/chat/notifications/${notificationId}/read`)
+            return true
+        } catch (error: any) {
+            console.error('markNotificationRead error', {
+                message: error?.response?.data?.message || error.message,
+                status: error?.response?.status
+            })
+            return false
+        }
     }
 
     // WebSocket Methods
-    sendMessage(roomId: string, content: string) {
-        const message = {
-            type: 'message',
-            roomId,
-            content,
-            createdAt: new Date()
-        }
-
-        if (this.ws?.readyState === WebSocket.OPEN) {
-            this.ws.send(JSON.stringify(message))
-        } else {
-            // Queue message if WebSocket is not connected
-            this.messageQueue.push(message)
-        }
-    }
-
-    async sendFileMessage(roomId: string, file: File) {
-        const formData = new FormData()
-        formData.append('file', file)
-        formData.append('roomId', roomId)
-
-        const response = await fetch('/api/chat/messages/file', {
-            method: 'POST',
-            headers: {
-                'Authorization': `Bearer ${this.token.getToken().accessToken}`
-            },
-            body: formData
-        })
-        return response.json()
-    }
-
-    // Typing Indicators
     sendTypingStatus(roomId: string, isTyping: boolean) {
         if (this.ws?.readyState === WebSocket.OPEN) {
             this.ws.send(JSON.stringify({
