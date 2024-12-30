@@ -5,6 +5,7 @@ import { SearchOutlined, UserOutlined } from '@ant-design/icons'
 import { Avatar, Badge, Input, Spin } from 'antd'
 import { useAuthStore } from '@/store/auth.store'
 import { formatISOToTimeAgo } from '@/utils/converTime'
+import { useChat } from '@/providers/ChatProvider'
 
 interface ChatRoomsListProps {
     chatRoomList: ChatRoom[]
@@ -14,6 +15,7 @@ interface ChatRoomsListProps {
 
 export default function ChatRoomsList({ chatRoomList, setCurrentChatRoom, currentChatRoom }: ChatRoomsListProps) {
     const { user } = useAuthStore()
+    const { onlineUsers } = useChat()
 
     return (
         <div className='bg-white rounded-lg shadow-md p-4'>
@@ -40,14 +42,13 @@ export default function ChatRoomsList({ chatRoomList, setCurrentChatRoom, curren
                     chatRoomList.map((room) => {
                         const otherUser = room.users.find(u => u.id !== user?.id)
                         if (!otherUser) return null
-
                         return (
                             <div
                                 key={room.id}
                                 onClick={() => { setCurrentChatRoom(room) }}
                                 className={`flex items-center gap-3 p-3 rounded-lg cursor-pointer transition-colors ${currentChatRoom?.id === room.id ? 'bg-blue-50' : 'hover:bg-gray-50'}`}
                             >
-                                <Badge dot status="success" offset={[-2, 32]}>
+                                <Badge dot status={onlineUsers.has(otherUser.id) ? 'success' : 'default'} offset={[-2, 32]}>
                                     <Avatar
                                         src={otherUser?.photoProfile || undefined}
                                         icon={!otherUser?.photoProfile ? <UserOutlined /> : undefined}

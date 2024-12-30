@@ -40,15 +40,6 @@ export default function ChatMessageList({ messages, currentChatRoom }: ChatMessa
 
     return (
         <div className='flex flex-col gap-2 bg-white p-4 h-[calc(100vh-225px)] overflow-y-auto no-scrollbar'>
-            {talkingWith && (
-                <div className='text-center text-sm text-gray-500 mb-2'>
-                    {onlineUsers.has(talkingWith.id) ? (
-                        <span className='text-green-500'>● ออนไลน์</span>
-                    ) : (
-                        <span>● ออฟไลน์</span>
-                    )}
-                </div>
-            )}
             {talkingWith && messages.map((message, index) => {
                 const isCurrentUser = message.senderId === user?.id
                 return (

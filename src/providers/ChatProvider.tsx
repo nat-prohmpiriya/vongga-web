@@ -167,9 +167,7 @@ export function ChatProvider({ children }: { children: React.ReactNode }) {
             ws.onmessage = (event) => {
                 try {
                     const message = JSON.parse(event.data) as WebSocketMessage;
-                    if (message.type === 'userStatus') {
-                        console.log('Received status:', message);
-                    }
+                    console.log('onmessage:', message);
                     switch (message.type) {
                         case 'message':
                             setMessages(prev => {
