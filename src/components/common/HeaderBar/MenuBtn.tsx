@@ -1,3 +1,5 @@
+"use client"
+
 import { IoAppsOutline } from 'react-icons/io5'
 import { IoHomeOutline } from 'react-icons/io5'
 import { FaRegUser } from 'react-icons/fa'

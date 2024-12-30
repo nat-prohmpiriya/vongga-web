@@ -24,28 +24,25 @@ export function ChatProvider({ children }: { children: React.ReactNode }) {
     const [messages, setMessages] = useState<Record<string, ChatMessage[]>>({});
     const [typingUsers, setTypingUsers] = useState<Record<string, Set<string>>>({});
     const [onlineUsers, setOnlineUsers] = useState<Set<string>>(new Set());
-
-    const fetchMessages = async (roomId: string) => {
-        try {
-            console.log('Fetching messages for room:', roomId);
-            const response = await chatService.getMessages(roomId);
-            console.log('Messages response:', response);
-            if (!response) return;
-
-            setMessages(prev => ({
-                ...prev,
-                [roomId]: response
-            }));
-        } catch (error) {
-            console.error('Error fetching messages:', error);
-        }
-    };
-
     const socketRef = useRef<WebSocket | null>(null);
     const reconnectTimeoutRef = useRef<NodeJS.Timeout | null>(null);
     const pingIntervalRef = useRef<NodeJS.Timeout | null>(null);
     const reconnectCountRef = useRef(0);
     const maxReconnectAttempts = 5;
+
+    const fetchMessages = async (roomId: string) => {
+        try {
+            const response = await chatService.getMessages(roomId);
+            if (!response) return;
+            const sortedMessages = response.sort((a, b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime());
+            setMessages(prev => ({
+                ...prev,
+                [roomId]: sortedMessages
+            }));
+        } catch (error) {
+            console.error('Error fetching messages:', error);
+        }
+    };
 
     const cleanupSocket = useCallback(() => {
         if (socketRef.current) {
@@ -108,14 +105,19 @@ export function ChatProvider({ children }: { children: React.ReactNode }) {
 
     const sendUserStatus = useCallback((isOnline: boolean) => {
         if (!socketRef.current || socketRef.current.readyState !== WebSocket.OPEN || !user?.id) {
+            console.log('Cannot send status:', {
+                socketExists: !!socketRef.current,
+                readyState: socketRef.current?.readyState,
+                userId: user?.id
+            });
             return;
         }
-
         const statusMessage: WebSocketMessage = {
             type: 'userStatus',
             roomId: '',
             content: isOnline ? 'online' : 'offline'
         };
+        console.log('Sending status:', statusMessage);
         socketRef.current.send(JSON.stringify(statusMessage));
     }, [user]);
 
@@ -165,7 +167,9 @@ export function ChatProvider({ children }: { children: React.ReactNode }) {
             ws.onmessage = (event) => {
                 try {
                     const message = JSON.parse(event.data) as WebSocketMessage;
-
+                    if (message.type === 'userStatus') {
+                        console.log('Received status:', message);
+                    }
                     switch (message.type) {
                         case 'message':
                             setMessages(prev => {
@@ -219,6 +223,7 @@ export function ChatProvider({ children }: { children: React.ReactNode }) {
 
                         case 'pong':
                             // Handle pong response if needed
+                            console.log('Pong received');
                             break;
                     }
                 } catch (error) {
