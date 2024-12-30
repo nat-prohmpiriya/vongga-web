@@ -1,20 +1,30 @@
 "use client"
 
-import { ChatMessage } from '@/services/chat.service'
+import { ChatMessage, ChatRoom, User } from '@/services/chat.service'
 import { Avatar } from 'antd'
 import dayjs from 'dayjs'
-import { useEffect, useRef } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { useAuthStore } from '@/store/auth.store'
 import { UserOutlined } from '@ant-design/icons'
 
 interface ChatMessageListProps {
     messages: ChatMessage[]
-    currentUserId: string | undefined
+    currentChatRoom: ChatRoom | null
 }
 
-export const ChatMessageList = ({ messages, currentUserId }: ChatMessageListProps) => {
+export const ChatMessageList = ({ messages, currentChatRoom }: ChatMessageListProps) => {
     const messagesEndRef = useRef<HTMLDivElement>(null)
     const { user } = useAuthStore()
+    const [talkingWith, setTalkingWith] = useState<User | null>(null)
+
+    useEffect(() => {
+        if (currentChatRoom) {
+            const member = currentChatRoom.users.find(m => m.id !== user?.id)
+            if (member) {
+                setTalkingWith(member)
+            }
+        }
+    }, [currentChatRoom])
 
     useEffect(() => {
         if (messagesEndRef.current) {
@@ -28,7 +38,7 @@ export const ChatMessageList = ({ messages, currentUserId }: ChatMessageListProp
 
     return (
         <div className='flex flex-col gap-2 bg-white p-4 h-[calc(100vh-225px)] overflow-y-auto no-scrollbar'>
-            {messages.map((message, index) => {
+            {talkingWith && messages.map((message, index) => {
                 const isCurrentUser = message.senderId === user?.id
                 return (
                     <div key={message.id} className={`flex items-start gap-2 ${isCurrentUser ? 'flex-row-reverse' : ''}`}>
@@ -36,8 +46,8 @@ export const ChatMessageList = ({ messages, currentUserId }: ChatMessageListProp
                             <Avatar
                                 size="small"
                                 className={`mt-1 ${!isCurrentUser ? 'order-first' : 'order-last'}  `}
-                                src={isCurrentUser ? user?.photoProfile : undefined}
-                                icon={isCurrentUser ? undefined : <UserOutlined />}
+                                src={isCurrentUser ? user?.photoProfile : talkingWith?.photoProfile || undefined}
+                                icon={!isCurrentUser ? <UserOutlined /> : talkingWith?.photoProfile ? undefined : <UserOutlined />}
                             />
                         </div>
                         <div className={`max-w-[70%] ${isCurrentUser ? 'bg-blue-500 text-white' : 'bg-gray-100'} rounded-lg px-3 py-2`}>

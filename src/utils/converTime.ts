@@ -19,15 +19,18 @@ export function formatISOToTimeAgo(isoString: string) {
     const diff = now.getTime() - date.getTime();
     const minutes = Math.floor(diff / 1000 / 60);
     if (minutes < 60) {
-        return `${minutes} min ago`;
+        return `${minutes} min`;
     }
     if (minutes < 1440) {
         const hours = Math.floor(minutes / 60);
-        return `${hours} hr ago`;
+        return `${hours} hr`;
     }
     if (minutes < 10080) {
         const days = Math.floor(minutes / 1440);
-        return `${days} day ago`;
+        return `${days} day`;
     }
     return formatISOToDate(isoString);
 }
+
+// output: HH:MM
+

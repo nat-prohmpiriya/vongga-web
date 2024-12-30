@@ -1,110 +1,94 @@
 'use client'
 
 import { createContext, useContext, useEffect, useState, ReactNode } from 'react'
-import chatService, { ChatMessage } from '@/services/chat.service'
+import chatService, { ChatMessage, RequestSendMessage } from '@/services/chat.service'
 import { useAuthStore } from '@/store/auth.store'
+import clientToken from '@/utils/clientToken'
 
 interface ChatContextType {
-    sendMessage: (roomId: string, content: string) => void
-    sendTypingStatus: (roomId: string, isTyping: boolean) => void
-    messages: { [roomId: string]: ChatMessage[] }
-    typingUsers: { [roomId: string]: Set<string> }
-    loadMessages: (roomId: string) => Promise<void>
+    sendMessage: (message: RequestSendMessage) => void
+    sendTypingStatus: (message: RequestSendMessage) => void
+    messages: ChatMessage[]
+    fetchMessages: (roomId: string) => Promise<void>
 }
 
 const ChatContext = createContext<ChatContextType | null>(null)
 
 export function ChatProvider({ children }: { children: ReactNode }) {
     const user = useAuthStore((state) => state.user)
-    const [messages, setMessages] = useState<{ [roomId: string]: ChatMessage[] }>({})
-    const [typingUsers, setTypingUsers] = useState<{ [roomId: string]: Set<string> }>({})
+    const [socket, setSocket] = useState<WebSocket | null>(null);
+    const [messages, setMessages] = useState<ChatMessage[]>([]);
 
-    const loadMessages = async (roomId: string) => {
-        try {
-            console.log('Loading messages for room:', roomId)
-            const response = await chatService.getMessages(roomId)
-            if (response) {
-                setMessages(prev => ({
-                    ...prev,
-                    [roomId]: response
-                }))
-            }
-        } catch (error) {
-            console.error('Error loading messages:', error)
-        }
-    }
+
 
     useEffect(() => {
-        if (!user) return
+        const accessToken = clientToken.getToken().accessToken
+        const url = process.env.NEXT_PUBLIC_VONGGA_API_URL + '/ws?token=' + accessToken
+        const ws = new WebSocket(url)
 
-        const ws = chatService.connect()
-        if (!ws) {
-            console.error('ChatProvider WebSocket connection failed')
-            return
+        ws.onopen = () => {
+            console.log('ChatProvider: WebSocket connection opened')
         }
 
-        ws.onmessage = (event) => {
-            const message = JSON.parse(event.data)
-            console.log('ws.onmessage', { message })
-
-            switch (message.type) {
-                case 'message':
-                    setMessages(prev => ({
-                        ...prev,
-                        [message.roomId]: [...(prev[message.roomId] || []), message]
-                    }))
-                    break
-                case 'typing':
-                    if (!message.userId || message.userId === user.id) return // ไม่อัพเดทถ้าเป็นตัวเองที่พิมพ์
-                    setTypingUsers(prev => {
-                        const roomTyping = new Set(prev[message.roomId] || [])
-                        if (message.content === "true") {
-                            roomTyping.add(message.userId)
-                        } else {
-                            roomTyping.delete(message.userId)
-                        }
-                        return {
-                            ...prev,
-                            [message.roomId]: roomTyping
-                        }
-                    })
-                    break
-                default:
-                    console.warn('Unknown message type:', message.type)
-            }
+        ws.onmessage = (event) => { // Handle incoming messages
+            console.log('ChatProvider: Received message:', JSON.stringify(event.data))
         }
+
+        ws.onclose = () => {
+            console.log('ChatProvider: WebSocket connection closed')
+        }
+
+        ws.onerror = (error) => {
+            console.error('ChatProvider: WebSocket error:', error)
+        }
+
+        setSocket(ws)
 
         return () => {
+            console.log('ChatProvider: WebSocket connection closed')
             ws.close()
         }
     }, [user])
 
-    const sendMessage = (roomId: string, content: string) => {
-        const message = {
-            type: 'message',
-            roomId,
-            content
+    const sendMessage = (message: RequestSendMessage) => {
+        if (socket && socket.readyState === WebSocket.OPEN) {
+            if (message.type === 'message') {
+                socket.send(JSON.stringify(message))
+                chatService.sendMessage(message)
+            }
+        } else {
+            console.error('ChatProvider: WebSocket is not open. Unable to send message.')
         }
-        chatService.sendMessage(roomId, content)
     }
 
-    const sendTypingStatus = (roomId: string, isTyping: boolean) => {
-        const message = {
-            type: 'typing',
-            roomId,
-            userId: user?.id,
-            content: isTyping.toString()
+    const sendTypingStatus = (message: RequestSendMessage) => {
+        if (socket && socket.readyState === WebSocket.OPEN) {
+            if (message.type === 'typing') {
+                socket.send(JSON.stringify(message))
+            }
+        } else {
+            console.error('ChatProvider: WebSocket is not open. Unable to send typing status.')
         }
-        chatService.sendMessage(roomId, isTyping.toString())
     }
+
+    const fetchMessages = async (roomId: string) => {
+        try {
+            const messages = await chatService.getMessages(roomId)
+            if (!messages) throw new Error('ChatProvider: Error fetching messages')
+            setMessages(messages)
+        } catch (error) {
+            console.error('ChatProvider: Error fetching messages:', error)
+        }
+    }
+
+
 
     return (
         <ChatContext.Provider value={{
             sendMessage,
             sendTypingStatus,
             messages,
-            typingUsers,
-            loadMessages
+            fetchMessages,
         }}>
             {children}
         </ChatContext.Provider>

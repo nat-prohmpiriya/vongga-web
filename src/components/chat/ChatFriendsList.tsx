@@ -1,33 +1,65 @@
 import { UserList } from '@/services/user.service'
 import { SearchOutlined, UserOutlined } from '@ant-design/icons'
 import { Avatar, Badge, Button, Input, Spin } from 'antd'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
+import userService from '@/services/user.service'
 
 interface ChatFriendsListProps {
-    friends: UserList[]
-    loading: boolean
-    onSearch: (search: string) => void
     onChatClick: (e: React.MouseEvent, friend: UserList) => void
 }
 
-export const ChatFriendsList = ({
-    friends,
-    loading,
-    onSearch,
-    onChatClick
-}: ChatFriendsListProps) => {
+export const ChatFriendsList = (props: ChatFriendsListProps) => {
+
+    const { onChatClick } = props
+
+    const [friendsList, setFriendsList] = useState<UserList[]>([])
+    const [loading, setLoading] = useState(true)
+    const [searchFriend, setSearchFriend] = useState('')
     const [searchValue, setSearchValue] = useState('')
+    const [filteredFriends, setFilteredFriends] = useState<UserList[]>([])
+
+    useEffect(() => {
+        fetchListFriends()
+    }, [])
+
+    useEffect(() => {
+        if (!friendsList) return
+        const filtered = friendsList.filter(friend =>
+            friend.username.toLowerCase().includes(searchFriend.toLowerCase())
+        )
+        setFilteredFriends(filtered)
+    }, [])
+
+    const fetchListFriends = async () => {
+        setLoading(true)
+        try {
+            console.log('Fetching list of friends...')
+            const response = await userService.getUsers({
+                page: 1,
+                pageSize: 50,
+                sortBy: 'createdAt',
+                sortDir: 'desc',
+                search: ''
+            })
+            if (!response) return console.error('Error fetching list of friends')
+            setFriendsList(response.users)
+            setFilteredFriends(response.users)
+        } catch (error) {
+            console.error('Error fetching list of friends:', error)
+        } finally {
+            setLoading(false)
+        }
+    }
 
     const handleSearch = (value: string) => {
         setSearchValue(value)
-        onSearch(value)
     }
 
     return (
         <div className='bg-white rounded-lg shadow-md p-4 mb-4'>
             <div className='flex items-center justify-between mb-4'>
                 <h2 className='text-lg font-semibold'>Friends</h2>
-                <Badge count={friends.length} />
+                <Badge count={filteredFriends.length} />
             </div>
 
             <Input
@@ -43,19 +75,15 @@ export const ChatFriendsList = ({
                     <div className='flex justify-center py-4'>
                         <Spin />
                     </div>
-                ) : friends.length > 0 ? (
-                    friends.map((friend) => (
+                ) : filteredFriends.length > 0 ? (
+                    filteredFriends.map((friend) => (
                         <div
                             key={friend.id}
                             className='flex items-center justify-between p-3 rounded-lg hover:bg-gray-50 transition-colors'
                         >
                             <div className='flex items-center gap-3'>
                                 <Badge dot status="success" offset={[-2, 32]}>
-                                    {friend.photoProfile ? (
-                                        <Avatar src={friend.photoProfile} />
-                                    ) : (
-                                        <Avatar icon={<UserOutlined />} />
-                                    )}
+                                    <Avatar src={friend.photoProfile || undefined} icon={!friend.photoProfile && <UserOutlined />} />
                                 </Badge>
                                 <div>
                                     <div className='font-medium'>{friend.username}</div>

@@ -1,75 +1,56 @@
+
 import { ChatRoom } from '@/services/chat.service'
 import { SearchOutlined, UserOutlined } from '@ant-design/icons'
 import { Avatar, Badge, Input, Spin } from 'antd'
-import dayjs from 'dayjs'
-import { useState } from 'react'
+import { useAuthStore } from '@/store/auth.store'
+import { formatISOToTimeAgo } from '@/utils/converTime'
 
 interface ChatRoomsListProps {
-    rooms: ChatRoom[] | null
-    loading: boolean
-    onSearch: (search: string) => void
-    onRoomSelect: (roomId: string) => void
-    currentUserId: string | undefined
-    selectedRoomId?: string
+    chatRoomList: ChatRoom[]
+    currentChatRoom: ChatRoom | null
+    setCurrentChatRoom: (room: ChatRoom) => void
 }
 
-export const ChatRoomsList = ({
-    rooms,
-    loading,
-    onSearch,
-    onRoomSelect,
-    currentUserId,
-    selectedRoomId
-}: ChatRoomsListProps) => {
-    const [searchValue, setSearchValue] = useState('')
-
-    const handleSearch = (value: string) => {
-        setSearchValue(value)
-        onSearch(value)
-    }
-
-    const formatTime = (time: string) => {
-        return dayjs(time).format('HH:mm')
-    }
+export const ChatRoomsList = ({ chatRoomList, setCurrentChatRoom, currentChatRoom }: ChatRoomsListProps) => {
+    const { user } = useAuthStore()
 
     return (
         <div className='bg-white rounded-lg shadow-md p-4'>
             <div className='flex items-center justify-between mb-4'>
-                <h2 className='text-lg font-semibold'>Chats</h2>
-                <Badge count={rooms?.length || 0} />
+                <h2 className='text-lg font-semibold'>Chat Rooms</h2>
+                <Badge count={chatRoomList?.length || 0} />
             </div>
 
-            <Input
+            {/* <Input
                 prefix={<SearchOutlined className="text-gray-400" />}
                 placeholder="Search chats..."
                 className='mb-4'
                 value={searchValue}
                 onChange={(e) => handleSearch(e.target.value)}
-            />
+            /> */}
 
             <div className='space-y-3 max-h-[400px] overflow-y-auto'>
-                {loading ? (
+                {/* {loading ? (
                     <div className='flex justify-center py-4'>
                         <Spin />
-                    </div>
-                ) : rooms && rooms.length > 0 ? (
-                    rooms.map((room) => {
-                        const otherUser = room.users.find(u => u.id !== currentUserId)
+                    </div> */}
+                {/* ) :  */}
+                {chatRoomList && chatRoomList.length > 0 ? (
+                    chatRoomList.map((room) => {
+                        const otherUser = room.users.find(u => u.id !== user?.id)
                         if (!otherUser) return null
 
                         return (
                             <div
                                 key={room.id}
-                                onClick={() => onRoomSelect(room.id)}
-                                className={`flex items-center gap-3 p-3 rounded-lg cursor-pointer transition-colors ${selectedRoomId === room.id ? 'bg-blue-50' : 'hover:bg-gray-50'
-                                    }`}
+                                onClick={() => { setCurrentChatRoom(room) }}
+                                className={`flex items-center gap-3 p-3 rounded-lg cursor-pointer transition-colors ${currentChatRoom?.id === room.id ? 'bg-blue-50' : 'hover:bg-gray-50'}`}
                             >
                                 <Badge dot status="success" offset={[-2, 32]}>
-                                    {otherUser.photoProfile ? (
-                                        <Avatar src={otherUser.photoProfile} />
-                                    ) : (
-                                        <Avatar icon={<UserOutlined />} />
-                                    )}
+                                    <Avatar
+                                        src={otherUser?.photoProfile || undefined}
+                                        icon={!otherUser?.photoProfile ? <UserOutlined /> : undefined}
+                                    />
                                 </Badge>
                                 <div className='flex-1 min-w-0'>
                                     <div className='flex justify-between items-start'>
@@ -78,7 +59,7 @@ export const ChatRoomsList = ({
                                         </div>
                                         {room.lastMessage && (
                                             <div className='text-xs text-gray-500 whitespace-nowrap ml-2'>
-                                                {formatTime(room.lastMessage.createdAt)}
+                                                {formatISOToTimeAgo(room.lastMessage.createdAt)}
                                             </div>
                                         )}
                                     </div>
