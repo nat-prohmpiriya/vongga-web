@@ -76,7 +76,7 @@ export function ChatProvider({ children }: { children: React.ReactNode }) {
                 };
                 socketRef.current.send(JSON.stringify(pingMessage));
             }
-        }, 30000);
+        }, 30000); // 30 seconds  
     }, []);
 
     const sendMessage = useCallback((roomId: string, content: string) => {

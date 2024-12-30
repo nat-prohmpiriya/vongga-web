@@ -11,7 +11,7 @@ interface ChatHeaderProps {
     setCurrentChatRoom: (room: ChatRoom | null) => void
 }
 
-export const ChatHeader = ({ currentChatRoom, setCurrentChatRoom }: ChatHeaderProps) => {
+export default function ChatHeader({ currentChatRoom, setCurrentChatRoom }: ChatHeaderProps) {
     const { user } = useAuthStore()
     const [talkingWith, setTalkingWith] = useState<User | null>(null)
 

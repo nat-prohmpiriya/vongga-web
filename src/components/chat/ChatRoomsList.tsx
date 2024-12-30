@@ -12,7 +12,7 @@ interface ChatRoomsListProps {
     setCurrentChatRoom: (room: ChatRoom) => void
 }
 
-export const ChatRoomsList = ({ chatRoomList, setCurrentChatRoom, currentChatRoom }: ChatRoomsListProps) => {
+export default function ChatRoomsList({ chatRoomList, setCurrentChatRoom, currentChatRoom }: ChatRoomsListProps) {
     const { user } = useAuthStore()
 
     return (

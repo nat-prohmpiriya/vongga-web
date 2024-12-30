@@ -13,7 +13,7 @@ interface ChatMessageListProps {
     currentChatRoom: ChatRoom | null
 }
 
-export const ChatMessageList = ({ messages, currentChatRoom }: ChatMessageListProps) => {
+export default function ChatMessageList({ messages, currentChatRoom }: ChatMessageListProps) {
     const messagesEndRef = useRef<HTMLDivElement>(null)
     const { user } = useAuthStore()
     const { onlineUsers } = useChat()

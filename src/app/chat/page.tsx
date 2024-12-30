@@ -1,16 +1,14 @@
 'use client'
 
 import { useChat } from '@/providers/ChatProvider'
-import { Row, Col, Spin } from 'antd'
+import { Row, Col, } from 'antd'
 import { useState, useEffect } from 'react'
-import userService, { UserList } from '@/services/user.service'
+import { UserList } from '@/services/user.service'
 import { useAuthStore } from '@/store/auth.store'
 import chatService from '@/services/chat.service'
-import { ChatFriendsList } from '@/components/chat/ChatFriendsList'
-import { ChatRoomsList } from '@/components/chat/ChatRoomsList'
-import { ChatHeader } from '@/components/chat/ChatHeader'
-import { ChatMessageList } from '@/components/chat/ChatMessageList'
-import { TypingIndicator } from '@/components/chat/TypingIndicator'
+import ChatRoomsList from '@/components/chat/ChatRoomsList'
+import ChatHeader from '@/components/chat/ChatHeader'
+import ChatMessageList from '@/components/chat/ChatMessageList'
 import ChatInput from '@/components/chat/ChatInput'
 import { ChatRoom } from '@/types/chat'
 
@@ -54,7 +52,7 @@ export default function ChatRoomPage() {
     }, [currentChatRoom])
 
     return (
-        <div className='bg-gray-100 h-[calc(100vh-64px)] p-4'>
+        <div className='bg-gray-100 h-[calc(100vh-64px)] p-4' suppressHydrationWarning>
             <Row gutter={[16, 16]} className=''>
                 <Col xs={24} sm={8}>
                     {/* <ChatFriendsList onChatClick={createPrivateChat} /> */}
