@@ -6,6 +6,7 @@ import dayjs from 'dayjs'
 import { useEffect, useRef, useState } from 'react'
 import { useAuthStore } from '@/store/auth.store'
 import { UserOutlined } from '@ant-design/icons'
+import { useChat } from '@/providers/ChatProvider'
 
 interface ChatMessageListProps {
     messages: ChatMessage[]
@@ -15,6 +16,7 @@ interface ChatMessageListProps {
 export const ChatMessageList = ({ messages, currentChatRoom }: ChatMessageListProps) => {
     const messagesEndRef = useRef<HTMLDivElement>(null)
     const { user } = useAuthStore()
+    const { onlineUsers } = useChat()
     const [talkingWith, setTalkingWith] = useState<User | null>(null)
 
     useEffect(() => {
@@ -37,7 +39,16 @@ export const ChatMessageList = ({ messages, currentChatRoom }: ChatMessageListPr
     }
 
     return (
-        <div className='flex flex-col gap-2 bg-white p-4 h-[calc(100vh-225px)] overflow-y-auto no-scrollbar' >
+        <div className='flex flex-col gap-2 bg-white p-4 h-[calc(100vh-225px)] overflow-y-auto no-scrollbar'>
+            {talkingWith && (
+                <div className='text-center text-sm text-gray-500 mb-2'>
+                    {onlineUsers.has(talkingWith.id) ? (
+                        <span className='text-green-500'>● ออนไลน์</span>
+                    ) : (
+                        <span>● ออฟไลน์</span>
+                    )}
+                </div>
+            )}
             {talkingWith && messages.map((message, index) => {
                 const isCurrentUser = message.senderId === user?.id
                 return (

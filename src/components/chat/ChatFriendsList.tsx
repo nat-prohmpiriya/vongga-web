@@ -1,3 +1,5 @@
+"use client"
+
 import { UserList } from '@/services/user.service'
 import { SearchOutlined, UserOutlined } from '@ant-design/icons'
 import { Avatar, Badge, Button, Input, Spin } from 'antd'

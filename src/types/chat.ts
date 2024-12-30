@@ -3,7 +3,7 @@ export interface ChatMessage {
     roomId: string
     senderId: string
     content: string
-    type: 'message' | 'typing' | 'ping' | 'pong'
+    type: 'message' | 'typing' | 'ping' | 'pong' | 'userStatus'
     fileUrl?: string
     fileType?: string
     fileSize?: number
@@ -36,7 +36,7 @@ export interface User {
 }
 
 export interface WebSocketMessage {
-    type: 'message' | 'typing' | 'ping' | 'pong'
+    type: 'message' | 'typing' | 'ping' | 'pong' | 'userStatus'
     roomId: string
     senderId?: string
     content: string

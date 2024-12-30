@@ -13,6 +13,7 @@ interface ChatContextType {
     messages: Record<string, ChatMessage[]>;
     typingUsers: Record<string, Set<string>>;
     isConnected: boolean;
+    onlineUsers: Set<string>;
 }
 
 const ChatContext = createContext<ChatContextType | undefined>(undefined);
@@ -22,6 +23,7 @@ export function ChatProvider({ children }: { children: React.ReactNode }) {
     const [isConnected, setIsConnected] = useState(false);
     const [messages, setMessages] = useState<Record<string, ChatMessage[]>>({});
     const [typingUsers, setTypingUsers] = useState<Record<string, Set<string>>>({});
+    const [onlineUsers, setOnlineUsers] = useState<Set<string>>(new Set());
 
     const fetchMessages = async (roomId: string) => {
         try {
@@ -104,6 +106,19 @@ export function ChatProvider({ children }: { children: React.ReactNode }) {
         socketRef.current.send(JSON.stringify(typingMessage));
     }, [user]);
 
+    const sendUserStatus = useCallback((isOnline: boolean) => {
+        if (!socketRef.current || socketRef.current.readyState !== WebSocket.OPEN || !user?.id) {
+            return;
+        }
+
+        const statusMessage: WebSocketMessage = {
+            type: 'userStatus',
+            roomId: '',
+            content: isOnline ? 'online' : 'offline'
+        };
+        socketRef.current.send(JSON.stringify(statusMessage));
+    }, [user]);
+
     const connectWebSocket = useCallback(() => {
         if (!user) return;
 
@@ -125,6 +140,7 @@ export function ChatProvider({ children }: { children: React.ReactNode }) {
                 setIsConnected(true);
                 reconnectCountRef.current = 0;
                 startPingInterval();
+                sendUserStatus(true);
             };
 
             ws.onclose = (event) => {
@@ -187,6 +203,20 @@ export function ChatProvider({ children }: { children: React.ReactNode }) {
                             });
                             break;
 
+                        case 'userStatus':
+                            if (message.senderId) {
+                                setOnlineUsers(prev => {
+                                    const newSet = new Set(prev);
+                                    if (message.content === 'online') {
+                                        newSet.add(message.senderId!);
+                                    } else {
+                                        newSet.delete(message.senderId!);
+                                    }
+                                    return newSet;
+                                });
+                            }
+                            break;
+
                         case 'pong':
                             // Handle pong response if needed
                             break;
@@ -198,13 +228,29 @@ export function ChatProvider({ children }: { children: React.ReactNode }) {
         } catch (error) {
             console.error('Error connecting to WebSocket:', error);
         }
-    }, [user, cleanupSocket, startPingInterval]);
+    }, [user, cleanupSocket, startPingInterval, sendUserStatus]);
 
     useEffect(() => {
         connectWebSocket();
         return () => cleanupSocket();
     }, [connectWebSocket, cleanupSocket]);
 
+    useEffect(() => {
+        if (isConnected) {
+            sendUserStatus(true);
+        }
+    }, [isConnected, sendUserStatus]);
+
+    useEffect(() => {
+        const handleBeforeUnload = () => {
+            sendUserStatus(false);
+        };
+        window.addEventListener('beforeunload', handleBeforeUnload);
+        return () => {
+            window.removeEventListener('beforeunload', handleBeforeUnload);
+            sendUserStatus(false);
+        };
+    }, [sendUserStatus]);
 
     return (
         <ChatContext.Provider value={{
@@ -213,7 +259,8 @@ export function ChatProvider({ children }: { children: React.ReactNode }) {
             fetchMessages,
             messages,
             typingUsers,
-            isConnected
+            isConnected,
+            onlineUsers
         }}>
             {children}
         </ChatContext.Provider>
