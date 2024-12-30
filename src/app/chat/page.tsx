@@ -118,8 +118,8 @@ export default function ChatRoomPage() {
     }
 
     return (
-        <div className='bg-gray-100 min-h-screen p-4'>
-            <Row gutter={[16, 16]} className='min-h-screen'>
+        <div className='bg-gray-100 h-[calc(100vh-64px)] p-4'>
+            <Row gutter={[16, 16]} className=''>
                 <Col xs={24} sm={8}>
                     <ChatFriendsList
                         friends={filteredFriends}
@@ -139,7 +139,7 @@ export default function ChatRoomPage() {
                 </Col>
 
                 <Col xs={24} sm={16}>
-                    <div className='bg-white rounded-lg shadow-md h-full flex flex-col'>
+                    <div className='bg-white rounded-lg shadow-md h-[calc(100vh-90px)] flex flex-col'>
                         <ChatHeader talkingWith={talkingWith} />
 
                         <ChatMessageList
