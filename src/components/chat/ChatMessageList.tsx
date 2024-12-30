@@ -1,6 +1,6 @@
 "use client"
 
-import { ChatMessage, ChatRoom, User } from '@/services/chat.service'
+import { ChatMessage, ChatRoom, User } from '@/types/chat'
 import { Avatar } from 'antd'
 import dayjs from 'dayjs'
 import { useEffect, useRef, useState } from 'react'
@@ -37,7 +37,7 @@ export const ChatMessageList = ({ messages, currentChatRoom }: ChatMessageListPr
     }
 
     return (
-        <div className='flex flex-col gap-2 bg-white p-4 h-[calc(100vh-225px)] overflow-y-auto no-scrollbar'>
+        <div className='flex flex-col gap-2 bg-white p-4 h-[calc(100vh-225px)] overflow-y-auto no-scrollbar' >
             {talkingWith && messages.map((message, index) => {
                 const isCurrentUser = message.senderId === user?.id
                 return (

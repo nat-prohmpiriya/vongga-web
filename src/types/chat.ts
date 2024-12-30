@@ -3,7 +3,7 @@ export interface ChatMessage {
     roomId: string
     senderId: string
     content: string
-    type: 'message' | 'typing'
+    type: 'message' | 'typing' | 'ping' | 'pong'
     fileUrl?: string
     fileType?: string
     fileSize?: number
@@ -38,7 +38,10 @@ export interface User {
 export interface WebSocketMessage {
     type: 'message' | 'typing' | 'ping' | 'pong'
     roomId: string
+    senderId?: string
     content: string
+    data?: any
+    createdAt?: string
 }
 
 export interface RestApiMessage {

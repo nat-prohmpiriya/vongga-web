@@ -16,7 +16,7 @@ import { ChatRoom } from '@/types/chat'
 
 export default function ChatRoomPage() {
     const { user } = useAuthStore()
-    const { sendMessage, messages, fetchMessages } = useChat()
+    const { messages, fetchMessages } = useChat()
     const [chatRoomList, setChatRoomList] = useState<ChatRoom[]>([])
     const [currentChatRoom, setCurrentChatRoom] = useState<ChatRoom | null>(null)
 

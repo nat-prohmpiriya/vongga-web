@@ -1,7 +1,6 @@
 "use client"
 
 import { useChat } from '@/providers/ChatProvider'
-import { ChatRoom } from '@/services/chat.service'
 import { useEffect, useState } from 'react'
 
 interface TypingIndicatorProps {
@@ -9,7 +8,7 @@ interface TypingIndicatorProps {
 }
 
 export const TypingIndicator = ({ currentChatRoomId }: TypingIndicatorProps) => {
-    const { sendTypingStatus } = useChat()
+    const { sendTyping, typingUsers } = useChat()
     const [typingNames, setTypingNames] = useState<string[]>([])
 
     useEffect(() => {

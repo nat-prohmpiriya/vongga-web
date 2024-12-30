@@ -29,7 +29,7 @@ export function ChatProvider({ children }: { children: React.ReactNode }) {
             const response = await chatService.getMessages(roomId);
             console.log('Messages response:', response);
             if (!response) return;
-            
+
             setMessages(prev => ({
                 ...prev,
                 [roomId]: response
@@ -154,9 +154,19 @@ export function ChatProvider({ children }: { children: React.ReactNode }) {
                         case 'message':
                             setMessages(prev => {
                                 const roomMessages = prev[message.roomId] || [];
+                                const chatMessage: ChatMessage = {
+                                    id: window.crypto.randomUUID(),
+                                    roomId: message.roomId,
+                                    senderId: message.senderId!,
+                                    content: message.content,
+                                    type: message.type,
+                                    readBy: [],
+                                    createdAt: message.createdAt || new Date().toISOString(),
+                                    updatedAt: message.createdAt || new Date().toISOString()
+                                };
                                 return {
                                     ...prev,
-                                    [message.roomId]: [...roomMessages, message as ChatMessage]
+                                    [message.roomId]: [...roomMessages, chatMessage]
                                 };
                             });
                             break;
@@ -186,7 +196,7 @@ export function ChatProvider({ children }: { children: React.ReactNode }) {
                 }
             };
         } catch (error) {
-            console.error('Error creating WebSocket:', error);
+            console.error('Error connecting to WebSocket:', error);
         }
     }, [user, cleanupSocket, startPingInterval]);
 
