@@ -75,7 +75,7 @@ export default function ChatRoomPage() {
 
                         {/* <TypingIndicator currentChatRoomId={currentChatRoom?.id || ''} /> */}
 
-                        <ChatInput roomId={currentChatRoom?.id || ''} />
+                        {currentChatRoom && <ChatInput roomId={currentChatRoom?.id || ''} />}
                     </div>
                 </Col>
             </Row>
