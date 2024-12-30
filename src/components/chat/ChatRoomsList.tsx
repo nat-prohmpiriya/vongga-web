@@ -1,5 +1,6 @@
+"use client"
 
-import { ChatRoom } from '@/services/chat.service'
+import { ChatRoom } from '@/types/chat'
 import { SearchOutlined, UserOutlined } from '@ant-design/icons'
 import { Avatar, Badge, Input, Spin } from 'antd'
 import { useAuthStore } from '@/store/auth.store'

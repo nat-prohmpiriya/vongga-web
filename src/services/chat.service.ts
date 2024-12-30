@@ -1,69 +1,8 @@
 import clientToken from '@/utils/clientToken'
 import vonggaAxios from '@/utils/vonggaAxios'
-
-export interface ChatMessage {
-    id: string
-    roomId: string
-    senderId: string
-    type: string
-    content: string
-    fileUrl?: string
-    fileType?: string
-    fileSize?: number
-    readBy: string[]
-    createdAt: string
-    updatedAt: string
-}
-
-export interface User {
-    id: string
-    username: string
-    displayName: string
-    photoProfile: string
-    firstName: string
-    lastName: string
-}
-
-export interface ChatRoom {
-    id: string
-    name: string
-    type: 'private' | 'group'
-    members: string[]
-    createdAt: string
-    updatedAt: string
-    users: User[]
-    lastMessage?: {
-        content: string
-        createdAt: string
-    }
-}
-
-export interface ChatNotification {
-    id: string
-    type: string
-    content: string
-    isRead: boolean
-    createdAt: string
-}
-
-export interface UserStatus {
-    userId: string
-    status: 'online' | 'offline' | 'away'
-    lastSeen: string
-}
-
-export interface RequestSendMessage {
-    type: 'message' | 'typing'
-    roomId: string
-    userId: string
-    content: string
-}
+import { ChatMessage, ChatRoom, RestApiMessage, User, WebSocketMessage } from '@/types/chat'
 
 class ChatService {
-    private ws: WebSocket | null = null
-    private messageQueue: any[] = []
-    private token = clientToken
-
 
     // Room Methods
     async createPrivateRoom(userId: string): Promise<ChatRoom | null> {
@@ -132,14 +71,14 @@ class ChatService {
     }
 
     // Message Methods
-    async sendMessage(message: RequestSendMessage): Promise<ChatMessage | null> {
+    async sendMessage(message: RestApiMessage): Promise<ChatMessage | null> {
         try {
             if (!message.roomId || message.content === '') {
                 console.warn('roomId or content not found')
                 return null
             }
 
-            const response = await vonggaAxios.post('/chat/messages',)
+            const response = await vonggaAxios.post('/chat/messages', message)
             return response.data
         } catch (error: any) {
             console.error('sendMessage error', {
@@ -209,7 +148,7 @@ class ChatService {
         }
     }
 
-    async getUserStatus(userId: string): Promise<UserStatus | null> {
+    async getUserStatus(userId: string): Promise<User | null> {
         try {
             const response = await vonggaAxios.get(`/chat/status/${userId}`)
             return response.data
@@ -223,7 +162,7 @@ class ChatService {
     }
 
     // Notification Methods
-    async getUserNotifications(): Promise<ChatNotification[] | null> {
+    async getUserNotifications(): Promise<any[] | null> {
         try {
             const response = await vonggaAxios.get('/chat/notifications')
             return response.data
@@ -248,7 +187,6 @@ class ChatService {
             return false
         }
     }
-
 
 }
 

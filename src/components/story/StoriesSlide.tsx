@@ -88,7 +88,7 @@ const StorySlide = () => {
                     <div className="flex-none snap-start">
                         <StoryCard isCreate fetchStories={fetchStories} />
                     </div>
-                    {stories.map((story, index) => (
+                    {stories?.map((story, index) => (
                         <div key={index} className="flex-none snap-start">
                             <StoryCard story={story} fetchStories={fetchStories} />
                         </div>

@@ -5,17 +5,18 @@ import { Row, Col, Spin } from 'antd'
 import { useState, useEffect } from 'react'
 import userService, { UserList } from '@/services/user.service'
 import { useAuthStore } from '@/store/auth.store'
-import chatService, { ChatRoom } from '@/services/chat.service'
+import chatService from '@/services/chat.service'
 import { ChatFriendsList } from '@/components/chat/ChatFriendsList'
 import { ChatRoomsList } from '@/components/chat/ChatRoomsList'
 import { ChatHeader } from '@/components/chat/ChatHeader'
 import { ChatMessageList } from '@/components/chat/ChatMessageList'
 import { TypingIndicator } from '@/components/chat/TypingIndicator'
 import ChatInput from '@/components/chat/ChatInput'
+import { ChatRoom } from '@/types/chat'
 
 export default function ChatRoomPage() {
     const { user } = useAuthStore()
-    const { sendMessage, sendTypingStatus, messages, fetchMessages } = useChat()
+    const { sendMessage, messages, fetchMessages } = useChat()
     const [chatRoomList, setChatRoomList] = useState<ChatRoom[]>([])
     const [currentChatRoom, setCurrentChatRoom] = useState<ChatRoom | null>(null)
 
@@ -46,6 +47,11 @@ export default function ChatRoomPage() {
         fetchRoom()
     }, [])
 
+    useEffect(() => {
+        if (currentChatRoom?.id) {
+            fetchMessages(currentChatRoom.id)
+        }
+    }, [currentChatRoom])
 
     return (
         <div className='bg-gray-100 h-[calc(100vh-64px)] p-4'>
@@ -65,7 +71,7 @@ export default function ChatRoomPage() {
                         />
 
                         <ChatMessageList
-                            messages={messages}
+                            messages={messages[currentChatRoom?.id || ''] || []}
                             currentChatRoom={currentChatRoom}
                         />
 
