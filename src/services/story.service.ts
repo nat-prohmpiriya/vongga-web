@@ -55,7 +55,7 @@ class StoryService {
             const response = await vonggaAxios.post("/stories", story)
             console.timeLog('createStory', response)
             return response?.data
-        } catch (error: any) {
+        } catch (error) {
             console.error('createStory error', {
                 message: error?.response?.data?.message || error.message,
                 status: error?.response?.status
@@ -67,7 +67,7 @@ class StoryService {
         try {
             const response = await vonggaAxios.get("/stories/active")
             return response?.data?.stories
-        } catch (error: any) {
+        } catch (error) {
             console.error('getAtiveStories error', {
                 message: error?.response?.data?.message || error.message,
                 status: error?.response?.status
@@ -80,7 +80,7 @@ class StoryService {
         try {
             const response = await vonggaAxios.get(`/stories/user/${userId}`)
             return response.data
-        } catch (error: any) {
+        } catch (error) {
             console.error('getUserStories error', {
                 message: error?.response?.data?.message || error.message,
                 status: error?.response?.status
@@ -93,7 +93,7 @@ class StoryService {
         try {
             const response = await vonggaAxios.get(`/stories/${id}`)
             return response.data.story
-        } catch (error: any) {
+        } catch (error) {
             console.error('getStoryById error', {
                 message: error?.response?.data?.message || error.message,
                 status: error?.response?.status
@@ -105,7 +105,7 @@ class StoryService {
         try {
             const response = await vonggaAxios.post(`/stories/${id}/view`)
             return response.data
-        } catch (error: any) {
+        } catch (error) {
             console.error('viewStory error', {
                 message: error?.response?.data?.message || error.message,
                 status: error?.response?.status
@@ -118,7 +118,7 @@ class StoryService {
         try {
             const response = await vonggaAxios.delete(`/stories/${id}`)
             return response.data
-        } catch (error: any) {
+        } catch (error) {
             console.error('deleteStory error', {
                 message: error?.response?.data?.message || error.message,
                 status: error?.response?.status

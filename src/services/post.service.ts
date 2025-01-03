@@ -1,3 +1,4 @@
+import { handleAxiosError } from '@/lib/handleAxiosError';
 import { Media } from "@/types/post";
 import vonggaAxios from "../utils/vonggaAxios";
 import { PostVisibility } from "@/types/post";
@@ -55,11 +56,8 @@ class PostService {
 
             const response = await vonggaAxios.post('/posts', postData, config)
             return response.data.post
-        } catch (error: any) {
-            console.error('createPost error', {
-                message: error.response?.data?.message,
-                status: error.response?.status
-            })
+        } catch (error) {
+            handleAxiosError('createPost', error)
             throw error
         }
     }
@@ -69,11 +67,8 @@ class PostService {
 
             const response = await vonggaAxios.get(`/posts?limit=${limit}&offset=${offset}&userId=${userId}&includeSubPosts=${includeSubPosts}`)
             return response.data
-        } catch (error: any) {
-            console.error('getPosts error', {
-                message: error?.response?.data?.message || error.message,
-                status: error?.response?.status
-            })
+        } catch (error) {
+            handleAxiosError('getPosts', error)
             return null
         }
     }
@@ -83,11 +78,8 @@ class PostService {
             const url = `posts?limit=10&offset=0&userId=${userId}&includeSubPosts=true&hasMedia=true&mediaType=video`
             const response = await vonggaAxios.get(url)
             return response.data
-        } catch (error: any) {
-            console.error('getPostVideos error', {
-                message: error?.response?.data?.message || error.message,
-                status: error?.response?.status
-            })
+        } catch (error) {
+            handleAxiosError('getPostVideos', error)
             return null
         }
     }
@@ -97,11 +89,8 @@ class PostService {
             const url = `posts?limit=10&offset=0&userId=${userId}&includeSubPosts=true&hasMedia=true&mediaType=image`
             const response = await vonggaAxios.get(url)
             return response.data
-        } catch (error: any) {
-            console.error('getPostImages error', {
-                message: error?.response?.data?.message || error.message,
-                status: error?.response?.status
-            })
+        } catch (error) {
+            handleAxiosError('getPostImages', error)
             return null
         }
     }
@@ -110,11 +99,8 @@ class PostService {
         try {
             const response = await vonggaAxios.delete(`/posts/${id}`)
             return response.data
-        } catch (error: any) {
-            console.error('deletePost error', {
-                message: error?.response?.data?.message || error.message,
-                status: error?.response?.status
-            })
+        } catch (error) {
+            handleAxiosError('deletePost', error)
             return null
         }
     }

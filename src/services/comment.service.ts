@@ -14,7 +14,7 @@ class CommentService {
                 parentId
             })
             return response.data
-        } catch (error: any) {
+        } catch (error) {
             console.error('createComment error', {
                 message: error?.response?.data?.message || error.message,
                 status: error?.response?.status
@@ -29,7 +29,7 @@ class CommentService {
             const params = parentId ? `?parentId=${parentId}` : ''
             const response = await vonggaAxios.get(`/comments/posts/${postId}${params}`)
             return response.data
-        } catch (error: any) {
+        } catch (error) {
             console.error('getComments error', {
                 message: error?.response?.data?.message || error.message,
                 status: error?.response?.status
@@ -43,7 +43,7 @@ class CommentService {
         try {
             const response = await vonggaAxios.delete(`/comments/${id}`)
             return response.data
-        } catch (error: any) {
+        } catch (error) {
             console.error('deleteComment error', {
                 message: error?.response?.data?.message || error.message,
                 status: error?.response?.status

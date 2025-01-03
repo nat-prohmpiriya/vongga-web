@@ -6,7 +6,7 @@ class FollowService {
         try {
             const response = await vonggaAxios.post(`/follows/${userId}`)
             return response.data
-        } catch (error: any) {
+        } catch (error) {
             console.error('getFollowers error', {
                 message: error?.response?.data?.message || error.message,
                 status: error?.response?.status
@@ -19,7 +19,7 @@ class FollowService {
         try {
             const response = await vonggaAxios.delete(`/follows/${userId}`)
             return response.data
-        } catch (error: any) {
+        } catch (error) {
             console.error('getFollowers error', {
                 message: error?.response?.data?.message || error.message,
                 status: error?.response?.status
@@ -32,7 +32,7 @@ class FollowService {
         try {
             const response = await vonggaAxios.post(`/follows/${userId}`)
             return response.data
-        } catch (error: any) {
+        } catch (error) {
             console.error('getFollowers error', {
                 message: error?.response?.data?.message || error.message,
                 status: error?.response?.status
@@ -45,7 +45,7 @@ class FollowService {
         try {
             const response = await vonggaAxios.delete(`/follows/${userId}`)
             return response.data
-        } catch (error: any) {
+        } catch (error) {
             console.error('getFollowers error', {
                 message: error?.response?.data?.message || error.message,
                 status: error?.response?.status

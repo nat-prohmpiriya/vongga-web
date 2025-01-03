@@ -8,7 +8,7 @@ export default async function refreshToken() {
         };
         const response = await axios.post(url, body);
         return response.data.accessToken;
-    } catch (error: any) {
+    } catch (error) {
         console.error('Error refreshing token:', {
             message: error?.response?.data?.message || error.message,
             status: error?.response?.status

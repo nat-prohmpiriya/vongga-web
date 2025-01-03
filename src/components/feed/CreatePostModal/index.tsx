@@ -120,7 +120,7 @@ const CreatePostModal = forwardRef<CreatePostModalRef, ModalProps>((props, ref) 
 			setPost(null)
 			setMediaFiles([])
 			setMediaPreviews([])
-		} catch (error: any) {
+		} catch (error) {
 			setError(error.message)
 		} finally {
 			setLoading(false)

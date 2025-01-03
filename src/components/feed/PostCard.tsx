@@ -59,7 +59,7 @@ export default function PostCard(props: PostProps) {
         try {
             const result = await postService.deletePost(id)
             props?.fetchPosts?.()
-        } catch (error: any) {
+        } catch (error) {
             console.log('Delete post error', error)
         }
     }
@@ -68,7 +68,7 @@ export default function PostCard(props: PostProps) {
         try {
             const result = await commentService.deleteComment(id)
             refreshComments()
-        } catch (error: any) {
+        } catch (error) {
             console.log('Delete comment error', error)
         }
     }

@@ -19,7 +19,7 @@ export default async function EventPage(params: { name: string }) {
         const data = await response.json()
         console.log(data)
         console.log(data.user)
-    } catch (error: any) {
+    } catch (error) {
         console.error('Error fetching user:', error.message)
     }
     return (

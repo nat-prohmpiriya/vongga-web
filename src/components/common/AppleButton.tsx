@@ -30,7 +30,7 @@ const AppleButton = ({ state }: AppleButtonProps) => {
             setUser(resultVerify.user)
             console.log('Signed in with Apple successfully!')
             router.push('/feed')
-        } catch (error: any) {
+        } catch (error) {
             console.error('Error signing in with Apple: ', error)
         } finally {
             setIsLoading(false)

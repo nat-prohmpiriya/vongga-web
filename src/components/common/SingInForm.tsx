@@ -46,7 +46,7 @@ const AuthForm = ({ type }: AuthFormProps) => {
             setUser(resultVerify.user)
             console.log('Signed in successfully!')
             router.push('/feed')
-        } catch (error: any) {
+        } catch (error) {
 
         } finally {
             setIsLoading(false)

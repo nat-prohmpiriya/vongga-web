@@ -36,7 +36,7 @@ class NotifcationService {
         try {
             const response = await vonggaAxios.get(`/notifications?limit=${limit}&offset=${offset}`)
             return response.data
-        } catch (error: any) {
+        } catch (error) {
             console.error('getNotifications error', {
                 message: error?.response?.data?.message || error.message,
                 status: error?.response?.status
@@ -49,7 +49,7 @@ class NotifcationService {
         try {
             const response = await vonggaAxios.post(`/notifications/${id}/read`)
             return response.data
-        } catch (error: any) {
+        } catch (error) {
             console.warn('markNotificationAsRead error', {
                 message: error?.response?.data?.message || error.message,
                 status: error?.response?.status

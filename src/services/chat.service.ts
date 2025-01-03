@@ -9,7 +9,7 @@ class ChatService {
         try {
             const response = await vonggaAxios.post('/chat/rooms/private', { userId })
             return response.data
-        } catch (error: any) {
+        } catch (error) {
             console.error('createPrivateRoom error', {
                 message: error?.response?.data?.message || error.message,
                 status: error?.response?.status
@@ -22,7 +22,7 @@ class ChatService {
         try {
             const response = await vonggaAxios.post('/chat/rooms/group', { name, memberIds })
             return response.data
-        } catch (error: any) {
+        } catch (error) {
             console.error('createGroupRoom error', {
                 message: error?.response?.data?.message || error.message,
                 status: error?.response?.status
@@ -35,7 +35,7 @@ class ChatService {
         try {
             const response = await vonggaAxios.get('/chat/rooms')
             return response.data
-        } catch (error: any) {
+        } catch (error) {
             console.error('getRooms error', {
                 message: error?.response?.data?.message || error.message,
                 status: error?.response?.status
@@ -48,7 +48,7 @@ class ChatService {
         try {
             await vonggaAxios.post(`/chat/rooms/${roomId}/members`, { userId })
             return true
-        } catch (error: any) {
+        } catch (error) {
             console.error('addMemberToGroup error', {
                 message: error?.response?.data?.message || error.message,
                 status: error?.response?.status
@@ -61,7 +61,7 @@ class ChatService {
         try {
             await vonggaAxios.delete(`/chat/rooms/${roomId}/members/${userId}`)
             return true
-        } catch (error: any) {
+        } catch (error) {
             console.error('removeMemberFromGroup error', {
                 message: error?.response?.data?.message || error.message,
                 status: error?.response?.status
@@ -80,7 +80,7 @@ class ChatService {
 
             const response = await vonggaAxios.post('/chat/messages', message)
             return response.data
-        } catch (error: any) {
+        } catch (error) {
             console.error('sendMessage error', {
                 message: error?.response?.data?.message || error.message,
                 status: error?.response?.status
@@ -97,7 +97,7 @@ class ChatService {
 
             const response = await vonggaAxios.post('/chat/messages/file', formData)
             return response.data
-        } catch (error: any) {
+        } catch (error) {
             console.error('sendFileMessage error', {
                 message: error?.response?.data?.message || error.message,
                 status: error?.response?.status
@@ -112,7 +112,7 @@ class ChatService {
                 params: { limit, offset }
             })
             return response.data
-        } catch (error: any) {
+        } catch (error) {
             console.error('getMessages error', {
                 message: error?.response?.data?.message || error.message,
                 status: error?.response?.status
@@ -125,7 +125,7 @@ class ChatService {
         try {
             await vonggaAxios.put(`/chat/messages/${messageId}/read`)
             return true
-        } catch (error: any) {
+        } catch (error) {
             console.error('markMessageRead error', {
                 message: error?.response?.data?.message || error.message,
                 status: error?.response?.status
@@ -139,7 +139,7 @@ class ChatService {
         try {
             await vonggaAxios.put('/chat/status', { isOnline })
             return true
-        } catch (error: any) {
+        } catch (error) {
             console.error('updateUserStatus error', {
                 message: error?.response?.data?.message || error.message,
                 status: error?.response?.status
@@ -152,7 +152,7 @@ class ChatService {
         try {
             const response = await vonggaAxios.get(`/chat/status/${userId}`)
             return response.data
-        } catch (error: any) {
+        } catch (error) {
             console.error('getUserStatus error', {
                 message: error?.response?.data?.message || error.message,
                 status: error?.response?.status
@@ -166,7 +166,7 @@ class ChatService {
         try {
             const response = await vonggaAxios.get('/chat/notifications')
             return response.data
-        } catch (error: any) {
+        } catch (error) {
             console.error('getUserNotifications error', {
                 message: error?.response?.data?.message || error.message,
                 status: error?.response?.status
@@ -179,7 +179,7 @@ class ChatService {
         try {
             await vonggaAxios.put(`/chat/notifications/${notificationId}/read`)
             return true
-        } catch (error: any) {
+        } catch (error) {
             console.error('markNotificationRead error', {
                 message: error?.response?.data?.message || error.message,
                 status: error?.response?.status

@@ -38,11 +38,8 @@ class UserService {
             const user = response?.data?.user
             if (!user) console.log('getUserInfoByUsername', response)
             return user
-        } catch (error: any) {
-            console.error('getUserInfoByUsername error', {
-                message: error?.response?.data?.message || error.message,
-                status: error?.response?.status
-            })
+        } catch (error) {
+            handleAxiosError(error)
             return null
         }
     }
@@ -51,7 +48,7 @@ class UserService {
         try {
             const response = await vonggaAxios.patch(`/users`, data)
             return response.data.user
-        } catch (error: any) {
+        } catch (error) {
             console.error('updateUserProfile error', {
                 message: error?.response?.data?.message || error.message,
                 status: error?.response?.status
@@ -64,7 +61,7 @@ class UserService {
         try {
             const response = await vonggaAxios.get(`/users/me`)
             return response?.data?.user
-        } catch (error: any) {
+        } catch (error) {
             console.error('getMyProfile error', {
                 message: error?.response?.data?.message || error.message,
                 status: error?.response?.status
@@ -77,11 +74,8 @@ class UserService {
         try {
             const response = await vonggaAxios.get(`/users/list?page=${req.page}&pageSize=${req.pageSize}&sortBy=${req.sortBy}&sortDir=${req.sortDir}&search=${req.search}`)
             return response.data
-        } catch (error: any) {
-            console.error('getUsers error', {
-                message: error?.response?.data?.message || error.message,
-                status: error?.response?.status
-            })
+        } catch (error) {
+            handleAxiosError(error)
             return null
         }
     }

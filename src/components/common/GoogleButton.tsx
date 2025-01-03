@@ -32,7 +32,7 @@ const GoogleButton = ({ state }: GoogleButtonProps) => {
             setUser(resultVerify.user)
             toast.success('Signed in with Google successfully!')
             router.push('/feed')
-        } catch (error: any) {
+        } catch (error) {
             toast.error(error.message || 'Failed to sign in with Google')
         } finally {
             setIsLoading(false)

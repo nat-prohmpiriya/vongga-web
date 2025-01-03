@@ -44,7 +44,7 @@ const SignUpForm = () => {
             )
 
             router.push('/auth/login')
-        } catch (error: any) {
+        } catch (error) {
 
         } finally {
             setIsLoading(false)

@@ -21,7 +21,7 @@ export const uploadService = {
       });
 
       return data;
-    } catch (error: any) {
+    } catch (error) {
       console.error('uploadFile error', {
         message: error?.response?.data?.message || error.message,
         status: error?.response?.status
@@ -34,7 +34,7 @@ export const uploadService = {
     try {
       const uploadPromises = files.map(file => uploadService.uploadFile(file, type));
       return await Promise.all(uploadPromises);
-    } catch (error: any) {
+    } catch (error) {
       console.error('uploadMultipleFiles error', error);
       throw error;
     }

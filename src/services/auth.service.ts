@@ -17,7 +17,7 @@ class AuthService {
             const { data } = await axios.post(url, { firebaseToken: accessToken })
             clientToken.setToken(data)
             return data
-        } catch (error: any) {
+        } catch (error) {
             console.error('Error verifying Firebase token: ', {
                 message: error?.response?.data?.message || error.message,
                 status: error?.response?.status
@@ -34,7 +34,7 @@ class AuthService {
             })
             clientToken.setToken(data)
             return data
-        } catch (error: any) {
+        } catch (error) {
             console.error('Error refreshing token: ', {
                 message: error?.response?.data?.message || error.message,
                 status: error?.response?.status
@@ -48,7 +48,7 @@ class AuthService {
             const resultLogout = await vonggaAxios.post('/auth/logout', { refreshToken })
             clientToken.clearToken()
             return resultLogout
-        } catch (error: any) {
+        } catch (error) {
             console.error('Error logging out: ', {
                 message: error?.response?.data?.message || error.message,
                 status: error?.response?.status
