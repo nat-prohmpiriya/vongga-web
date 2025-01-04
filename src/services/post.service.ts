@@ -1,4 +1,4 @@
-import { handleAxiosError } from '@/lib/handleAxiosError';
+import handleAxiosError from '@/utils/handleAxiosError';
 import { Media } from "@/types/post";
 import vonggaAxios from "../utils/vonggaAxios";
 import { PostVisibility } from "@/types/post";
